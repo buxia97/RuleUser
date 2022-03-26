@@ -4,6 +4,10 @@ var LOGO_URL = "https://www.ruletree.club/logo.png";
 
 var webName = "规则之树";  //网站名称
 var webEmail = "buxia97@126.com";  //站长邮箱
+
+var opinionUrl = "https://www.ruletree.club/help.html";  //意见反馈地址
+var appUrl = ""; //APP下载地址
+
 var footerLink = `
 	<a href="#">网站首页</a>
 	<a href="#">投稿说明</a>
@@ -26,3 +30,221 @@ var pageRule =WEB_URL+"{slug}.html" //独立页面
 
 //公告mid，可以是分类也可以是标签
 var  noticeID = 12;
+
+//接口和公共方法定义
+var API = {
+	userLogin:function(){
+		return API_URL + 'typechoUsers/userLogin';
+	},
+	RegSendCode:function(){
+		return API_URL + 'typechoUsers/RegSendCode';
+	},
+	SendCode:function(){
+		return API_URL + 'typechoUsers/SendCode';
+	},
+	userApi:function(){
+		return API_URL + 'typechoUsers/apiLogin';
+	},
+	userRegister:function(){
+		return API_URL + 'typechoUsers/userRegister';
+	},
+	userFoget:function(){
+		return API_URL + 'typechoUsers/userFoget';
+	},
+	getUserInfo:function(){
+		return API_URL + 'typechoUsers/userInfo';
+	},
+	getUserList:function(){
+		return API_URL + 'typechoUsers/userList';
+	},
+	userEdit:function(){
+		return API_URL + 'typechoUsers/userEdit';
+	},
+	getUserData:function(){
+		return API_URL + 'typechoUsers/userData';
+	},
+	userDelete:function(){
+		return API_URL + 'typechoUsers/userDelete';
+	},
+	userRecharge:function(){
+		return API_URL + 'typechoUsers/userRecharge';
+	},
+	
+	userWithdraw:function(){
+		return API_URL + 'typechoUsers/userWithdraw';
+	},
+	withdrawList:function(){
+		return API_URL + 'typechoUsers/withdrawList';
+	},
+	withdrawStatus:function(){
+		return API_URL + 'typechoUsers/withdrawStatus';
+	},
+	manageUserEdit:function(){
+		return API_URL + 'typechoUsers/manageUserEdit';
+	},
+	apiBind:function(){
+		return API_URL + 'typechoUsers/apiBind';
+	},
+	userBindStatus:function(){
+		return API_URL + 'typechoUsers/userBindStatus';
+	},
+	getMarkList:function(){
+		return API_URL + 'typechoUserlog/markList';
+	},
+	getIsMark:function(){
+		return API_URL + 'typechoUserlog/isMark';
+	},
+	userStatus:function(){
+		return API_URL + 'typechoUsers/userStatus';
+	},
+	addLog:function(){
+		return API_URL + 'typechoUserlog/addLog';
+	},
+	removeLog:function(){
+		return API_URL + 'typechoUserlog/removeLog';
+	},
+	removeLog:function(){
+		return API_URL + 'typechoUserlog/removeLog';
+	},
+	
+	
+	getCommentsList:function(){
+		return API_URL + 'typechoComments/commentsList';
+	},
+	setComments:function(){
+		return API_URL + 'typechoComments/commentsAdd';
+	},
+	commentsDelete:function(){
+		return API_URL + 'typechoComments/commentsDelete';
+	},
+	commentsAudit:function(){
+		return API_URL + 'typechoComments/commentsAudit';
+	},
+	
+	
+	//根据标签或者分类获取文章
+	getMetaContents:function(){
+		return API_URL + 'typechoMetas/selectContents';
+	},
+	getMetasList:function(){
+		return API_URL + 'typechoMetas/metasList';
+	},
+	getContentsList:function(){
+		return API_URL + 'typechoContents/contensList';
+	},
+	getContentsInfo:function(){
+		return API_URL + 'typechoContents/contentsInfo';
+	},
+	contensAdd:function(){
+		return API_URL + 'typechoContents/contensAdd';
+	},
+	
+	contensUpdate:function(){
+		return API_URL + 'typechoContents/contensUpdate';
+	},
+	contensImage:function(){
+		return API_URL + 'typechoContents/ImagePexels';
+	},
+	allData:function(){
+		return API_URL + 'typechoContents/allData';
+	},
+	contentsDelete:function(){
+		return API_URL + 'typechoContents/contentsDelete';
+	},
+	contentsAudit:function(){
+		return API_URL + 'typechoContents/contentsAudit';
+	},
+	getForeverblog:function(){
+		return API_URL + 'typechoContents/foreverblog';
+	},
+	//文章是否评论过
+	isCommnet:function(){
+		return API_URL + 'typechoContents/isCommnet';
+	},
+	//下面这个方法涉及图片上传，自己修改定义接口路径
+	upload:function(){
+		//return API_URL + 'upload/ossUpload';//OSS对象存储接口
+		return API_URL + 'upload/cosUpload';//COS对象存储接口
+		//return API_URL + 'upload/ftpUpload'; //远程ftp上传接口
+		//return API_URL + 'upload/localUpload'; //本地上传接口
+	},
+	shopList:function(){
+		return API_URL + 'typechoShop/shopList';
+	},
+	shopInfo:function(){
+		return API_URL + 'typechoShop/shopInfo';
+	},
+	addShop:function(){
+		return API_URL + 'typechoShop/addShop';
+	},
+	editShop:function(){
+		return API_URL + 'typechoShop/editShop';
+	},
+	deleteShop:function(){
+		return API_URL + 'typechoShop/deleteShop';
+	},
+	buyShop:function(){
+		return API_URL + 'typechoShop/buyShop';
+	},
+	isBuyShop:function(){
+		return API_URL + 'typechoShop/isBuyShop';
+	},
+	auditShop:function(){
+		return API_URL + 'typechoShop/auditShop';
+	},
+	orderList:function(){
+		return API_URL + 'typechoUserlog/orderList';
+	},
+	orderSellList:function(){
+		return API_URL + 'typechoUserlog/orderSellList';
+	},
+	
+	//文章挂载商品
+	mountShop:function(){
+		return API_URL + 'typechoShop/mountShop';
+	},
+	//支付宝当面付
+	scancodePay:function(){
+		return API_URL + 'pay/scancodePay';
+	},
+	//充值二维码生成
+	qrCode:function(){
+		return API_URL + 'pay/qrCode';
+	},
+	payLogList:function(){
+		return API_URL + 'pay/payLogList';
+	},
+	
+	IsNull(obj) {
+		return (obj != null && obj != undefined);
+	},
+	//获取日期
+	formatDate(datetime) {
+		var datetime = new Date(parseInt(datetime * 1000));
+		// 获取年月日时分秒值  slice(-2)过滤掉大于10日期前面的0
+		var year = datetime.getFullYear(),
+			month = ("0" + (datetime.getMonth() + 1)).slice(-2),
+			date = ("0" + datetime.getDate()).slice(-2),
+			hour = ("0" + datetime.getHours()).slice(-2),
+			minute = ("0" + datetime.getMinutes()).slice(-2);
+		//second = ("0" + date.getSeconds()).slice(-2);
+		// 拼接
+		var result = year + "-" + month + "-" + date + " " + hour + ":" + minute;
+		// 返回
+		return result;
+	},
+	//移除数据中的空对象
+	removeObjectEmptyKey(json) {
+	    var value;
+	    for (var key in json) {
+	        if (json.hasOwnProperty(key)) {
+	            value = json[key];
+	            if (value === undefined || value === '' || value === null) {
+	                delete json[key]
+	            }
+	        }
+	    }
+	    return json;
+	},
+	
+}

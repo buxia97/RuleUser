@@ -23,6 +23,25 @@ img{transition: 0.5s all;
 -moz-transition: 0.5s all;
 -o-transition: 0.5s all;
 -ms-transition: 0.5s all;}
+input[type=text], input[type=password], input[type=email], textarea {
+    background: #FFF;
+    border: 1px solid #333333;
+    padding: 7px;
+    border-radius: 2px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+button{
+	height: 40px;
+	line-height: 40px;
+	border: none;
+	outline: none;
+	width: auto;
+	border-radius: 2px;
+	padding: 0px 10px;
+	cursor: pointer;
+}
 @media print {
 	a,a:visited{text-decoration:underline;}
 	a[href]:after{content:" (" attr(href) ")";}
@@ -131,6 +150,7 @@ img{transition: 0.5s all;
 .user{
 	float: right;
 	padding-top:12.5px;
+	position: relative;
 }
 .user img{
 	width: 35px;
@@ -344,6 +364,7 @@ img{transition: 0.5s all;
 }
 .index-archives{
 	margin-top: 10px;
+	min-height: 320px;
 }
 .index-archives-box{
 	padding: 15px 0px;
@@ -352,11 +373,16 @@ img{transition: 0.5s all;
 .index-archives-box a{
 	color: #000;
 }
-.index-archives-box img{
+.index-archives-img img{
+	display: block;
+	width: 100%;
+}
+.index-archives-img{
 	width: 80px;
 	height: 50px;
 	border-radius: 5px;
 	float: left;
+	overflow: hidden;
 	margin-right: 20px;
 }
 .index-archives-box h3{
@@ -472,7 +498,7 @@ img{transition: 0.5s all;
 .tool{
 	width: 50px;
 	position: fixed;
-	z-index: 100000;
+	z-index: 800;
 	right: 10px;
 	bottom: 20px;
 }
@@ -499,4 +525,330 @@ img{transition: 0.5s all;
 	margin-bottom: 0px;
 	line-height: 20px;
 	font-size: 15px;
+}
+.comment-box{
+	width: 100%;
+	padding: 15px 0px;
+	border-bottom: #e9ecf3 1px solid;
+	overflow: hidden;
+}
+.comment-avatar{
+	width: 50px;
+}
+.comment-avatar img{
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+}
+.comment-main{
+	width: calc(100% - 50px);
+}
+.userlv{
+	padding: 3px 8px;
+	font-size: 12px;
+	border-radius: 5px;
+	color: #fff;
+	background-color: #ba21a8;
+}
+.comment-userinfo{
+	margin-bottom: 10px;
+}
+.comment-userinfo a{
+	color: #000;
+}
+.comment-userinfo .comment-date{
+	color: #999;
+}
+.comment-text{
+	color: #000;
+	font-family: PingFangSC-Regular;
+	font-size: 14px;
+	line-height: 24px;
+	margin-top: 6px;
+	margin-bottom: 10px;
+	word-wrap: break-word;
+}
+.new-comment{
+	margin-top: 15px;
+}
+.comment-links{
+	color: #666;
+	font-family: PingFangSC-Regular;
+	font-size: 12px;
+	line-height: 22px;
+	margin-top: 3px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.isLogin{
+	z-index: 11000;
+	position: fixed;
+	background-color: #fff;
+	top: 0;
+	left: 0;
+	width: 100%;
+	display: none;
+	height: 100vh;
+}
+.isLogin-bg{
+	z-index: 11001;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+	overflow: hidden;
+}
+.isLogin-bg img{
+	width: 100%;
+	-webkit-filter: blur(10px); /* Chrome, Opera */
+	-moz-filter: blur(10px);
+	-ms-filter: blur(10px);    
+	filter: blur(10px); 
+	transform: scale(1.2);
+}
+.isLogin-bg-sh{
+	z-index: 11002;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+	background-color: #000000;
+	opacity: 0.3;
+}
+.isLogin-main{
+	z-index: 11003;
+	position: fixed;
+	top: 15%;
+	left: 0;
+	width: 100%;
+}
+.isLogin-box{
+	width: 350px;
+	margin: 0 auto;
+	background-color: #fff;
+	padding: 30px 40px;
+	position: relative;
+	opacity: 0.95;
+}
+.isLogin-logo{
+	width: 100%;
+	margin: 10px 0px 15px 0px;
+}
+.isLogin-logo img{
+	display: block;
+	width: 200px;
+	margin: 0 auto;
+}
+.box-input{
+	width: 100%;
+	position: relative;
+	padding: 10px 0px;
+}
+.box-input input{
+	height: 38px;
+	line-height: 38px;
+	width: 100%;
+	padding: 5px 10px;
+}
+.box-btn{
+	width: 100%;
+	padding: 10px 0px;
+}
+.box-btn button{
+	width: 100%;
+	background-color: #3855d5;
+	font-weight: bold;
+	font-size: 16px;
+	color: #fff;
+}
+.form-links{
+	text-align: center;
+	margin-top: 15px;
+	font-size: 14px;
+}
+.form-links a{
+	margin: 0px 5px;
+}
+.box-input .send{
+	display: block;
+	position: absolute;
+	right: 0px;
+	top: 10px;
+	line-height: 38px;
+	text-align: center;
+	width: 60px;
+	height: 38px;
+}
+.user-nav{
+	box-shadow: 0 3px 8px rgb(215 220 233 / 50%);
+	width:150px;
+	background-color: #fff;
+	border-radius: 4px;
+	padding: 15px 0px;
+	position: absolute;
+	right: 0px;
+	top: 50px;
+	display: none;
+}
+.user:hover .user-nav{
+	display: block;
+}
+.user-nav a{
+	color: #000000;
+}
+.user-nav-box a{
+	display: block;
+	width: 100px;
+	padding: 0px 20px;
+	line-height: 40px;
+	height: 40px;
+	width: 100%;
+	font-size: 14px;
+}
+.user-nav-box a:hover{
+	background-color: #f6f8f9;
+}
+.user-nav-box i{
+	margin-right: 10px;
+}
+.tomenu{
+	width: 50px;
+	height: 60px;
+	line-height: 60px;
+	display: none;
+}
+.tomenu a{
+	color: #000000;
+	font-size: 18px;
+}
+.tomenu a i{
+	font-size: 25px;
+}
+.header-left-bg{
+	display: none;
+}
+@media all and (max-width: 1600px) {
+	.home-left,.home-right{
+		width: 100%;
+	}
+	.isLogin-bg img{
+		width: auto;
+		height: 100vh;
+	}
+}
+@media all and (max-width: 1230px) {
+	.header-left{
+		transition: 0.3s all;
+		-webkit-transition:0.3s all;
+		-moz-transition:0.3s all;
+		-o-transition:0.3s all;
+		-ms-transition:0.3s all;
+		left: -240px;
+	}
+	.main{
+		width: 100%;
+	}
+	.tomenu{
+		display: block;
+	}
+	.header-left.wapShow{
+		left: 0;
+	}
+	.header-left-bg.wapShow{
+		display: block;
+	}
+	.header-left-bg{
+		
+		z-index: 890;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100vh;
+		background-color: #000000;
+		opacity: 0.3;
+	}
+}
+@media all and (max-width: 980px) {
+	.header-top{
+		padding: 0px 15px;
+	}
+	.content{
+		padding: 0px 15px;
+	}
+}
+@media all and (max-width: 917px) {
+	.hot-archives>div{
+		width: 100%;
+	}
+	.index-archives-box>a>div{
+		width: 100%;
+	}
+	.index-archives-data{
+		display: none;
+	}
+	.index-archives-box h3{
+		padding-right: 0px;
+	}
+	.hot-archives-pic{
+		height: 250px;
+	}
+	.isLogin-main{
+		top: 8%;
+	}
+}
+@media all and (max-width: 660px) {
+	.total-data-box h5{
+		font-size: 20px;
+		padding:0px
+	}
+	.total-data-box{
+		padding: 15px 18px 15px 18px
+	}
+	.hot-archives-pic{
+		height: 200px;
+	}
+	.content{
+		padding: 0px 7.5px;
+	}
+	.padding{
+		padding: 7.5px;
+	}
+	.main{
+		padding-top: 70px;
+	}
+}
+@media all and (max-width: 460px) {
+	.top-links{
+		display: none;
+	}
+	.logo{
+		float: none;
+		margin: 0 auto;
+		text-align: center;
+	}
+	.tomenu{
+		position: fixed;
+		left: 15px;
+		top: 0px;
+	}
+	.user{
+		position: fixed;
+		right: 15px;
+		top: 0px;
+	}
+	.header-left{
+		width: 200px;
+	}
+}
+@media all and (max-width: 380px) {
+	.total-data-box p{
+		font-size: 13px;
+	}
+	.total-data-box{
+		padding: 10px 12px;
+	}
+	
 }
