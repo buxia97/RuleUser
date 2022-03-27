@@ -127,7 +127,9 @@ button{
 .margin-top{
 	margin-top: 20px;
 }
-
+.margin-top-sm{
+	margin-top: 10px;
+}
 .header-top{
 	height: 60px;
 	width: 100%;
@@ -234,7 +236,7 @@ button{
 	line-height: 25px;
 }
 .menu-box a{
-	color: #9d9d9d;
+	color: #333333;
 }
 .active{
 	color:#3855d5 !important;
@@ -579,6 +581,7 @@ button{
 	margin-top: 3px;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	overflow: hidden;
 }
 .isLogin{
 	z-index: 11000;
@@ -681,6 +684,9 @@ button{
 	width: 60px;
 	height: 38px;
 }
+.box-input .send.sended{
+	display: none;
+}
 .user-nav{
 	box-shadow: 0 3px 8px rgb(215 220 233 / 50%);
 	width:150px;
@@ -728,6 +734,97 @@ button{
 }
 .header-left-bg{
 	display: none;
+}
+.more{
+	text-align: center;
+	display: none;
+}
+.more a{
+	display: block;
+	width: 100%;
+	line-height: 35px;
+	height: 35px;
+}
+.dataShow{
+	text-align: center;
+	padding: 50px 0px;
+	width: 100%;
+	color: #666;
+}
+.dataShow i{
+	font-size: 35px;
+}
+.dataShow p{
+	margin-top: 10px;
+	font-size: 14px;
+}
+.layer-form{
+	padding:15px 20px;
+}
+.text{
+	width: 100%;
+	border-radius: 4px;
+	border: solid 1px #ddd;
+	resize:none;
+}
+.reply-text{
+	height: 100px;
+	font-size: 14px;
+	line-height: 20px;
+}
+.comments-owo{
+	position: relative;
+	width: 100%;
+}
+.owo{
+	width: 230px;
+	background-color: #fff;
+	border-radius: 5px;
+	overflow: hidden;
+	position: absolute;
+	bottom: 0px;
+	left: 30px;
+	box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
+}
+.toOwo{
+	
+	color: #333;
+}
+.toOwo i{
+	font-size: 22px;
+}
+.owo{
+	display: none;
+}
+.owo-list{
+	width: 100%;
+	padding: 5px;
+	height: 95px;
+	overflow: auto;
+}
+.owo-lit-box{
+	height: 30px;
+	padding: 3px;
+	width: 30px;
+	float: left;
+}
+.owo-lit-box img{
+	width: 100%;
+}
+.owo-type{
+	height: 30px;
+	line-height: 30px;
+	border-top: solid 1px #ddd;
+}
+.owo-type a{
+	padding: 0px 10px;
+	color: #666;
+	font-size: 12px;
+	display: block;
+	float: left;
+}
+.owo-type a.active{
+	background: #f3f3f3;
 }
 @media all and (max-width: 1600px) {
 	.home-left,.home-right{
@@ -797,6 +894,12 @@ button{
 	}
 	.isLogin-main{
 		top: 8%;
+	}
+	.comment-links .reply{
+		float: none;
+		text-align: right;
+		margin-top: 10px;
+		font-size: 14px;
 	}
 }
 @media all and (max-width: 660px) {

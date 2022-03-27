@@ -1,3 +1,4 @@
+main();
 header();
 footer();
 $(function(){
@@ -27,7 +28,19 @@ $(function(){
 	});
 	
 });
-
+function main(){
+	var html = `
+	<div class="header" id="header"></div>
+	<div class="main" id="main">
+		<div class="content">
+		</div>
+		<div class="footer" id="footer">
+		</div>
+	</div>
+	<div class="isLogin" id="isLogin"></div>
+	`;
+	$("#RuleWeb").html(html);
+}
 function header(){
 	var html = `
 	<div class="header-top">
@@ -35,7 +48,7 @@ function header(){
 			<a href="javascript:;" onclick="tomenu()"><i class="iconfont icon-menu2"></i></a>
 		</div>
 		<div class="logo">
-			<a href="/"><img src="${LOGO_URL}" /></a>
+			<a href="${WEB_URL}"><img src="${LOGO_URL}" /></a>
 		</div>
 		<div class="user" id="user">
 			
@@ -43,7 +56,7 @@ function header(){
 		<div class="top-links">
 			
 			<a href="${appUrl}" target="_blank" style="color: #e61f18;"><i class="iconfont icon-icondownload"></i>客户端</a>
-			<a href="/"><i class="iconfont icon-email"></i>消息</a>
+			<a href="javascript:;" onclick='loadPage("pages/inbox.html","我的消息")'><i class="iconfont icon-email"></i>消息</a>
 		</div>
 		
 	</div>
@@ -63,49 +76,49 @@ function header(){
 					<a href="javascript:;" class="active" onclick='loadPage("pages/home.html","用户首页")'><i class="iconfont icon-color"></i>用户首页</a>
 				</div>
 				<div class="menu-box">
-					<a href="#"><i class="iconfont icon-bussinessman"></i>个人中心<i class="iconfont icon-moreunfold"></i></a>
+					<a href="javascript:;"><i class="iconfont icon-bussinessman"></i>个人中心<i class="iconfont icon-moreunfold"></i></a>
 					<div class="menu-sub">
 						<div class="menu-sub-box">
-							<a href="#">信息设置</a>
+							<a href="javascript:;" onclick='loadPage("pages/userinfo.html","信息设置")'>信息设置</a>
 						</div>
 						<div class="menu-sub-box">
-							<a href="#">我的消息</a>
+							<a href="javascript:;" onclick='loadPage("pages/inbox.html","我的消息")'>我的消息</a>
 						</div>
 						<div class="menu-sub-box">
-							<a href="#">我的收藏</a>
+							<a href="javascript:;" onclick='loadPage("pages/usermark.html","我的收藏")'>我的收藏</a>
 						</div>
 					</div>
 				</div>
 				<div class="menu-box">
-					<a href="#"><i class="iconfont icon-form"></i>创作中心<i class="iconfont icon-moreunfold"></i></a>
+					<a href="javascript:;"><i class="iconfont icon-form"></i>创作中心<i class="iconfont icon-moreunfold"></i></a>
 					<div class="menu-sub">
 						<div class="menu-sub-box">
-							<a href="#">文章管理</a>
+							<a href="javascript:;" onclick='loadPage("pages/userpost.html","文章管理")'>文章管理</a>
 						</div>
 						<div class="menu-sub-box">
-							<a href="#">商品管理</a>
+							<a href="javascript:;" onclick='loadPage("pages/myshop.html","商品管理")'>商品管理</a>
 						</div>
 						<div class="menu-sub-box">
-							<a href="#">已出售订单</a>
+							<a href="javascript:;" onclick='loadPage("pages/sellorder.html","已出售订单")'>已出售订单</a>
 						</div>
 					</div>
 				</div>
 				<div class="menu-box">
-					<a href="#"><i class="iconfont icon-trade-assurance"></i>财务中心<i class="iconfont icon-moreunfold"></i></a>
+					<a href="javascript:;"><i class="iconfont icon-trade-assurance"></i>财务中心<i class="iconfont icon-moreunfold"></i></a>
 					<div class="menu-sub">
 						<div class="menu-sub-box">
-							<a href="#">在线充值</a>
+							<a href="javascript:;" onclick='loadPage("pages/pay.html","在线充值")'>在线充值</a>
 						</div>
 						<div class="menu-sub-box">
-							<a href="#">提现申请</a>
+							<a  href="javascript:;" onclick='loadPage("pages/userwithdrawlist.html","提现申请")'>提现申请</a>
 						</div>
 						<div class="menu-sub-box">
-							<a href="#">购买订单</a>
+							<a href="javascript:;" onclick='loadPage("pages/order.html","购买订单")'>购买订单</a>
 						</div>
 					</div>
 				</div>
 				<div class="menu-box">
-					<a href="${opinionUrl}"><i class="iconfont icon-lights"></i>意见反馈</a>
+					<a href="${opinionUrl}" target="_blank"><i class="iconfont icon-lights"></i>意见反馈</a>
 				</div>
 			</div>
 		</div>
@@ -145,6 +158,7 @@ function footer(){
 	`;
 	$("#footer").html(html);
 }
+//页面载入入口
 function loadPage(url,title){
 	loading();
 	var webTitle = title + " - "+webName;
@@ -165,6 +179,22 @@ function loadPage(url,title){
 		}
 	});
 }
+//页面载入方法
+function pageData(page){
+	if(page=="pages/home.html"){
+		getUserData();
+		getIndexPost();
+		getIndexNotice();
+		recommendList();
+		indexComment();
+	}
+	if(page=="pages/userinfo.html"){
+		
+	}
+	if(page=="pages/inbox.html"){
+		getInbox();
+	}
+}
 function loading(){
 	var html = `
 	<div class="loading">
@@ -184,7 +214,7 @@ function isLogin(){
 	<div class="isLogin-main">
 		<div class="isLogin-box">
 			<div class="isLogin-logo">
-				<a href="#"><img src="https://www.ruletree.club/logo.png" /></a>
+				<a href="${WEB_URL}"><img src="${LOGO_URL}" /></a>
 			</div>
 			<div class="isLogin-form" id="isLogin-form">
 				
@@ -215,20 +245,21 @@ function login(){
 function forgot(){
 	var html = `
 		<div class="box-input">
-			<input type="text" placeholder="请输入用户名(必填)" value=""/>
+			<input type="text" placeholder="请输入用户名(必填)" value="" id="username"/>
 		</div>
 		<div class="box-input">
-			<input type="text" placeholder="请输入验证码" value=""/>
-			<a href="javascript:;" class="send">发送</a>
+			<input type="text" placeholder="请输入验证码" value="" id="code"/>
+			<a href="javascript:;" class="send sendBefor" id="sendBefore" onclick="sendCodeFogot()">发送</a>
+			<span class="send sended" id="sended"></span>
 		</div>
 		<div class="box-input">
-			<input type="password" placeholder="请输入新密码" value=""/>
+			<input type="password" placeholder="请输入新密码" value="" id="newspass"/>
 		</div>
 		<div class="box-input">
-			<input type="password" placeholder="再次输入新密码" value=""/>
+			<input type="password" placeholder="再次输入新密码" value="" id="repass"/>
 		</div>
 		<div class="box-btn">
-			<button type="button">确认修改</button>
+			<button type="button" onclick="toForgot()">确认修改</button>
 		</div>
 		<div class="form-links">
 			<a href="javascript:;" onclick="login()">用户登录</a>
@@ -239,23 +270,24 @@ function forgot(){
 function register(){
 	var html = `
 		<div class="box-input">
-			<input type="text" placeholder="请输入用户名(必填)" value=""/>
+			<input type="text" placeholder="请输入用户名(必填)" value="" id="username"/>
 		</div>
 		<div class="box-input">
-			<input type="text" placeholder="请输入邮箱(必填)" value=""/>
+			<input type="text" placeholder="请输入邮箱(必填)" value="" id="email"/>
 		</div>
 		<div class="box-input">
-			<input type="text" placeholder="请输入验证码" value=""/>
-			<a href="javascript:;" class="send">发送</a>
+			<input type="text" placeholder="请输入验证码" value="" id="code"/>
+			<a href="javascript:;" class="send sendBefor" id="sendBefore" onclick="sendCode()">发送</a>
+			<span class="send sended" id="sended"></span>
 		</div>
 		<div class="box-input">
-			<input type="password" placeholder="请输入新密码" value=""/>
+			<input type="password" placeholder="请输入密码" value="" id="userpass"/>
 		</div>
 		<div class="box-input">
-			<input type="password" placeholder="再次输入新密码" value=""/>
+			<input type="password" placeholder="再次输入密码" value="" id="repass"/>
 		</div>
 		<div class="box-btn">
-			<button type="button">立即注册</button>
+			<button type="button" onclick="toRegister()">立即注册</button>
 		</div>
 		<div class="form-links">
 			<a href="javascript:;" onclick="login()">用户登录</a>
@@ -349,6 +381,8 @@ function toLogin(){
 					location.reload();
 					clearTimeout('timer')
 				}, 1000)
+			}else{
+				layer.msg(result.msg, {icon: 2});
 			}
 		},
 		error : function(e){
@@ -356,6 +390,184 @@ function toLogin(){
 			layer.alert("请求失败，请检查网络", {icon: 2});
 		}
 	});
+}
+function toRegister(){
+	var username = $("#username").val();
+	var userpass = $("#userpass").val();
+	var code = $("#code").val();
+	var email = $("#email").val();
+	var repass = $("#repass").val();
+	
+	if(username==""||userpass==""||email==""||code==""){
+		layer.msg("请输入正确的参数", {icon: 2});
+		return false;
+	}
+	if(userpass!=repass){
+		layer.msg("两次密码不一致", {icon: 2});
+		return false;
+	}
+	var data = {
+		'name':username,
+		'code':code,
+		'password':userpass,
+		'mail':email
+	}
+	var index = layer.load(1, {
+	  shade: [0.4,'#000']
+	});
+	
+	$.ajax({
+		type : "post",
+		url: API.userRegister(),
+		data:{"params":JSON.stringify(API.removeObjectEmptyKey(data))},
+		dataType: 'json',
+		success : function(result) {
+			layer.close(index); 
+			if(result.code==1){
+				layer.msg("注册成功！", {icon: 1});
+				login();
+			}else{
+				layer.msg(result.msg, {icon: 2});
+			}
+		},
+		error : function(e){
+			layer.close(index); 
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function toForgot(){
+	var username = $("#username").val();
+	var newspass = $("#newspass").val();
+	var code = $("#code").val();
+	var repass = $("#repass").val();
+	
+	if(username==""||newspass==""||code==""){
+		layer.msg("请输入正确的参数", {icon: 2});
+		return false;
+	}
+	if(newspass!=repass){
+		layer.msg("两次密码不一致", {icon: 2});
+		return false;
+	}
+	var data = {
+		'name':username,
+		'code':code,
+		'password':newspass,
+	}
+	var index = layer.load(1, {
+	  shade: [0.4,'#000']
+	});
+	
+	$.ajax({
+		type : "post",
+		url: API.userFoget(),
+		data:{"params":JSON.stringify(API.removeObjectEmptyKey(data))},
+		dataType: 'json',
+		success : function(result) {
+			layer.close(index); 
+			if(result.code==1){
+				layer.msg("操作成功！", {icon: 1});
+				login();
+			}else{
+				layer.msg(result.msg, {icon: 2});
+			}
+		},
+		error : function(e){
+			layer.close(index); 
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function sendCode(){
+	var email = $("#email").val();
+	if(email==""){
+		layer.msg("请输入邮箱地址", {icon: 2});
+		return false;
+	}
+	var data = {
+		'mail':email
+	}
+	var index = layer.load(1, {
+	  shade: [0.4,'#000']
+	});
+	
+	$.ajax({
+		type : "post",
+		url: API.RegSendCode(),
+		data:{"params":JSON.stringify(API.removeObjectEmptyKey(data))},
+		
+		dataType: 'json',
+		success : function(result) {
+			layer.close(index); 
+			if(result.code==1){
+				$("#sendBefore").hide();
+				$("#sended").show();
+				countDownBtn();
+				layer.msg("发送成功！", {icon: 1});
+			}else{
+				layer.msg(result.msg, {icon: 2});
+			}
+		},
+		error : function(e){
+			layer.close(index); 
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function sendCodeFogot(){
+	
+	var username = $("#username").val();
+	if(username==""){
+		layer.msg("请输入用户名", {icon: 2});
+		return false;
+	}
+	var data = {
+		'name':username
+	}
+	var index = layer.load(1, {
+	  shade: [0.4,'#000']
+	});
+	
+	$.ajax({
+		type : "post",
+		url: API.SendCode(),
+		data:{"params":JSON.stringify(API.removeObjectEmptyKey(data))},
+		dataType: 'json',
+		success : function(result) {
+			layer.close(index); 
+			if(result.code==1){
+				$("#sendBefore").hide();
+				$("#sended").show();
+				countDownBtn();
+				layer.msg("发送成功！", {icon: 1});
+			}else{
+				layer.msg(result.msg, {icon: 2});
+			}
+		},
+		error : function(e){
+			layer.close(index); 
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function countDownBtn() {
+	var second = 60;
+	if (second > 0) {
+		second--;
+		$("#sended").text(second + 's');
+	}
+	var msgInterval = setInterval(function() {
+		if (second > 0) {
+			second--;
+			$("#sended").text(second + 's');
+		}
+		if (second == 0) {
+			clearInterval(msgInterval);
+			$("#sendBefore").show();
+			$("#sended").hide();
+		}
+	}, 1000);
 }
 function quit(){
 	
@@ -376,18 +588,18 @@ function userInfo(){
 		var lv = Number(userInfo.lv);
 		var lvText = rankList[lv];
 		var lvStyle = rankStyle[lv];
-		if(userInfo.screenName||userInfo.screenName!=""){
+		if(userInfo.screenName){
 			name = userInfo.screenName;
 		}
 		var customize = "";
-		if(userInfo.customize||userInfo.customize!=""){
+		if(userInfo.customize){
 			customize = `<span>${userInfo.customize}</span>`;
 		}
 		var userhtml =`
 			<a href="javascript:;"><img src="${userInfo.avatar}" /></a>
 			<div class="user-nav">
 				<div class="user-nav-box">
-					<a href="javascript:;"><i class="iconfont icon-set"></i>个人设置</a>
+					<a href="javascript:;" onclick='loadPage("pages/userinfo.html","信息设置")'><i class="iconfont icon-set"></i>个人设置</a>
 				</div>
 				<div class="user-nav-box">
 					<a href="javascript:;" onclick="quit()"><i class="iconfont icon-share"></i>退出登录</a>
@@ -428,16 +640,31 @@ function formatDate(datetime) {
 	// 返回
 	return result;
 }
+function toLinks(cid){
+	var url = linkRule.replace("{cid}",cid);
+	return url;
+}
+function dataShow(type){
+	var html = `
+	<div class="dataShow">
+		<i class="iconfont icon-process"></i>
+		<p>正在载入数据...</p>
+	</div>`;
+	if(type==1){
+		html = `
+		<div class="dataShow">
+			<i class="iconfont icon-form"></i>
+			<p>暂无数据</p>
+		</div>`;
+	}
+	return html;
+}
+
 
 //以上公共方法结束
 //下面是请求方法
-function pageData(page){
-	if(page=="pages/home.html"){
-		getUserData();
-		getIndexPost();
-		getIndexNotice();
-	}
-}
+
+
 
 function getUserData(){
 	var token;
@@ -486,6 +713,7 @@ function getUserData(){
 	});
 }
 function getIndexPost(){
+	$("#index-archives").html(dataShow(0));
 	var token;
 	if(localStorage.getItem("token")){
 		token = localStorage.getItem("token");
@@ -519,50 +747,58 @@ function getIndexPost(){
 			if(result.code==1){
 				var list = result.data;
 				var html = ``;
-				for(var i in list){
-					var img = ``;
-					if(list[i].images.length>0){
-						img = `<img src="${list[i].images[0]}" />`;
+				if(list.length>0){
+					for(var i in list){
+						var img = ``;
+						if(list[i].images.length>0){
+							img = `<img src="${list[i].images[0]}" />`;
+						}
+						html+=`
+						<div class="index-archives-box overflow-hidden">
+							<a href="${toLinks(list[i].cid)}" target="_blank">
+								<div class="col-5 left">
+									<div class="index-archives-img">
+									${img}
+									</div>
+									<div class="index-archives-info">
+										<h3>${list[i].title}</h3>
+										<p>${formatDate(list[i].created)}</p>
+									</div>
+								</div>
+								<div class="col-5 left index-archives-data">
+									<div class="col-25 right">
+										<h5>${formatNumber(list[i].views)}</h5>
+										<p>浏览量</p>
+									</div>
+									<div class="col-25 right">
+										<h5>${list[i].allowComment}</h5>
+										<p>评论量</p>
+									</div>
+									<div class="col-25 right">
+										<h5>${list[i].likes}</h5>
+										<p>点赞量</p>
+									</div>
+								</div>
+							</a>
+						</div>
+						`;
 					}
-					html+=`
-					<div class="index-archives-box overflow-hidden">
-						<a href="#">
-							<div class="col-5 left">
-								<div class="index-archives-img">
-								${img}
-								</div>
-								<div class="index-archives-info">
-									<h3>${list[i].title}</h3>
-									<p>${formatDate(list[i].created)}</p>
-								</div>
-							</div>
-							<div class="col-5 left index-archives-data">
-								<div class="col-25 right">
-									<h5>${formatNumber(list[i].views)}</h5>
-									<p>浏览量</p>
-								</div>
-								<div class="col-25 right">
-									<h5>${list[i].allowComment}</h5>
-									<p>评论量</p>
-								</div>
-								<div class="col-25 right">
-									<h5>${list[i].likes}</h5>
-									<p>点赞量</p>
-								</div>
-							</div>
-						</a>
-					</div>
-					`;
+					$("#index-archives").html(html);
+				}else{
+					$("#index-archives").html(dataShow(1));
 				}
-				$("#index-archives").html(html);
+				
+			}else{
+				$("#index-archives").html(dataShow(1));
 			}
 		},
 		error : function(e){
-			
+			$("#index-archives").html(dataShow(1));
 		}
 	});
 }
 function getIndexNotice(){
+	$("#notice").html(dataShow(0));
 	var token;
 	if(localStorage.getItem("token")){
 		token = localStorage.getItem("token");
@@ -572,7 +808,7 @@ function getIndexNotice(){
 	var data = {
 		"type":"post",
 		"status":"publish",
-		"mid":97
+		"mid":noticeID
 	}
 	$.ajax({
 		type : "post",
@@ -589,18 +825,300 @@ function getIndexNotice(){
 			if(result.code==1){
 				var list = result.data;
 				var html = ``;
-				for(var i in list){
-					html+=`
-					<div class="notice-box">
-						<a href="#"><span>${formatDate(list[i].created)}</span> ${list[i].title}</a>
-					</div>
-					`;
+				if(list.length>0){
+					for(var i in list){
+						
+						html+=`
+						<div class="notice-box">
+							<a href="${toLinks(list[i].cid)}"  target="_blank"><span>${formatDate(list[i].created)}</span> ${list[i].title}</a>
+						</div>
+						`;
+					}
+					$("#notice").html(html);
+				}else{
+					$("#notice").html(dataShow(1));
 				}
-				$("#notice").html(html);
+			}else{
+				$("#notice").html(dataShow(1));
 			}
 		},
 		error : function(e){
-			
+			$("#notice").html(dataShow(1));
 		}
 	});
+}
+function recommendList(){
+	$("#hot-archives").html(dataShow(0));
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var data = {
+		"type":"post",
+		"mid":recommendID
+	}
+	$.ajax({
+		type : "post",
+		url: API.getMetaContents(),
+		data:{
+			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
+			"limit":3,
+			"page":1,
+			"order":"created",
+			"token":token,
+		},
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				var list = result.data;
+				var html = ``;
+				if(list.length>0){
+					for(var i in list){
+						var img = ``;
+						if(list[i].images.length>0){
+							img = `<img src="${list[i].images[0]}" />`;
+						}
+						html+=`
+						<div class="padding col-33 left">
+							<a href="${toLinks(list[i].cid)}" target="_blank">
+								<div class="hot-archives-box">
+									<div class="hot-archives-pic">
+										${img}
+									</div>
+									<div class="hot-archives-info">
+										<h3>${list[i].title}</h3>
+										<p><i class="iconfont icon-office"></i>${formatNumber(list[i].views)}</p>
+									</div>
+								</div>
+							</a>
+							
+						</div>
+						`;
+					}
+					$("#hot-archives").html(html);
+				}else{
+					$("#hot-archives").html(dataShow(1));
+				}
+				
+			}else{
+				$("#hot-archives").html(dataShow(1));
+			}
+		},
+		error : function(e){
+			$("#hot-archives").html(dataShow(1));
+		}
+	});
+}
+function indexComment(){
+	$("#new-comment").html(dataShow(0));
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var data = {
+		"type":"comment",
+		"status":"approved"
+	}
+	$.ajax({
+		type : "post",
+		url: API.getCommentsList(),
+		data:{
+			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
+			"limit":4,
+			"page":1,
+			"token":token
+		},
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				var list = result.data;
+				var html = ``;
+				if(list.length>0){
+					for(var i in list){
+						var lv = Number(list[i].lv);
+						var lvText = rankList[lv];
+						var lvStyle = rankStyle[lv];
+						var customize = "";
+						if(list[i].customize){
+							customize = `<span class="userlv">${list[i].customize}</span>`;
+						}
+						html+=`
+						<div class="comment-box">
+							<div class="comment-avatar left">
+								<img src="${list[i].avatar}" />
+							</div>
+							<div class="comment-main left">
+								<div class="comment-userinfo">
+									<p>
+										<a href="javascript:;">${list[i].author}</a>
+										<span class="userlv" style="background:${lvStyle}">${lvText}</span>
+										${customize}
+										<span class="comment-date right">${formatDate(list[i].created)}</span>
+									</p>
+								</div>
+								<div class="comment-text">
+									
+									${list[i].text}
+									
+								</div>
+								<div class="comment-links">
+									发表在：<a href="${toLinks(list[i].cid)}" target="_blank">${list[i].contenTitle}</a>
+								</div>
+							</div>
+						</div>
+						`;
+					}
+					$("#new-comment").html(html);
+				}else{
+					$("#new-comment").html(dataShow(1));
+				}
+				
+			}else{
+				$("#new-comment").html(dataShow(1));
+			}
+		},
+		error : function(e){
+			$("#new-comment").html(dataShow(1));
+		}
+	});
+}
+function toOpinionUrl(){
+	window.open(opinionUrl, "_blank");
+}
+function getInbox(){
+	$("#inbox").html(dataShow(0));
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var data = {
+		"type":"comment",
+		"status":"approved"
+	}
+	$.ajax({
+		type : "post",
+		url: API.getCommentsList(),
+		data:{
+			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
+			"limit":10,
+			"page":1,
+			"token":token
+		},
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				var list = result.data;
+				var html = ``;
+				if(list.length>0){
+					$(".more").show();
+					for(var i in list){
+						var lv = Number(list[i].lv);
+						var lvText = rankList[lv];
+						var lvStyle = rankStyle[lv];
+						var customize = "";
+						if(list[i].customize){
+							customize = `<span class="userlv">${list[i].customize}</span>`;
+						}
+						html+=`
+						<div class="comment-box">
+							<div class="comment-avatar left">
+								<img src="${list[i].avatar}" />
+							</div>
+							<div class="comment-main left">
+								<div class="comment-userinfo">
+									<p>
+										<a href="javascript:;">${list[i].author}</a>
+										<span class="userlv" style="background:${lvStyle}">${lvText}</span>
+										${customize}
+										<span class="comment-date right">${formatDate(list[i].created)}</span>
+									</p>
+								</div>
+								<div class="comment-text">
+									
+									${list[i].text}
+									
+								</div>
+								<div class="comment-links">
+									发表在：<a href="${toLinks(list[i].cid)}" target="_blank">${list[i].contenTitle}</a>
+									<div class="reply right"><a href="javascript:;" onclick="reply('${list[i].author}','${list[i].coid}','${list[i].cid}')">回复</a></div>
+								</div>
+							</div>
+						</div>
+						`;
+					}
+					$("#inbox").html(html);
+				}else{
+					$("#inbox").html(dataShow(1));
+				}
+				
+			}
+		},
+		error : function(e){
+			$("#inbox").html(dataShow(1));
+		}
+	});
+}
+function reply(author,coid,cid){
+	layer.open({
+		title:"回复 [ "+author+" ] 的评论：",
+		type: 1,
+		area: ['320px', '300px'], 
+		content: `
+		<div class="layer-form">
+			<div class="box-input">
+				<textarea class="text reply-text" id="text" placeholder="请输入评论的内容"></textarea>
+			</div>
+			<div class="comments-owo">
+				<a href="javascript:;" class="toOwo" onclick="toOwo()"><i class="iconfont icon-smile"></i></a>
+				<div class="owo">
+					
+				</div>
+			</div>
+		</div>
+			
+		`
+	});
+	OWO();
+}
+function toOwo(){
+	$(".owo").toggle();
+}
+function OWO(){
+	$(".owo").html(`
+		<div class="owo-list">
+			
+		</div>
+		<div class="owo-type">
+			<a href="javascript:;" onclick="getOWO('paopao')" class="owo-box paopao active">泡泡</a>
+			<a href="javascript:;" onclick="getOWO('adai')" class="owo-box adai">阿呆</a>
+			<a href="javascript:;" onclick="getOWO('alu')" class="owo-box alu">阿鲁</a>
+			<a href="javascript:;" onclick="getOWO('quyinniang')" class="owo-box quyinniang">蛆音娘</a>
+		</div>
+	`);
+	getOWOList("paopao");
+}
+function getOWOList(type){
+	$(".owo-box").removeClass("active");
+	$("."+type).addClass("active");
+	var owoList = OWOData[type].container;
+	var html = ``;
+	for(var i in owoList){
+		html+=`
+			<div class="owo-lit-box">
+				<a href="javascript:;" onclick="setOWO('${owoList[i].data}')"><img src="${owoList[i].icon}"/></a>
+			</div>
+		`;
+	}
+	$(".owo-list").html(html);
+}
+function setOWO(owo){
+	var text = $("#text").val();
+	$("#text").val(text+owo);
+	$(".owo").hide();
 }

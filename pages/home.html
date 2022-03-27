@@ -33,40 +33,8 @@
 			<div class="data-box-title">
 				<h4>网站推荐文章</h4>
 			</div>
-			<div class="hot-archives col-10">
-				<div class="padding col-33 left">
-					<div class="hot-archives-box">
-						<div class="hot-archives-pic">
-							<img src="1641999645.jpg" />
-						</div>
-						<div class="hot-archives-info">
-							<h3>这是测试的文章标题，可能很长，需要测试长度超出导致的后果</h3>
-							<p><i class="iconfont icon-office"></i>4565</p>
-						</div>
-					</div>
-				</div>
-				<div class="padding col-33 left">
-					<div class="hot-archives-box">
-						<div class="hot-archives-pic">
-							<img src="1641999645.jpg" />
-						</div>
-						<div class="hot-archives-info">
-							<h3>这是测试的文章标题，可能很长，需要测试长度超出导致的后果</h3>
-							<p><i class="iconfont icon-office"></i>4565</p>
-						</div>
-					</div>
-				</div>
-				<div class="padding col-33 left">
-					<div class="hot-archives-box">
-						<div class="hot-archives-pic">
-							<img src="1641999645.jpg" />
-						</div>
-						<div class="hot-archives-info">
-							<h3>这是测试的文章标题，可能很长，需要测试长度超出导致的后果</h3>
-							<p><i class="iconfont icon-office"></i>4565</p>
-						</div>
-					</div>
-				</div>
+			<div class="hot-archives col-10" id="hot-archives">
+
 				
 			</div>
 		</div>
@@ -82,18 +50,7 @@
 			</div>
 			<div class="notice col-10" id="notice">
 				
-				<div class="notice-box">
-					<a href="#"><span>03-25</span> 这是测试的公告内容这是测试的公告内容</a>
-				</div>
-				<div class="notice-box">
-					<a href="#"><span>03-25</span> 公告内容公告内容公告内容</a>
-				</div>
-				<div class="notice-box">
-					<a href="#"><span>03-25</span> 这是测试的公告内容公告内容公告内容</a>
-				</div>
-				<div class="notice-box">
-					<a href="#"><span>03-25</span> 这是测试的公告内容公告内容公告内容公告内容</a>
-				</div>
+				
 			</div>
 		</div>
 		<div class="data-box web-links margin-top"">
@@ -108,16 +65,16 @@
 					<a href="#">发布商品</a>
 				</div>
 				<div class="col-33 left web-links-box">
-					<a href="#">意见反馈</a>
+					<a href="javascript:;" onclick="toOpinionUrl()">意见反馈</a>
 				</div>
 				<div class="col-33 left web-links-box">
-					<a href="#">在线充值</a>
+					<a href="javascript:;" onclick='loadPage("pages/pay.html","在线充值")'>在线充值</a>
 				</div>
 				<div class="col-33 left web-links-box">
-					<a href="#">申请提现</a>
+					<a href="javascript:;" onclick='loadPage("pages/userwithdrawlist.html","提现申请")'>申请提现</a>
 				</div>
 				<div class="col-33 left web-links-box">
-					<a href="#">个人设置</a>
+					<a  href="javascript:;" onclick='loadPage("pages/userinfo.html","信息设置")'>个人设置</a>
 				</div>
 			</div>
 		</div>
@@ -129,99 +86,9 @@
 				</a>
 				</h4>
 			</div>
-			<div class="new-comment col-10">
-				<div class="comment-box">
-					<div class="comment-avatar left">
-						<img src="https://gravatar.helingqi.com/wavatar/83d6d5237f4c908679fefff60a590269?d=mm" />
-					</div>
-					<div class="comment-main left">
-						<div class="comment-userinfo">
-							<p>
-								<a href="#">不暇</a>
-								<span class="userlv" style="background:#FF9900">熟手</span>
-								<span class="userlv">站长</span>
-								<span class="comment-date right">2022-03-26</span>
-							</p>
-						</div>
-						<div class="comment-text">
-							<p>
-								这是测试的评论，数量不会太多，也不会太少
-							</p>
-						</div>
-						<div class="comment-links">
-							发表在：<a href="#">关于会员中心模板的制作方案</a>
-						</div>
-					</div>
-				</div>
-				<div class="comment-box">
-					<div class="comment-avatar left">
-						<img src="https://gravatar.helingqi.com/wavatar/83d6d5237f4c908679fefff60a590269?d=mm" />
-					</div>
-					<div class="comment-main left">
-						<div class="comment-userinfo">
-							<p>
-								<a href="#">不暇</a>
-								<span class="userlv" style="background:#FF9900">熟手</span>
-								<span class="userlv">站长</span>
-								<span class="comment-date right">2022-03-26</span>
-							</p>
-						</div>
-						<div class="comment-text">
-							<p>
-								这是测试的评论，数量不会太多，也不会太少
-							</p>
-						</div>
-						<div class="comment-links">
-							发表在：<a href="#">关于会员中心模板的制作方案</a>
-						</div>
-					</div>
-				</div>
-				<div class="comment-box">
-					<div class="comment-avatar left">
-						<img src="https://gravatar.helingqi.com/wavatar/83d6d5237f4c908679fefff60a590269?d=mm" />
-					</div>
-					<div class="comment-main left">
-						<div class="comment-userinfo">
-							<p>
-								<a href="#">不暇</a>
-								<span class="userlv" style="background:#FF9900">熟手</span>
-								<span class="userlv">站长</span>
-								<span class="comment-date right">2022-03-26</span>
-							</p>
-						</div>
-						<div class="comment-text">
-							<p>
-								这是测试的评论，数量不会太多，也不会太少
-							</p>
-						</div>
-						<div class="comment-links">
-							发表在：<a href="#">关于会员中心模板的制作方案</a>
-						</div>
-					</div>
-				</div>
-				<div class="comment-box">
-					<div class="comment-avatar left">
-						<img src="https://gravatar.helingqi.com/wavatar/83d6d5237f4c908679fefff60a590269?d=mm" />
-					</div>
-					<div class="comment-main left">
-						<div class="comment-userinfo">
-							<p>
-								<a href="#">不暇</a>
-								<span class="userlv" style="background:#FF9900">熟手</span>
-								<span class="userlv">站长</span>
-								<span class="comment-date right">2022-03-26</span>
-							</p>
-						</div>
-						<div class="comment-text">
-							<p>
-								这是测试的评论，数量不会太多，也不会太少
-							</p>
-						</div>
-						<div class="comment-links">
-							发表在：<a href="#">关于会员中心模板的制作方案</a>
-						</div>
-					</div>
-				</div>
+			<div class="new-comment col-10" id="new-comment">
+				
+				
 			</div>
 		</div>
 		<!-- <div class="data-ads margin-top" style="display: none;">

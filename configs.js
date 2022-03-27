@@ -6,10 +6,11 @@ var webName = "规则之树";  //网站名称
 var webEmail = "buxia97@126.com";  //站长邮箱
 
 var opinionUrl = "https://www.ruletree.club/help.html";  //意见反馈地址
-var appUrl = ""; //APP下载地址
+var appUrl = "https://www.pgyer.com/J9bd"; //APP下载地址
 
+//底部链接
 var footerLink = `
-	<a href="#">网站首页</a>
+	<a href="https://www.ruletree.club">网站首页</a>
 	<a href="#">投稿说明</a>
 	<a href="#">关于我们</a>
 	<a href="#">问题反馈</a>
@@ -29,7 +30,9 @@ var linkRule =WEB_URL+"archives/{cid}/" //普通文章
 var pageRule =WEB_URL+"{slug}.html" //独立页面
 
 //公告mid，可以是分类也可以是标签
-var  noticeID = 12;
+var noticeID = 97;
+var recommendID = 394;
+
 
 //接口和公共方法定义
 var API = {
