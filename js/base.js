@@ -194,6 +194,17 @@ function pageData(page){
 	if(page=="pages/inbox.html"){
 		getInbox();
 	}
+	if(page=="pages/usermark.html"){
+		getMark();
+	}
+	if(page=="pages/userinfo.html"){
+		getUserInfo();
+	}
+	if(page=="pages/post.html"){
+		postStyle();
+	}
+	
+	
 }
 function loading(){
 	var html = `
@@ -659,7 +670,42 @@ function dataShow(type){
 	}
 	return html;
 }
-
+function toOwo(){
+	$(".owo").toggle();
+}
+function OWO(){
+	$(".owo").html(`
+		<div class="owo-list">
+			
+		</div>
+		<div class="owo-type">
+			<a href="javascript:;" onclick="getOWO('paopao')" class="owo-box paopao active">泡泡</a>
+			<a href="javascript:;" onclick="getOWO('adai')" class="owo-box adai">阿呆</a>
+			<a href="javascript:;" onclick="getOWO('alu')" class="owo-box alu">阿鲁</a>
+			<a href="javascript:;" onclick="getOWO('quyinniang')" class="owo-box quyinniang">蛆音娘</a>
+		</div>
+	`);
+	getOWOList("paopao");
+}
+function getOWOList(type){
+	$(".owo-box").removeClass("active");
+	$("."+type).addClass("active");
+	var owoList = OWOData[type].container;
+	var html = ``;
+	for(var i in owoList){
+		html+=`
+			<div class="owo-lit-box">
+				<a href="javascript:;" onclick="setOWO('${owoList[i].data}')"><img src="${owoList[i].icon}"/></a>
+			</div>
+		`;
+	}
+	$(".owo-list").html(html);
+}
+function setOWO(owo){
+	var text = $("#text").val();
+	$("#text").val(text+owo);
+	$(".owo").hide();
+}
 
 //以上公共方法结束
 //下面是请求方法
@@ -749,7 +795,7 @@ function getIndexPost(){
 				var html = ``;
 				if(list.length>0){
 					for(var i in list){
-						var img = ``;
+						var img = `<img src="img/nopic.png" />`;
 						if(list[i].images.length>0){
 							img = `<img src="${list[i].images[0]}" />`;
 						}
@@ -876,7 +922,7 @@ function recommendList(){
 				var html = ``;
 				if(list.length>0){
 					for(var i in list){
-						var img = ``;
+						var img = `<img src="img/nopic.png" />`;
 						if(list[i].images.length>0){
 							img = `<img src="${list[i].images[0]}" />`;
 						}
@@ -989,13 +1035,20 @@ function indexComment(){
 function toOpinionUrl(){
 	window.open(opinionUrl, "_blank");
 }
-function getInbox(){
-	$("#inbox").html(dataShow(0));
+function getInbox(isPage){
+	
 	var token;
 	if(localStorage.getItem("token")){
 		token = localStorage.getItem("token");
 	}else{
 		return false;
+	}
+	var page = $("#page").val();
+	if(isPage){
+		page++;
+		$(".more a").text("正在加载中...")
+	}else{
+		$("#inbox").html(dataShow(0));
 	}
 	var data = {
 		"type":"comment",
@@ -1007,7 +1060,7 @@ function getInbox(){
 		data:{
 			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"limit":10,
-			"page":1,
+			"page":page,
 			"token":token
 		},
 		dataType: 'json',
@@ -1016,7 +1069,9 @@ function getInbox(){
 				var list = result.data;
 				var html = ``;
 				if(list.length>0){
+					
 					$(".more").show();
+					$(".more a").text("加载更多");
 					for(var i in list){
 						var lv = Number(list[i].lv);
 						var lvText = rankList[lv];
@@ -1052,15 +1107,29 @@ function getInbox(){
 						</div>
 						`;
 					}
-					$("#inbox").html(html);
+					if(isPage){
+						$("#page").val(page);
+						$("#inbox").append(html);
+					}else{
+						$("#inbox").html(html);
+					}
+					
 				}else{
-					$("#inbox").html(dataShow(1));
+					if(isPage){
+						$(".more a").hide();
+					}else{
+						$("#inbox").html(dataShow(1));
+					}
 				}
 				
 			}
 		},
 		error : function(e){
-			$("#inbox").html(dataShow(1));
+			if(isPage){
+				$(".more a").hide();
+			}else{
+				$("#inbox").html(dataShow(1));
+			}
 		}
 	});
 }
@@ -1072,6 +1141,8 @@ function reply(author,coid,cid){
 		content: `
 		<div class="layer-form">
 			<div class="box-input">
+				<input type="hidden" id="coid" value="${coid}"/>
+				<input type="hidden" id="cid" value="${cid}"/>
 				<textarea class="text reply-text" id="text" placeholder="请输入评论的内容"></textarea>
 			</div>
 			<div class="comments-owo">
@@ -1080,45 +1151,317 @@ function reply(author,coid,cid){
 					
 				</div>
 			</div>
+			<div class="box-btn">
+				<button type="button" class="radius" onclick="toReply()">回复</button>
+			</div>
 		</div>
 			
 		`
 	});
 	OWO();
 }
-function toOwo(){
-	$(".owo").toggle();
-}
-function OWO(){
-	$(".owo").html(`
-		<div class="owo-list">
-			
-		</div>
-		<div class="owo-type">
-			<a href="javascript:;" onclick="getOWO('paopao')" class="owo-box paopao active">泡泡</a>
-			<a href="javascript:;" onclick="getOWO('adai')" class="owo-box adai">阿呆</a>
-			<a href="javascript:;" onclick="getOWO('alu')" class="owo-box alu">阿鲁</a>
-			<a href="javascript:;" onclick="getOWO('quyinniang')" class="owo-box quyinniang">蛆音娘</a>
-		</div>
-	`);
-	getOWOList("paopao");
-}
-function getOWOList(type){
-	$(".owo-box").removeClass("active");
-	$("."+type).addClass("active");
-	var owoList = OWOData[type].container;
-	var html = ``;
-	for(var i in owoList){
-		html+=`
-			<div class="owo-lit-box">
-				<a href="javascript:;" onclick="setOWO('${owoList[i].data}')"><img src="${owoList[i].icon}"/></a>
-			</div>
-		`;
+function toReply(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
 	}
-	$(".owo-list").html(html);
+	var coid = $("#coid").val();
+	var cid = $("#cid").val();
+	var text =  $("#text").val();
+	if(coid==""||cid==""||text==""){
+		layer.msg("请输入正确的参数", {icon: 2});
+		return false;
+	}
+	var data = {
+		"cid":cid,
+		"parent":coid,
+		"text":text,
+	}
+	var index = layer.load(1, {
+	  shade: [0.4,'#000']
+	});
+	
+	$.ajax({
+		type : "post",
+		url: API.setComments(),
+		data:{
+			"params":JSON.stringify(API.removeObjectEmptyKey(data)),
+			"token":token
+		},
+		dataType: 'json',
+		success : function(result) {
+			layer.close(index); 
+			if(result.code==1){
+				layer.msg("操作成功！", {icon: 1});
+				var timer = setTimeout(function() {
+					layer.closeAll();
+				}, 1000)
+				
+			}else{
+				layer.msg(result.msg, {icon: 2});
+			}
+		},
+		error : function(e){
+			layer.close(index); 
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
 }
-function setOWO(owo){
-	var text = $("#text").val();
-	$("#text").val(text+owo);
-	$(".owo").hide();
+function getMark(isPage){
+	
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var page = $("#page").val();
+	if(isPage){
+		page++;
+		$(".more a").text("正在加载中...")
+	}else{
+		$("#mark").html(dataShow(0));
+	}
+	var data = {
+		"type":"comment",
+		"status":"approved"
+	}
+	$.ajax({
+		type : "post",
+		url: API.getMarkList(),
+		data:{
+			"limit":8,
+			"page":page,
+			"token":token,
+		},
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				var list = result.data;
+				var html = ``;
+				if(list.length>0){
+					
+					$(".more").show();
+					$(".more a").text("加载更多");
+					for(var i in list){
+						var img = `<img src="img/nopic.png" />`;
+						if(list[i].images.length>0){
+							img = `<img src="${list[i].images[0]}" />`;
+						}
+						html+=`
+						<div class="mark-box col-5 left">
+							
+							<div class="mark-main overflow-hidden radius">
+								<div class="archives-img">
+									<a href="${toLinks(list[i].cid)}" target="_blank">${img}</a>
+								</div>
+								<div class="archives-info">
+									<h3><a href="${toLinks(list[i].cid)}" target="_blank">${list[i].title}</a></h3>
+									<p>${formatDate(list[i].created)} <a href="javascript:;" class="text-red right" onclick="rmMark('${list[i].logid}')">取消收藏</a> </p>
+								</div>
+							</div>
+						</div>
+						`;
+					}
+					if(isPage){
+						$("#page").val(page);
+						$("#mark").append(html);
+					}else{
+						$("#mark").html(html);
+					}
+					
+				}else{
+					if(isPage){
+						$(".more a").hide();
+					}else{
+						$("#mark").html(dataShow(1));
+					}
+				}
+				
+			}
+		},
+		error : function(e){
+			if(isPage){
+				$(".more a").hide();
+			}else{
+				$("#mark").html(dataShow(1));
+			}
+		}
+	});
 }
+function rmMark(logid){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var index = layer.load(1, {
+	  shade: [0.4,'#000']
+	});
+	
+	$.ajax({
+		type : "post",
+		url: API.removeLog(),
+		data:{
+			"key":logid,
+			"token":token
+		},
+		dataType: 'json',
+		success : function(result) {
+			layer.close(index); 
+			if(result.code==1){
+				layer.msg("操作成功！", {icon: 1});
+				var timer = setTimeout(function() {
+					layer.closeAll();
+					getMark();
+				}, 1000)
+				
+			}else{
+				layer.msg(result.msg, {icon: 2});
+			}
+		},
+		error : function(e){
+			layer.close(index); 
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+
+function toAvatar(){
+	layer.open({
+		title:"头像设置说明",
+		type: 1,
+		area: ['320px', '320px'], 
+		content: `
+		<div class="layer-form">
+			<div class="box-input">
+				<p>Gravatar是全球最大的头像库，属于Wordpress旗下。它广泛应用于国内外各类网站和程序，包括知名的Github。在Gravatar通过您的邮箱注册用户，并设置头像后，您在所有支持Gravatar的网站使用邮箱，都会显示您的头像。</p>
+				<p>或者，您可以将将邮箱设置成QQ邮箱，将自动获取您的QQ头像。</p>
+			</div>
+			<div class="box-btn">
+				<button type="button" class="radius" onclick="toGravatar()">前往Gravatar</button>
+			</div>
+		</div>
+			
+		`
+	});
+}
+function toGravatar(){
+	window.open("https://cn.gravatar.com/", "_blank");
+}
+function getUserInfo(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var index = layer.load(1, {
+	  shade: [0.4,'#000']
+	});
+	
+	$.ajax({
+		type : "post",
+		url: API.userStatus(),
+		data:{
+			"token":token
+		},
+		dataType: 'json',
+		success : function(result) {
+			layer.close(index); 
+			if(result.code==1){
+				console.log(JSON.stringify(result));
+				$("#name").val(result.data.name);
+				$("#screenName").val(result.data.screenName);
+				$("#mail").val(result.data.mail);
+				$("#url").val(result.data.url);
+				if(result.data.address){
+					var addressarr = result.data.address.split("|");
+					$("#receiptName").val(addressarr[0]);
+					$("#telephone").val(addressarr[1]);
+					$("#address").val(addressarr[2]);
+				}
+				if(result.data.pay){
+					var payarr = result.data.pay.split("|");
+					$("#type").val(payarr[0]);
+					$("#realname").val(payarr[1]);
+					$("#info").val(payarr[2]);
+					$("#imgurl").val(payarr[3]);
+					if(payarr[3]){
+						$("#imgurlText").val("已上传图片");
+					}
+				}
+				
+			}else{
+				layer.msg(result.msg, {icon: 2});
+			}
+		},
+		error : function(e){
+			layer.close(index); 
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function toPayPic(){
+	var url= $("#imgurl").val();
+	if(url==""){
+		layer.msg("请先上传图片", {icon: 2});
+		return false;
+	}
+	layer.open({
+		title:"收款码查看",
+		type: 1,
+		area: ['320px', '320px'], 
+		content: `
+		<div class="layer-form">
+			<img src="${url}" class="col-10"/>
+		</div>
+			
+		`
+	});
+}
+function postStyle(){
+	var style =`
+	<link rel="stylesheet" href="editormd/css/editormd.css" />
+	`;
+	var script =`
+	<script src="editormd/editormd.min.js"></script>
+	<script type="text/javascript">
+	    $(function() {
+	        var editor = editormd("text-editor", {
+	            path   : "editormd/lib/",
+	            toolbarIcons : function() {
+					return ["undo", "redo", "|", "bold", "hr", "|", "preview", "watch", "|", "fullscreen", "info", "testIcon", "testIcon2", "file", "faicon", "||", "watch", "fullscreen", "preview", "testIcon"]
+				},
+				 toolbarIconsClass : {
+					testIcon : "fa-gears"  // 指定一个FontAawsome的图标类
+				},
+	        });
+	    });
+	</script>
+	
+	`;
+	$("head").append(style);
+	$("body").append(script);
+}
+// jiami(1);
+// function jiami(text){
+// 	var w1 = "%E8%BF%99%E6%98%AF%E6%9D%A1%E6%9C%89%E4%BA%8C%E5%8D%81%E5%85%AD%E4%B8%AA%E5%AD%97%E7%9A%84%E5%8F%A5%E5%AD%90%E6%AF%94%E8%BE%83%E9%95%BF%E4%BD%86%E6%B2%A1%E9%87%8D%E5%A4%8D%E9%A1%B9%E7%94%A8%E4%BA%8E%E8%BF%9B%E8%A1%8C%E6%8E%88%E6%9D%83";
+// 	w1 = decodeURI(w1);
+// 	console.log(w1);
+// 	var w2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+// 	var w3 = "khfkjshf656+5656=="
+// 	if(/.*[\u4e00-\u9fa5]+.*$/.test(text)) {
+// 	    console.log("不能含有汉字！");
+// 	    return false;
+// 	}
+// 	if(text.indexOf(".") == -1){
+// 		console.log("不是域名格式");
+// 		return false;
+// 	}
+	
+// }
+

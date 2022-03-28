@@ -23,7 +23,7 @@ img{transition: 0.5s all;
 -moz-transition: 0.5s all;
 -o-transition: 0.5s all;
 -ms-transition: 0.5s all;}
-input[type=text], input[type=password], input[type=email], textarea {
+input[type=text], input[type=password], input[type=email], textarea,select {
     background: #FFF;
     border: 1px solid #333333;
     padding: 7px;
@@ -31,6 +31,10 @@ input[type=text], input[type=password], input[type=email], textarea {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+}
+
+input:disabled,textarea:disabled{
+	background-color: #F3f3f3;
 }
 button{
 	height: 40px;
@@ -129,7 +133,30 @@ button{
 }
 .margin-top-sm{
 	margin-top: 10px;
+	
 }
+.radius{
+	border-radius: 4px;
+}
+.text-red{
+	color: #d93444 !important;
+}
+.text-green{
+	color: #11ba47 !important;
+}
+.text-orange{
+	color: #f36134 !important;
+}
+.red{
+	background-color: #d93444 !important;
+}
+.green{
+	background-color: #11ba47 !important;
+}
+.orange{
+	background-color: #f36134 !important;
+}
+
 .header-top{
 	height: 60px;
 	width: 100%;
@@ -649,6 +676,11 @@ button{
 	position: relative;
 	padding: 10px 0px;
 }
+.box-input label{
+	display: block;
+	margin-bottom: 5px;
+	font-size: 16px;
+}
 .box-input input{
 	height: 38px;
 	line-height: 38px;
@@ -826,6 +858,83 @@ button{
 .owo-type a.active{
 	background: #f3f3f3;
 }
+.mark-box{
+	position: relative;
+	padding: 5px;
+}
+.mark-main{
+	border: solid 1px #F1F1F1;
+	padding: 18px 15px 18px 10px;
+	box-shadow: 0px 0px 5px rgba(0,0,0,0.15);
+}
+.archives-img {
+	width: 80px;
+	height: 50px;
+	border-radius: 5px;
+	float: left;
+	overflow: hidden;
+	margin-right: 20px;
+}
+.archives-img img{
+	width: 100%;
+}
+.archives-info h3 {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 16px;
+    overflow: hidden;
+    padding-right: 20px;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+    white-space: nowrap;
+}
+.archives-info h3 a{
+	color: #333;
+}
+.archives-info p {
+    color: #999;
+    font-size: 14px;
+    line-height: 14px;
+    margin-top: 15px;
+}
+.userEdit{
+	padding:20px 60px;
+}
+.userEdit .box-input input{
+	border: #9d9d9d solid 1px;
+	
+}
+.userEdit button{
+	border-radius: 4px;
+}
+
+.input-text{
+	border: #9d9d9d solid 1px;
+	width: 100%;
+	resize: none;
+}
+.address textarea{
+	height: 80px;
+}
+.userEdit-avatar{
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	display: block;
+	border: solid 1px #ddd;
+	margin: 0 auto;
+}
+.input-links{
+	position: absolute;
+	right: 0px;
+	width: auto;
+	padding: 0px 10px;
+	line-height: 36px;
+	top: 37px;
+}
+.input-links a{
+	margin: 0 5px;
+}
 @media all and (max-width: 1600px) {
 	.home-left,.home-right{
 		width: 100%;
@@ -900,6 +1009,12 @@ button{
 		text-align: right;
 		margin-top: 10px;
 		font-size: 14px;
+	}
+	.mark-box{
+		width: 100%;
+	}
+	.data-box{
+		padding: 20px 15px;
 	}
 }
 @media all and (max-width: 660px) {

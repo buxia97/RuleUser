@@ -2,28 +2,125 @@
 	<div class="padding col-5 left home-left">
 		<div class="data-box">
 			<div class="data-box-title">
-				<h4>用户设置
+				<h4>头像设置
 				</h4>
 			</div>
-		</div>
-	</div>
-	<div class="padding col-5 left  home-right">
-		<div class="data-box">
-			<div class="data-box-title">
-				<h4>邮箱设置
-				</h4>
+			<div class="userEdit padding col-10">
+				<div class="box-input">
+					<img class="userEdit-avatar" src="https://cdn.helingqi.com/wavatar/83d6d5237f4c908679fefff60a590269"/>
+				</div>
+				<div class="box-btn">
+					<button type="button" class="green" onclick="toAvatar()">设置</button>
+				</div>
 			</div>
 		</div>
 		<div class="data-box margin-top">
 			<div class="data-box-title">
+				<h4>基本信息设置
+				</h4>
+			</div>
+			<div class="userEdit padding col-10">
+				<div class="box-input">
+					<label>用户名</label>
+					<input type="text" value="buxia" id="name" disabled="disabled"/>
+				</div>
+				<div class="box-input">
+					<label>昵称</label>
+					<input type="text" value="" id="screenName" placeholder="请输入个人昵称"/>
+				</div>
+				<div class="box-input">
+					<label>邮箱</label>
+					<input type="text" value="" id="mail" disabled="disabled" placeholder="暂未设置邮箱"/>
+					<div class="input-links">
+						<a href="javascript:;">修改</a>
+					</div>
+				</div>
+				<div class="box-input">
+					<label>网址</label>
+					<input type="text" value="" id="url" placeholder="请输入个人网址"/>
+				</div>
+				<div class="box-btn">
+					<button type="button" onclick="">保存设置</button>
+				</div>
+			</div>
+		</div>
+		<div class="data-box margin-top">
+			<div class="data-box-title">
+				<h4>密码设置设置
+				</h4>
+			</div>
+			<div class="userEdit padding col-10">
+				<div class="box-input">
+					<label>新密码</label>
+					<input type="text" placeholder="请输入新密码"/>
+				</div>
+				<div class="box-input">
+					<label>新密码</label>
+					<input type="text" placeholder="请再次输入新密码"/>
+				</div>
+				<div class="box-btn">
+					<button type="button" onclick="">保存设置</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="padding col-5 left home-right">
+		<div class="data-box">
+			<div class="data-box-title">
 				<h4>收货地址设置
 				</h4>
+			</div>
+			<div class="userEdit padding col-10">
+				<div class="box-input">
+					<label>收货人名称</label>
+					<input type="text" value="" id="receiptName" placeholder="请输入收货人名称"/>
+				</div>
+				<div class="box-input">
+					<label>收货人电话</label>
+					<input type="text" value="" id="telephone" placeholder="请输入收货人电话"/>
+				</div>
+				<div class="box-input address">
+					<label>收货地址</label>
+					<textarea class="input-text" id="address" placeholder="输入收货地址(精确到省市区街道)"></textarea>
+				</div>
+				<div class="box-btn">
+					<button type="button" onclick="">保存设置</button>
+				</div>
 			</div>
 		</div>
 		<div class="data-box margin-top">
 			<div class="data-box-title">
 				<h4>账户设置
 				</h4>
+			</div>
+			<div class="userEdit padding col-10">
+				<div class="box-input">
+					<label>账户类型</label>
+					<select class="input-text" id="type">
+						<option value="支付宝" selected="selected">支付宝</option>
+						<option value="微信">微信</option>
+					</select>
+				</div>
+				<div class="box-input">
+					<label>真实姓名</label>
+					<input type="text" value="" id="realname" placeholder="请输入真实姓名"/>
+				</div>
+				<div class="box-input">
+					<label>账户信息</label>
+					<input type="text" value="" id="info" placeholder="请输入账户信息"/>
+				</div>
+				<div class="box-input address">
+					<label>收款二维码</label>
+					<input type="text" value="" disabled="disabled" id="imgurlText" placeholder="未上传图片"/>
+					<input type="hidden" id="imgurl"/>
+					<div class="input-links">
+						<a href="javascript:;" onclick="toPayPic()" class="text-green">查看图片</a>
+						<a href="javascript:;">上传新图片</a>
+					</div>
+				</div>
+				<div class="box-btn">
+					<button type="button" onclick="">保存设置</button>
+				</div>
 			</div>
 		</div>
 	</div>

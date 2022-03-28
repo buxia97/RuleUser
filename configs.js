@@ -1,4 +1,6 @@
-var API_URL = 'https://api.ruletree.club/'; //API地址，需要先开启允许跨域
+//var API_URL = 'https://api.ruletree.club/'; //API地址，需要先开启允许跨域
+var API_URL = 'http://127.0.0.1:8081/';
+
 var WEB_URL = 'https://www.ruletree.club/'; //网站地址
 var LOGO_URL = "https://www.ruletree.club/logo.png";
 
@@ -167,9 +169,9 @@ var API = {
 	//下面这个方法涉及图片上传，自己修改定义接口路径
 	upload:function(){
 		//return API_URL + 'upload/ossUpload';//OSS对象存储接口
-		return API_URL + 'upload/cosUpload';//COS对象存储接口
+		//return API_URL + 'upload/cosUpload';//COS对象存储接口
 		//return API_URL + 'upload/ftpUpload'; //远程ftp上传接口
-		//return API_URL + 'upload/localUpload'; //本地上传接口
+		return API_URL + 'upload/localUpload'; //本地上传接口
 	},
 	shopList:function(){
 		return API_URL + 'typechoShop/shopList';
