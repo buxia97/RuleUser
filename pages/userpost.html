@@ -1,9 +1,38 @@
 <div class="col-10 overflow-hidden">
 	<div class="padding col-10 left home-left">
 		<div class="data-box">
-			<div class="data-box-title">
-				<h4>文章管理
-				</h4>
+			<div class="data-top padding">
+				<button type="button" class="green"  onclick='loadPage("pages/post.html","发布文章")'><i class="iconfont icon-add"></i>创建新文章</button>
+			</div>
+			<div class="data-header padding">
+				<div class="data-header-main overflow-hidden">
+					<div class="data-search right">
+						<div class="data-search-box">
+							<input type="text" placeholder="请输入关键字"/>
+							<button type="button">
+								<i class="iconfont icon-search"></i>
+							</button>
+						</div>
+					</div>
+					<div class="data-type left">
+						<a href="javascript:;" class="active">
+							全部
+						</a>
+						<a href="javascript:;">
+							已发布
+						</a>
+						<a href="javascript:;">
+							待审核
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="archives-list col-10" id="archives-list">
+				
+			</div>
+			<div class="more">
+				<input type="hidden" value="1" id="page"/>
+				<a href="javascript:;" onclick="getArchives(true)">加载更多</a>
 			</div>
 		</div>
 	</div>

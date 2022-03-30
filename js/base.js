@@ -41,6 +41,7 @@ function main(){
 	`;
 	$("#RuleWeb").html(html);
 }
+
 function header(){
 	var html = `
 	<div class="header-top">
@@ -203,6 +204,10 @@ function pageData(page){
 	if(page=="pages/post.html"){
 		postStyle();
 	}
+	if(page=="pages/userpost.html"){
+		getArchives();
+	}
+	
 	
 	
 }
@@ -1373,7 +1378,7 @@ function getUserInfo(){
 		success : function(result) {
 			layer.close(index); 
 			if(result.code==1){
-				console.log(JSON.stringify(result));
+				
 				$("#name").val(result.data.name);
 				$("#screenName").val(result.data.screenName);
 				$("#mail").val(result.data.mail);
@@ -1419,8 +1424,112 @@ function toPayPic(){
 		<div class="layer-form">
 			<img src="${url}" class="col-10"/>
 		</div>
-			
 		`
+	});
+}
+function saveUserInfo(type){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var uid;
+	if(localStorage.getItem('userinfo')){
+		var userInfo = JSON.parse(localStorage.getItem('userinfo'));
+		uid = userInfo.uid;
+	}else{
+		return false;
+	}
+	var data;
+	if(type==0){
+		var name = $("#name").val();
+		var screenName = $("#screenName").val();
+		var url = $("#url").val();
+		var data = {
+			uid:uid,
+			name:name,
+			screenName:screenName,
+			url:url,
+		}
+	}
+	if(type==1){
+		var password = $("#password").val();
+		var repassword = $("#repassword").val();
+		if(password==""||repassword==""){
+			layer.msg("参数不能为空！", {icon: 2});
+			return false;
+		}
+		if(password!=password){
+			layer.msg("两次密码不一致！", {icon: 2});
+			return false;
+		}
+		data = {
+			uid:uid,
+			name:name,
+			password:password,
+		}
+	}
+	if(type==2){
+		var receiptName = $("#receiptName").val();
+		var telephone = $("#telephone").val();
+		var address = $("#address").val();
+		if(receiptName==""||telephone==""||address==""){
+			layer.msg("参数不能为空！", {icon: 2});
+			return false;
+		}
+		var address = receiptName+"|"+telephone+"|"+address;
+		data = {
+			uid:uid,
+			name:name,
+			address:address,
+		}
+	}
+	if(type==3){
+		var type = $("#type").val();
+		var realname = $("#realname").val();
+		var info = $("#info").val();
+		var imgurl = $("#imgurl").val();
+		if(type==""||realname==""||info==""||imgurl==""){
+			layer.msg("参数不能为空！", {icon: 2});
+			return false;
+		}
+		var pay = type+"|"+realname+"|"+info+"|"+imgurl;
+		data = {
+			uid:uid,
+			name:name,
+			pay:pay,
+		}
+	}
+	var index = layer.load(1, {
+	  shade: [0.4,'#000']
+	});
+	
+	$.ajax({
+		type : "post",
+		url: API.userEdit(),
+		data:{
+			"params":JSON.stringify(API.removeObjectEmptyKey(data)),
+			"token":token
+		},
+		dataType: 'json',
+		success : function(result) {
+			layer.close(index); 
+			if(result.code==1){
+				layer.msg("操作成功！", {icon: 1});
+				var timer = setTimeout(function() {
+					
+					getUserInfo();
+				}, 1000)
+				
+			}else{
+				layer.msg(result.msg, {icon: 2});
+			}
+		},
+		error : function(e){
+			layer.close(index); 
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
 	});
 }
 function postStyle(){
@@ -1433,12 +1542,17 @@ function postStyle(){
 	    $(function() {
 	        var editor = editormd("text-editor", {
 	            path   : "editormd/lib/",
+				height  : 640,
+				watch : false,
+				placeholder:"请输入文章的内容",
 	            toolbarIcons : function() {
-					return ["undo", "redo", "|", "bold", "hr", "|", "preview", "watch", "|", "fullscreen", "info", "testIcon", "testIcon2", "file", "faicon", "||", "watch", "fullscreen", "preview", "testIcon"]
+					return ["undo", "redo", "|", "bold", "del", "italic", "quote", "ucwords", "hr", "|", "h1", "h2", "h3", "h4", "h5", "h6", "|",  "list-ul", "list-ol", "hr","|","link","reference-link","code","preformatted-text", "code-block", "table","|","filepic","shopbag", "||", "watch"]
 				},
-				 toolbarIconsClass : {
-					testIcon : "fa-gears"  // 指定一个FontAawsome的图标类
-				},
+				toolbarCustomIcons : {
+					shopbag : '<a href="javascript:;" title="添加商品"><i class="fa fa-shopping-cart text-red"></i></a>',
+					filepic : '<a href="javascript:;" title="添加图片"><i class="fa fa-picture-o"></i></a>'
+				}
+				
 	        });
 	    });
 	</script>
@@ -1446,6 +1560,215 @@ function postStyle(){
 	`;
 	$("head").append(style);
 	$("body").append(script);
+}
+function uploadPic(){
+	
+	$("#upload").click();
+	$("#upload").change(function() {
+		var token;
+		if(localStorage.getItem("token")){
+			token = localStorage.getItem("token");
+		}else{
+			return false;
+		}
+		var formData = new FormData();
+		formData.append("file", $("#upload")[0].files[0]);
+		formData.append("token",token);
+		var index = layer.load(1, {
+		  shade: [0.4,'#000']
+		});
+		$.ajax({
+			url: API.upload(),
+			type: "post",
+			data: formData,
+			processData: false, // 告诉jQuery不要去处理发送的数据
+			contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+			dataType: 'json',
+			success: function(result) {
+				layer.close(index); 
+				layer.alert("请求失败，请检查网络", {icon: 2});
+				if(result.code==1){
+					layer.msg("上传成功！", {icon: 1});
+					$("#imgurl").val(result.data.url);
+					$("#imgurlText").val("已上传图片");
+				}else{
+					layer.msg(result.msg, {icon: 2});
+				}
+			},
+			error: function(data) {
+				layer.close(index); 
+			}
+		});
+	})
+	
+}
+function setEmail(){
+	layer.open({
+		title:"邮箱设置",
+		type: 1,
+		area: ['320px', '320px'], 
+		content: `
+		<div class="layer-form">
+			<div class="box-input">
+				<label>新邮箱</label>
+				<input type="text"  id="newmail"  placeholder="请输入新邮箱"/>
+			</div>
+			<div class="box-input">
+				<label>验证码</label>
+				<input type="text" id="code" placeholder="填写新邮箱验证码"/>
+				<div class="input-links">
+					<a href="javascript:;" onclick="setEmail()" class="sendBefore" id="sendBefore">发送</a>
+					<span id="sended" class="sended"></span>
+				</div>
+			</div>
+			<div class="box-btn">
+				<button type="button" class="radius" onclick="toReply()">保存设置</button>
+			</div>
+		</div>
+			
+		`
+	});
+}
+function sendEmailCode(){
+	var newmail = $("#newmail").val();
+	if(newmail==""){
+		layer.msg("请输入邮箱地址", {icon: 2});
+		return false;
+	}
+	var data = {
+		'mail':newmail
+	}
+	var index = layer.load(1, {
+	  shade: [0.4,'#000']
+	});
+	
+	$.ajax({
+		type : "post",
+		url: API.RegSendCode(),
+		data:{"params":JSON.stringify(API.removeObjectEmptyKey(data))},
+		
+		dataType: 'json',
+		success : function(result) {
+			layer.close(index); 
+			if(result.code==1){
+				$("#sendBefore").hide();
+				$("#sended").show();
+				countDownBtn();
+				layer.msg("发送成功！", {icon: 1});
+			}else{
+				layer.msg(result.msg, {icon: 2});
+			}
+		},
+		error : function(e){
+			layer.close(index); 
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function getArchives(isPage){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var authorId;
+	if(localStorage.getItem('userinfo')){
+		var userInfo = JSON.parse(localStorage.getItem('userinfo'));
+		authorId = userInfo.uid;
+	}else{
+		return false;
+	}
+	var page = $("#page").val();
+	if(isPage){
+		page++;
+		$(".more a").text("正在加载中...")
+	}else{
+		$("#archives-list").html(dataShow(0));
+	}
+	var data = {
+		"type":"post",
+		"status":"publish",
+		"authorId":authorId,
+	}
+	$.ajax({
+		type : "post",
+		url: API.getContentsList(),
+		data:{
+			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
+			"limit":10,
+			"page":page,
+			"order":"created",
+			"token":token,
+		},
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				var list = result.data;
+				var html = ``;
+				if(list.length>0){
+					$(".more").show();
+					$(".more a").text("加载更多");
+					for(var i in list){
+						var img = `<img src="img/nopic.png" />`;
+						if(list[i].images.length>0){
+							img = `<img src="${list[i].images[0]}" />`;
+						}
+						html+=`
+						<div class="archives-list-box overflow-hidden">
+							<div class="archives-list-pic left">
+								${img}
+							</div>
+							<div class="archives-list-info left">
+								<div class="archives-list-title">
+									<a href="${toLinks(list[i].cid)}" target="_blank">${list[i].title}</a>
+									<span class="right">${API.formatDate(list[i].created)}</span>
+								</div>
+								<div class="archives-list-status">
+									<span class="status-green">已发布</span>
+								</div>
+								<div class="archives-list-links">
+									<div class="archives-list-data left">
+										<span><i class="iconfont icon-browse"></i>${formatNumber(list[i].views)}</span>
+										<span><i class="iconfont icon-remind1"></i>${list[i].allowComment}</span>
+										<span><i class="iconfont icon-good"></i>${list[i].likes}</span>
+									</div>
+									<div class="archives-list-btn right">
+										<a href="${toLinks(list[i].cid)}" target="_blank">访问文章</a>
+										<a href="#">查看评论</a>
+										<a href="#">编辑文章</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						`;
+					}
+					if(isPage){
+						$("#page").val(page);
+						$("#archives-list").append(html);
+					}else{
+						$("#archives-list").html(html);
+					}
+				}else{
+					if(isPage){
+						$(".more a").hide();
+					}else{
+						$("##archives-list").html(dataShow(1));
+					}
+				}
+				
+			}else{
+				if(isPage){
+					$(".more a").hide();
+				}else{
+					$("##archives-list").html(dataShow(1));
+				}
+			}
+		},
+		error : function(e){
+			$("#archives-list").html(dataShow(1));
+		}
+	});
 }
 // jiami(1);
 // function jiami(text){
