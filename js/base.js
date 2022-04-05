@@ -28,6 +28,7 @@ $(function(){
 	});
 	
 });
+
 function main(){
 	var html = `
 	<div class="header" id="header"></div>
@@ -171,7 +172,8 @@ function loadPage(url,title){
 			localStorage.setItem("page",url);
 			localStorage.setItem("pageName",title);
 			userStatus();
-			
+			$(".header-left").removeClass("wapShow")
+			$(".header-left-bg").removeClass("wapShow")
 			$("#main .content").html(result);
 			pageData(url);
 		},
@@ -202,10 +204,43 @@ function pageData(page){
 		getUserInfo();
 	}
 	if(page=="pages/post.html"){
+		localStorage.removeItem('cnum');
 		postStyle();
+		getContensLocal();
+		//定时保存本地输入
+		setInterval(function () {
+			contensLocal();	
+		}, 5000);
+		
+	}
+	if(page=="pages/edit.html"){
+		localStorage.removeItem('cnum');
+		postStyle();
+		getContensLocal();
+		//getContent();
 	}
 	if(page=="pages/userpost.html"){
 		getArchives();
+	}
+	if(page=="pages/comment.html"){
+		getComment();
+	}
+	if(page=="pages/myshop.html"){
+		getShopList();
+	}
+	if(page=="pages/shopAdd.html"){
+		postStyle();
+		getShopBase();
+		//定时保存本地输入
+		setInterval(function () {
+			shopLocal();	
+		}, 5000);
+		
+	}
+	if(page=="pages/shopEdit.html"){
+		postStyle();
+		getShopBase();
+		
 	}
 	
 	
@@ -1121,7 +1156,7 @@ function getInbox(isPage){
 					
 				}else{
 					if(isPage){
-						$(".more a").hide();
+						$(".more").hide();
 					}else{
 						$("#inbox").html(dataShow(1));
 					}
@@ -1131,7 +1166,7 @@ function getInbox(isPage){
 		},
 		error : function(e){
 			if(isPage){
-				$(".more a").hide();
+				$(".more").hide();
 			}else{
 				$("#inbox").html(dataShow(1));
 			}
@@ -1279,7 +1314,7 @@ function getMark(isPage){
 					
 				}else{
 					if(isPage){
-						$(".more a").hide();
+						$(".more").hide();
 					}else{
 						$("#mark").html(dataShow(1));
 					}
@@ -1289,7 +1324,7 @@ function getMark(isPage){
 		},
 		error : function(e){
 			if(isPage){
-				$(".more a").hide();
+				$(".more").hide();
 			}else{
 				$("#mark").html(dataShow(1));
 			}
@@ -1537,29 +1572,9 @@ function postStyle(){
 	<link rel="stylesheet" href="editormd/css/editormd.css" />
 	`;
 	var script =`
-	<script src="editormd/editormd.min.js"></script>
-	<script type="text/javascript">
-	    $(function() {
-	        var editor = editormd("text-editor", {
-	            path   : "editormd/lib/",
-				height  : 640,
-				watch : false,
-				placeholder:"请输入文章的内容",
-	            toolbarIcons : function() {
-					return ["undo", "redo", "|", "bold", "del", "italic", "quote", "ucwords", "hr", "|", "h1", "h2", "h3", "h4", "h5", "h6", "|",  "list-ul", "list-ol", "hr","|","link","reference-link","code","preformatted-text", "code-block", "table","|","filepic","shopbag", "||", "watch"]
-				},
-				toolbarCustomIcons : {
-					shopbag : '<a href="javascript:;" title="添加商品"><i class="fa fa-shopping-cart text-red"></i></a>',
-					filepic : '<a href="javascript:;" title="添加图片"><i class="fa fa-picture-o"></i></a>'
-				}
-				
-	        });
-	    });
-	</script>
-	
-	`;
+	<script src="editormd/editormd.min.js"></script>`;
 	$("head").append(style);
-	$("body").append(script);
+	$("#base").before(script);
 }
 function uploadPic(){
 	
@@ -1586,7 +1601,7 @@ function uploadPic(){
 			dataType: 'json',
 			success: function(result) {
 				layer.close(index); 
-				layer.alert("请求失败，请检查网络", {icon: 2});
+				
 				if(result.code==1){
 					layer.msg("上传成功！", {icon: 1});
 					$("#imgurl").val(result.data.url);
@@ -1597,6 +1612,7 @@ function uploadPic(){
 			},
 			error: function(data) {
 				layer.close(index); 
+				layer.alert("请求失败，请检查网络", {icon: 2});
 			}
 		});
 	})
@@ -1665,6 +1681,193 @@ function sendEmailCode(){
 		}
 	});
 }
+$(function(){
+	
+	$("body").on('click','#archives-type a',function(){
+		$("#archives-type a").removeClass("active");
+		$(this).addClass("active");
+		var type = $(this).attr("data-type");
+		$("#type").val(type);
+		$("#page").val(1);
+		getArchives();
+	});
+	//选择分类
+	$("body").on('click','#category a',function(){
+		
+		if($(this).hasClass("active")){
+			var num = localStorage.getItem("cnum");
+			num--;
+			localStorage.setItem("cnum",num);
+			$(this).removeClass("active");
+		}else{
+			if(localStorage.getItem("cnum")){
+				var num = localStorage.getItem("cnum");
+				num++;
+				if(num>3){
+					layer.msg("最多只能选择三个分类", {icon: 2});
+					return false;
+				}
+				localStorage.setItem("cnum",num);
+			}else{
+				localStorage.setItem("cnum",1);
+			}
+			$(this).addClass("active");
+		}
+		var text = "";
+		var html = "";
+		$("#category a.active").each(function(){
+			var mid = $(this).attr("data-mid");
+			var name = $(this).text();
+			text = text +","+mid;
+			html +=`
+				<a href="javascript:;" class="toTag data-cur" data-mid="${mid}">
+					${name}<i class="iconfont icon-close"></i>
+				</a>
+			`;
+		});
+		html +=`
+			<a href="javascript:;" class="toTag" onclick="toCategory()">
+				<i class="iconfont icon-add"></i>
+			</a>
+		`;
+		$("#categoryBox").html(html);
+		$("#categoryText").val(text);
+	});
+	$("body").on('click','#categoryBox a.data-cur',function(){
+		$(this).remove();
+		var text = "";
+		var html = "";
+		$("#categoryBox a.data-cur").each(function(){
+			
+			var mid = $(this).attr("data-mid");
+			var name = $(this).text();
+			text = text +","+mid;
+			html +=`
+				<a href="javascript:;" class="toTag data-cur" data-mid="${mid}">
+					${name}<i class="iconfont icon-close"></i>
+				</a>
+			`;
+		});
+		html +=`
+			<a href="javascript:;" class="toTag" onclick="toCategory()">
+				<i class="iconfont icon-add"></i>
+			</a>
+		`;
+		$("#categoryBox").html(html);
+		$("#categoryText").val(text);
+		
+	});
+	//选择标签
+	$("body").on('click','#tag a',function(){
+		
+		if($(this).hasClass("active")){
+			var num = localStorage.getItem("tnum");
+			num--;
+			localStorage.setItem("tnum",num);
+			$(this).removeClass("active");
+		}else{
+			if(localStorage.getItem("tnum")){
+				var num = localStorage.getItem("tnum");
+				num++;
+				if(num>5){
+					layer.msg("最多只能选择五个标签", {icon: 2});
+					return false;
+				}
+				localStorage.setItem("tnum",num);
+			}else{
+				localStorage.setItem("tnum",1);
+			}
+			$(this).addClass("active");
+		}
+		var text = "";
+		var html = "";
+		$("#tag a.active").each(function(){
+			var mid = $(this).attr("data-mid");
+			var name = $(this).text();
+			text = text +","+mid;
+			html +=`
+				<a href="javascript:;" class="toTag data-cur" data-mid="${mid}">
+					${name}<i class="iconfont icon-close"></i>
+				</a>
+			`;
+		});
+		html +=`
+			<a href="javascript:;" class="toTag" onclick="toTag()">
+				<i class="iconfont icon-add"></i>
+			</a>
+		`;
+		$("#tagBox").html(html);
+		$("#tagText").val(text);
+	});
+	$("body").on('click','#tagBox a.data-cur',function(){
+		$(this).remove();
+		var text = "";
+		var html = "";
+		$("#tagBox a.data-cur").each(function(){
+			
+			var mid = $(this).attr("data-mid");
+			var name = $(this).text();
+			text = text +","+mid;
+			html +=`
+				<a href="javascript:;" class="toTag data-cur" data-mid="${mid}">
+					${name}<i class="iconfont icon-close"></i>
+				</a>
+			`;
+		});
+		html +=`
+			<a href="javascript:;" class="toTag" onclick="toTag()">
+				<i class="iconfont icon-add"></i>
+			</a>
+		`;
+		$("#tagBox").html(html);
+		$("#tagText").val(text);
+		
+	});
+})
+var editor;
+function toSearch(){
+	var searchText  = $("#searchText").val();
+	$("#page").val(1);
+	getArchives();
+}
+function getContensLocal(){
+	editor = editormd("text-editor", {
+	    path   : "editormd/lib/",
+		height  : 640,
+		watch : false,
+		placeholder:"请输入文章的内容",
+	    toolbarIcons : function() {
+			return ["undo", "redo", "|", "bold", "del", "italic", "quote", "ucwords", "hr", "|", "h1", "h2", "h3", "h4", "h5", "h6", "|",  "list-ul", "list-ol", "hr","|","link","reference-link","code","preformatted-text", "code-block", "table","|","filepic","shopbag", "||", "watch"]
+		},
+		toolbarCustomIcons : {
+			shopbag : '<a href="javascript:;" title="添加商品" onclick="toShop()"><i class="fa fa-shopping-cart"></i></a>',
+			filepic : `<a href="javascript:;" title="添加图片" onclick="contensPic()"><i class="fa fa-picture-o"></i></a>
+			<input type="file" style="display:none"  accept="image/*" id="contensPic"/>
+			`,
+		},
+		onload : function() {
+			if(localStorage.getItem('contensLocal')&&localStorage.getItem('page')!="pages/edit.html"){
+				layer.msg("检测到本地缓存，已载入", {icon: 1});
+				var data = localStorage.getItem('contensLocal');
+				data = JSON.parse(data);
+				$("#title").val(data.title);
+				$("#tagText").val(data.tag);
+				$("#categoryText").val(data.category);
+				editor.clear();
+				editor.insertValue(data.text);
+				$("#shopID").val(data.shopID);
+				$("#categoryBox").html(data.categoryBox);
+				$("#tagBox").html(data.tagBox);
+			}
+			if(localStorage.getItem('page')=="pages/edit.html"){
+				getContent()
+			}
+		},
+		
+		
+	});
+	
+}
 function getArchives(isPage){
 	var token;
 	if(localStorage.getItem("token")){
@@ -1680,16 +1883,25 @@ function getArchives(isPage){
 		return false;
 	}
 	var page = $("#page").val();
+	var searchText  = $("#searchText").val();
 	if(isPage){
 		page++;
 		$(".more a").text("正在加载中...")
 	}else{
 		$("#archives-list").html(dataShow(0));
 	}
+	var type = $("#type").val();
 	var data = {
 		"type":"post",
-		"status":"publish",
+		//"status":"publish",
 		"authorId":authorId,
+	}
+	if(type!="all"){
+		data = {
+			"type":"post",
+			"status":type,
+			"authorId":authorId,
+		}
 	}
 	$.ajax({
 		type : "post",
@@ -1700,6 +1912,7 @@ function getArchives(isPage){
 			"page":page,
 			"order":"created",
 			"token":token,
+			"searchKey":searchText,
 		},
 		dataType: 'json',
 		success : function(result) {
@@ -1712,7 +1925,19 @@ function getArchives(isPage){
 					for(var i in list){
 						var img = `<img src="img/nopic.png" />`;
 						if(list[i].images.length>0){
-							img = `<img src="${list[i].images[0]}" />`;
+							img = `<img src="${list[i].images[0]}" onerror="this.onerror='';src='img/nopic.png'"/>`;
+						}
+						var category="";
+						if(list[i].category.length>0){
+							var arr = list[i].category;
+							for(var j in arr){
+								category += `<span class="status-gray">${arr[j].name}</span>`;
+							}
+							
+						}
+						var status = `<span class="status-green">已发布</span>`;
+						if(list[i].status=="waiting"){
+							status = `<span class="status-orange">待审核</span>`;
 						}
 						html+=`
 						<div class="archives-list-box overflow-hidden">
@@ -1725,18 +1950,19 @@ function getArchives(isPage){
 									<span class="right">${API.formatDate(list[i].created)}</span>
 								</div>
 								<div class="archives-list-status">
-									<span class="status-green">已发布</span>
+									${status}
+									${category}
 								</div>
 								<div class="archives-list-links">
 									<div class="archives-list-data left">
 										<span><i class="iconfont icon-browse"></i>${formatNumber(list[i].views)}</span>
-										<span><i class="iconfont icon-remind1"></i>${list[i].allowComment}</span>
+										<span><i class="iconfont icon-remind1"></i>${list[i].commentsNum}</span>
 										<span><i class="iconfont icon-good"></i>${list[i].likes}</span>
 									</div>
 									<div class="archives-list-btn right">
 										<a href="${toLinks(list[i].cid)}" target="_blank">访问文章</a>
-										<a href="#">查看评论</a>
-										<a href="#">编辑文章</a>
+										<a href="javascript:;"  onclick='toComment(${list[i].cid})'>查看评论</a>
+										<a href="javascript:;" onclick='toEdit(${list[i].cid})'>编辑文章</a>
 									</div>
 								</div>
 							</div>
@@ -1751,40 +1977,1216 @@ function getArchives(isPage){
 					}
 				}else{
 					if(isPage){
-						$(".more a").hide();
+						$(".more").hide();
 					}else{
-						$("##archives-list").html(dataShow(1));
+						$(".more").hide();
+						$("#archives-list").html(dataShow(1));
 					}
 				}
 				
 			}else{
 				if(isPage){
-					$(".more a").hide();
+					$(".more").hide();
 				}else{
-					$("##archives-list").html(dataShow(1));
+					$(".more").hide();
+					$("#archives-list").html(dataShow(1));
 				}
 			}
 		},
 		error : function(e){
+			$(".more").hide();
 			$("#archives-list").html(dataShow(1));
 		}
 	});
 }
-// jiami(1);
-// function jiami(text){
-// 	var w1 = "%E8%BF%99%E6%98%AF%E6%9D%A1%E6%9C%89%E4%BA%8C%E5%8D%81%E5%85%AD%E4%B8%AA%E5%AD%97%E7%9A%84%E5%8F%A5%E5%AD%90%E6%AF%94%E8%BE%83%E9%95%BF%E4%BD%86%E6%B2%A1%E9%87%8D%E5%A4%8D%E9%A1%B9%E7%94%A8%E4%BA%8E%E8%BF%9B%E8%A1%8C%E6%8E%88%E6%9D%83";
-// 	w1 = decodeURI(w1);
-// 	console.log(w1);
-// 	var w2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-// 	var w3 = "khfkjshf656+5656=="
-// 	if(/.*[\u4e00-\u9fa5]+.*$/.test(text)) {
-// 	    console.log("不能含有汉字！");
-// 	    return false;
-// 	}
-// 	if(text.indexOf(".") == -1){
-// 		console.log("不是域名格式");
-// 		return false;
-// 	}
+function toComment(cid){
+	localStorage.setItem('commentCid',cid);
+	loadPage("pages/comment.html","评论管理");
+}
+function toEdit(cid){
+	localStorage.setItem('editCid',cid);
+	loadPage("pages/edit.html","编辑文章");
+}
+function getComment(isPage){
 	
-// }
+	var token;
+	var cid;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	if(localStorage.getItem('commentCid')){
+		cid = localStorage.getItem('commentCid');
+	}
+	var page = $("#page").val();
+	if(isPage){
+		page++;
+		$(".more a").text("正在加载中...")
+	}else{
+		$("#comment").html(dataShow(0));
+	}
+	var data = {
+		"cid":cid,
+		"type":"comment",
+		"status":"approved"
+	}
+	$.ajax({
+		type : "post",
+		url: API.getCommentsList(),
+		data:{
+			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
+			"limit":10,
+			"page":page,
+			"token":token
+		},
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				var list = result.data;
+				var html = ``;
+				if(list.length>0){
+					
+					$(".more").show();
+					$(".more a").text("加载更多");
+					for(var i in list){
+						var lv = Number(list[i].lv);
+						var lvText = rankList[lv];
+						var lvStyle = rankStyle[lv];
+						var customize = "";
+						if(list[i].customize){
+							customize = `<span class="userlv">${list[i].customize}</span>`;
+						}
+						html+=`
+						<div class="comment-box">
+							<div class="comment-avatar left">
+								<img src="${list[i].avatar}" />
+							</div>
+							<div class="comment-main left">
+								<div class="comment-userinfo">
+									<p>
+										<a href="javascript:;">${list[i].author}</a>
+										<span class="userlv" style="background:${lvStyle}">${lvText}</span>
+										${customize}
+										<span class="comment-date right">${formatDate(list[i].created)}</span>
+									</p>
+								</div>
+								<div class="comment-text">
+									
+									${list[i].text}
+									
+								</div>
+								<div class="comment-links">
+									发表在：<a href="${toLinks(list[i].cid)}" target="_blank">${list[i].contenTitle}</a>
+									<div class="reply right"><a href="javascript:;" onclick="reply('${list[i].author}','${list[i].coid}','${list[i].cid}')">回复</a></div>
+								</div>
+							</div>
+						</div>
+						`;
+					}
+					if(isPage){
+						$("#page").val(page);
+						$("#comment").append(html);
+					}else{
+						$(".more").hide();
+						$("#comment").html(html);
+					}
+					
+				}else{
+					if(isPage){
+						$(".more").hide();
+					}else{
+						$(".more").hide();
+						$("#comment").html(dataShow(1));
+					}
+				}
+				
+			}
+		},
+		error : function(e){
+			if(isPage){
+				$(".more").hide();
+			}else{
+				$(".more").hide();
+				$("#comment").html(dataShow(1));
+			}
+		}
+	});
+}
+function toCategory(){
+	layer.open({
+		title:"选择分类",
+		type: 1,
+		area: ['330px', '320px'], 
+		content: `
+		<div class="layer-form">
+			<div class="box-input overflow-hidden" id="category">
+				
+			</div>
+		</div>
+			
+		`,
+		cancel: function(){
+			localStorage.removeItem('cnum');
+		}
+	});
+	getCategory();
+}
+function toTag(){
+	layer.open({
+		title:"选择标签",
+		type: 1,
+		area: ['330px', '320px'], 
+		content: `
+		<div class="layer-form">
+			<div class="box-input overflow-hidden" id="tag">
+				
+			</div>
+		</div>
+			
+		`,
+		cancel: function(){
+			localStorage.removeItem('tnum');
+		}
+	});
+	getTag();
+}
+function getCategory(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var data = {
+		"type":"category"
+	}
+	$("#category").html(dataShow(0));
+	var categoryText = $("#categoryText").val();
+	$.ajax({
+		type : "post",
+		url: API.getMetasList(),
+		data:{
+			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
+			"limit":100,
+			"page":1,
+		},
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				var list = result.data;
+				var html = ``;
+				if(list.length>0){
+					
+					for(var i in list){
+						var isActive = "";
+						var mid = list[i].mid;
+						if(categoryText!=""){
+							var arr = categoryText.split(",");
+							for(var j in arr){
+								if(arr[j]==mid){
+									isActive = "active";
+									if(localStorage.getItem('cnum')){
+										var cnum = localStorage.getItem('cnum');
+										cnum++;
+										localStorage.setItem('cnum',cnum);
+									}else{
+										localStorage.setItem('cnum',1);
+									}
+								}
+							}
+						}
+						
+						html+=`
+						<a href="javascript:;" class="toTag ${isActive}" data-mid="${list[i].mid}">
+							${list[i].name}
+						</a>
+						`;
+					}
+					$("#category").html(html);
+				}else{
+					$("#category").html(dataShow(1));
+					
+				}
+				
+			}
+		},
+		error : function(e){
+			$("#category").html(dataShow(1));
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function getTag(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var data = {
+		"type":"tag"
+	}
+	$("#tag").html(dataShow(0));
+	var tagText = $("#tagText").val();
+	$.ajax({
+		type : "post",
+		url: API.getMetasList(),
+		data:{
+			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
+			"limit":1000,
+			"page":1,
+		},
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				var list = result.data;
+				var html = ``;
+				if(list.length>0){
+					
+					for(var i in list){
+						var isActive = "";
+						var mid = list[i].mid;
+						if(tagText!=""){
+							var arr = tagText.split(",");
+							for(var j in arr){
+								if(arr[j]==mid){
+									isActive = "active";
+									if(localStorage.getItem('tnum')){
+										var tnum = localStorage.getItem('tnum');
+										tnum++;
+										localStorage.setItem('tnum',tnum);
+									}else{
+										localStorage.setItem('tnum',1);
+									}
+								}
+							}
+						}
+						
+						html+=`
+						<a href="javascript:;" class="toTag ${isActive}" data-mid="${list[i].mid}">
+							${list[i].name}
+						</a>
+						`;
+					}
+					$("#tag").html(html);
+				}else{
+					$("#tag").html(dataShow(1));
+					
+				}
+				
+			}
+		},
+		error : function(e){
+			$("#tag").html(dataShow(1));
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
 
+
+function contensLocal(){
+	var title = $("#title").val();
+	var text = editor.getMarkdown();
+	var category = $("#categoryText").val();
+	var tag = $("#tagText").val();
+	var shopID = $("#shopID").val();
+	var categoryBox = $("#categoryBox").html();
+	var tagBox = $("#tagBox").html();
+	if(title==""&&text==""){
+		localStorage.removeItem('contensLocal');
+		return false;
+	}
+	var data = {
+		'title':title,
+		'category':category,
+		'tag':tag,
+		'text':text,
+		'sid':shopID,
+		"categoryBox":categoryBox,
+		"tagBox":tagBox,
+	}
+	localStorage.setItem('contensLocal',JSON.stringify(data));
+}
+function contensAdd(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var title = $("#title").val();
+	var text = editor.getMarkdown();
+	var category = $("#categoryText").val();
+	var tag = $("#tagText").val();
+	var shopID = $("#shopID").val();
+	if (title == ""||category == ""||text == "") {
+		layer.msg("请输入正确的参数", {icon: 2});
+		return false
+	}
+	var data = {
+		'title':title,
+		'category':category,
+		'tag':tag,
+		'text':text,
+		'sid':shopID
+	}
+	var index = layer.load(1, {
+	  shade: [0.4,'#000']
+	});
+	
+	$.ajax({
+		type : "post",
+		url: API.contensAdd(),
+		data:{
+			"params":JSON.stringify(API.removeObjectEmptyKey(data)),
+			"token":token,
+		},
+		dataType: 'json',
+		success : function(result) {
+			layer.close(index); 
+			if(result.code==1){
+				layer.msg("操作成功！", {icon: 1});
+				localStorage.removeItem('contensLocal');
+				var timer = setTimeout(function() {
+					loadPage("pages/userpost.html","文章管理");
+				}, 500);
+				
+			}else{
+				layer.msg(result.msg, {icon: 2});
+			}
+		},
+		error : function(e){
+			layer.close(index); 
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function contensPic(){
+	
+	$("#contensPic").click();
+	$("#contensPic").change(function() {
+		var token;
+		if(localStorage.getItem("token")){
+			token = localStorage.getItem("token");
+		}else{
+			return false;
+		}
+		var formData = new FormData();
+		formData.append("file", $("#contensPic")[0].files[0]);
+		formData.append("token",token);
+		var index = layer.load(1, {
+		  shade: [0.4,'#000']
+		});
+		$.ajax({
+			url: API.upload(),
+			type: "post",
+			data: formData,
+			processData: false, // 告诉jQuery不要去处理发送的数据
+			contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+			dataType: 'json',
+			success: function(result) {
+				layer.close(index); 
+				
+				if(result.code==1){
+					layer.msg("上传成功！", {icon: 1});
+					editor.insertValue("![图片名称]("+result.data.url+")");
+				}else{
+					layer.msg(result.msg, {icon: 2});
+				}
+			},
+			error: function(data) {
+				layer.close(index); 
+				layer.alert("请求失败，请检查网络", {icon: 2});
+			}
+		});
+	})
+	
+}
+function toShop(){
+	layer.open({
+		title:"插入商品",
+		type: 1,
+		area: ['330px', '320px'], 
+		content: `
+		<div class="layer-form">
+			<div class="post-shop" id="post-shop">
+			</div>
+		</div>
+			
+		`
+	});
+	getShop();
+}
+function getShop(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var uid;
+	if(localStorage.getItem('userinfo')){
+		var userInfo = JSON.parse(localStorage.getItem('userinfo'));
+		uid = userInfo.uid;
+	}else{
+		return false;
+	}
+	var data = {
+		"uid":uid,
+		"status":1,
+	}
+	var shopID = $("#shopID").val();
+	$("#post-shop").html(dataShow(0));
+	$.ajax({
+		type : "post",
+		url: API.shopList(),
+		data:{
+			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
+			"limit":1000,
+			"page":1,
+		},
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				var list = result.data;
+				var html = ``;
+				if(list.length>0){
+					
+					for(var i in list){
+						var isActive = "";
+						if(shopID==list[i].id){
+							isActive = "active";
+						}
+						html+=`
+						<a href="javascript:;" class="shop-box ${isActive}" onclick="setShop(${list[i].id})">
+							<i class="iconfont icon-cart"></i>${list[i].title}
+						</a>
+						`;
+					}
+					$("#post-shop").html(html);
+				}else{
+					$("#post-shop").html(dataShow(1));
+					
+				}
+				
+			}
+		},
+		error : function(e){
+			$("#post-shop").html(dataShow(1));
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function setShop(id){
+	var shopID = $("#shopID").val();
+	if(id==shopID){
+		layer.msg("商品已解除挂载", {icon: 1});
+		$("#shopID").val("");
+		$(".fa-shopping-cart").removeClass("text-red");
+	}else{
+		layer.msg("商品已添加挂载", {icon: 1});
+		$("#shopID").val(id);
+		$(".fa-shopping-cart").addClass("text-red");
+		
+	}
+	var timer = setTimeout(function() {
+		layer.closeAll();
+	}, 1000);
+	
+}
+function getContent(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var cid;
+	if(localStorage.getItem('editCid')){
+		cid = localStorage.getItem('editCid');
+	}
+	var data = {
+		"key":cid,
+		"token":token,
+		"isMd":0,
+	}
+	var shopID = $("#shopID").val();
+	$("#post-shop").html(dataShow(0));
+	$.ajax({
+		type : "post",
+		url: API.getContentsInfo(),
+		data:data,
+		dataType: 'json',
+		success : function(result) {
+			if(result.title){
+				
+				var data = result;
+				var category;
+				var tag;
+				var categoryBox = "";
+				var tagBox = "";
+				if(data.category.length>0){
+					var list = data.category;
+					var clist ="";
+					for(var i in list){
+						categoryBox +=`
+							<a href="javascript:;" class="toTag data-cur" data-mid="${list[i].mid}">
+								${list[i].name}<i class="iconfont icon-close"></i>
+							</a>
+						`;
+						clist += ","+list[i].mid;
+						
+					}
+					
+					category = clist;
+					
+				}
+				if(data.tag.length>0){
+					var list = data.tag;
+					var ctag ="";
+					for(var i in list){
+						tagBox +=`
+							<a href="javascript:;" class="toTag data-cur" data-mid="${list[i].mid}">
+								${list[i].name}<i class="iconfont icon-close"></i>
+							</a>
+						`;
+						ctag += ","+list[i].mid;
+						
+					}
+					tag = ctag;
+					
+				}
+				categoryBox +=`
+					<a href="javascript:;" class="toTag" onclick="toCategory()">
+						<i class="iconfont icon-add"></i>
+					</a>
+				`;
+				tagBox +=`
+					<a href="javascript:;" class="toTag" onclick="toTag()">
+						<i class="iconfont icon-add"></i>
+					</a>
+				`;
+				$("#title").val(data.title);
+				$("#tagText").val(tag);
+				$("#categoryText").val(category);
+				editor.insertValue(data.text);
+				
+				$("#categoryBox").html(categoryBox);
+				$("#tagBox").html(tagBox);
+				cidShop();
+			}
+		},
+		error : function(e){
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function cidShop(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var uid;
+	if(localStorage.getItem('userinfo')){
+		var userInfo = JSON.parse(localStorage.getItem('userinfo'));
+		uid = userInfo.uid;
+	}else{
+		return false;
+	}
+	var cid;
+	if(localStorage.getItem('editCid')){
+		cid = localStorage.getItem('editCid');
+	}else{
+		return false;
+	}
+	var data = {
+		"uid":uid,
+		"status":1,
+	}
+	$.ajax({
+		type : "post",
+		url: API.shopList(),
+		data:{
+			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
+			"limit":1000,
+			"page":1,
+		},
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				var list = result.data;
+				if(list.length>0){
+					
+					for(var i in list){
+						if(list[i].cid == cid){
+										
+							$("#shopID").val(list[i].id);
+						}
+						
+					}
+				}
+			}
+		},
+		error : function(e){
+		}
+	});
+}
+function updateContents(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var title = $("#title").val();
+	var text = editor.getMarkdown();
+	var category = $("#categoryText").val();
+	var tag = $("#tagText").val();
+	var shopID = $("#shopID").val();
+	if (title == ""||category == ""||text == "") {
+		layer.msg("请输入正确的参数", {icon: 2});
+		return false
+	}
+	var cid;
+	if(localStorage.getItem('editCid')){
+		cid = localStorage.getItem('editCid');
+	}
+	var data = {
+		'cid':cid,
+		'title':title,
+		'category':category,
+		'tag':tag,
+		'text':text,
+		'sid':shopID
+	}
+	var index = layer.load(1, {
+	  shade: [0.4,'#000']
+	});
+	
+	$.ajax({
+		type : "post",
+		url: API.contensUpdate(),
+		data:{
+			"params":JSON.stringify(API.removeObjectEmptyKey(data)),
+			"token":token,
+		},
+		dataType: 'json',
+		success : function(result) {
+			layer.close(index); 
+			if(result.code==1){
+				layer.msg("操作成功！", {icon: 1});
+				localStorage.removeItem('editCid');
+				var timer = setTimeout(function() {
+					loadPage("pages/userpost.html","文章管理");
+				}, 500);
+				
+			}else{
+				layer.msg(result.msg, {icon: 2});
+			}
+		},
+		error : function(e){
+			layer.close(index); 
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+$(function(){
+	$("body").on('click','#shop-type a',function(){
+		$("#shop-type a").removeClass("active");
+		$(this).addClass("active");
+		var type = $(this).attr("data-type");
+		$("#type").val(type);
+		$("#page").val(1);
+		getShopList();
+	});
+	$("body").on('click','#shop-data-type a',function(){
+		$("#shop-data-type a").removeClass("active");
+		$(this).addClass("active");
+		var type = $(this).attr("data-type");
+		$("#type").val(type);
+		$("#page").val(1);
+		getShopList();
+	});
+})
+function toShopSearch(){
+	var searchText  = $("#searchText").val();
+	$("#page").val(1);
+	getShopList();
+}
+function getShopList(isPage){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var uid;
+	if(localStorage.getItem('userinfo')){
+		var userInfo = JSON.parse(localStorage.getItem('userinfo'));
+		uid = userInfo.uid;
+	}else{
+		return false;
+	}
+	var page = $("#page").val();
+	var searchText  = $("#searchText").val();
+	if(isPage){
+		page++;
+		$(".more a").text("正在加载中...")
+	}else{
+		$("#shop-list").html(dataShow(0));
+	}
+	var type = $("#type").val();
+	var data = {
+		"uid":uid,
+	}
+	if(type!="all"){
+		data.status = type;
+	}
+	$.ajax({
+		type : "post",
+		url: API.shopList(),
+		data:{
+			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
+			"limit":10,
+			"page":page,
+			"order":"created",
+			"searchKey":searchText,
+		},
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				var list = result.data;
+				var html = ``;
+				if(list.length>0){
+					$(".more").show();
+					$(".more a").text("加载更多");
+					for(var i in list){
+						var img = `<img src="img/nopic.png" />`;
+						if(list[i].imgurl!=""){
+							img = `<img src="${list[i].imgurl}"  onerror="this.onerror='';src='img/nopic.png'"/>`;
+						}
+						var status = `<span class="status-green">已上架</span>`;
+						if(list[i].status==0){
+							status = `<span class="status-orange">待审核</span>`;
+						}
+						if(list[i].status==2){
+							status = `<span class="status-red">已禁用</span>`;
+						}
+						html+=`
+						<div class="archives-list-box overflow-hidden">
+							<div class="archives-list-pic left">
+								${img}
+							</div>
+							<div class="archives-list-info left">
+								<div class="archives-list-title">
+									<a href="javascript:;" target="_blank">${list[i].title}</a>
+									<span class="right">${API.formatDate(list[i].created)}</span>
+								</div>
+								<div class="archives-list-status">
+									${status}
+								</div>
+								<div class="archives-list-links shop-links">
+									<div class="archives-list-data left">
+										<span>价格：<i class="text-red shop-price">${list[i].price}积分</i></span>
+										<span>剩余数量：<i>${list[i].num}</i></span>
+									</div>
+									<div class="archives-list-btn right">
+										<a href="javascript:;"  onclick='toShopEdit(${list[i].id})'>编辑商品</a>
+										<a href="javascript:;" onclick='toShopDelete(${list[i].id})'>删除商品</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						`;
+					}
+					if(isPage){
+						$("#page").val(page);
+						$("#shop-list").append(html);
+					}else{
+						$("#shop-list").html(html);
+					}
+				}else{
+					if(isPage){
+						$(".more").hide();
+					}else{
+						$(".more").hide();
+						$("#shop-list").html(dataShow(1));
+					}
+				}
+				
+			}else{
+				if(isPage){
+					$(".more").hide();
+				}else{
+					$(".more").hide();
+					$("#shop-list").html(dataShow(1));
+				}
+			}
+		},
+		error : function(e){
+			$(".more").hide();
+			$("#shop-list").html(dataShow(1));
+		}
+	});
+}
+var shopeditor;
+var buyeditor;
+function getShopBase(){
+	shopeditor = editormd("shopeditor", {
+	    path   : "editormd/lib/",
+		height  : 320,
+		watch : false,
+		placeholder:"请输入商品的介绍",
+	    toolbarIcons : function() {
+			return ["undo", "redo", "|", "bold", "del", "italic", "quote", "ucwords", "hr", "|", "h1", "h2", "h3", "h4", "h5", "h6", "|",  "list-ul", "list-ol", "hr","|","link","reference-link","code","preformatted-text", "code-block", "table","|","filepic", "||", "watch"]
+		},
+		toolbarCustomIcons : {
+			filepic : `<a href="javascript:;" title="添加图片" onclick="shopPic(0)"><i class="fa fa-picture-o"></i></a>
+			<input type="file" style="display:none"  accept="image/*" id="shopPic0"/>
+			`,
+		},
+		onload : function() {
+			
+		}
+		
+	});
+	buyeditor = editormd("buyeditor", {
+	    path   : "editormd/lib/",
+		height  : 320,
+		watch : false,
+		placeholder:"请输入商品的付费内容",
+	    toolbarIcons : function() {
+			return ["undo", "redo", "|", "bold", "del", "italic", "quote", "ucwords", "hr", "|", "h1", "h2", "h3", "h4", "h5", "h6", "|",  "list-ul", "list-ol", "hr","|","link","reference-link","code","preformatted-text", "code-block", "table","|","filepic","shopbag", "||", "watch"]
+		},
+		toolbarCustomIcons : {
+			filepic : `<a href="javascript:;" title="添加图片" onclick="shopPic(1)"><i class="fa fa-picture-o"></i></a>
+			<input type="file" style="display:none"  accept="image/*" id="shopPic1"/>
+			`,
+		},
+		onload : function() {
+			if(localStorage.getItem('shopLocal')&&localStorage.getItem('page')!="pages/shopEdit.html"){
+				var data = localStorage.getItem('shopLocal');
+				data = JSON.parse(data);
+				layer.msg("检测到本地缓存，已载入", {icon: 1});
+				var data = localStorage.getItem('shopLocal');
+				data = JSON.parse(data);
+				$("#title").val(data.title);
+				$("#type").val(data.type);
+				$("#shop-data-type a").removeClass("active");
+				$("#shop-data-type a[data-type='"+data.type+"']").addClass("active");
+				$("#imgurl").val(data.imgurl);
+				$("#price").val(data.price);
+				$("#num").val(data.num);
+				if(data.imgurl!=""){
+					$("#imgurlText").val("已上传图片");
+				}
+				shopeditor.clear();
+				buyeditor.clear();
+				shopeditor.insertValue(data.text);
+				buyeditor.insertValue(data.value);
+			}
+			if(localStorage.getItem('page')=="pages/shopEdit.html"){
+				getShopInfo()
+			}
+			
+		}
+		
+	});
+	
+}
+function shopPic(type){
+	
+	$("#shopPic"+type).click();
+	$("#shopPic"+type).change(function() {
+		var token;
+		if(localStorage.getItem("token")){
+			token = localStorage.getItem("token");
+		}else{
+			return false;
+		}
+		var formData = new FormData();
+		formData.append("file", $("#shopPic"+type)[0].files[0]);
+		formData.append("token",token);
+		var index = layer.load(1, {
+		  shade: [0.4,'#000']
+		});
+		$.ajax({
+			url: API.upload(),
+			type: "post",
+			data: formData,
+			processData: false, // 告诉jQuery不要去处理发送的数据
+			contentType: false, // 告诉jQuery不要去设置Content-Type请求头
+			dataType: 'json',
+			success: function(result) {
+				layer.close(index); 
+				
+				if(result.code==1){
+					layer.msg("上传成功！", {icon: 1});
+					if(type==0){
+						shopeditor.insertValue("![图片名称]("+result.data.url+")");
+						
+					}
+					if(type==1){
+						buyeditor.insertValue("![图片名称]("+result.data.url+")");
+					}
+					
+				}else{
+					layer.msg(result.msg, {icon: 2});
+				}
+			},
+			error: function(data) {
+				layer.close(index); 
+				layer.alert("请求失败，请检查网络", {icon: 2});
+			}
+		});
+	})
+	
+}
+function shopLocal(){
+	var title = $("#title").val();
+	var type = $("#type").val();
+	var text = shopeditor.getMarkdown();
+	var imgurl = $("#imgurl").val();
+	var price = $("#price").val();
+	var num = $("#num").val();
+	var value = buyeditor.getMarkdown();
+	var data = {
+		'title':title,
+		'type':type,
+		'text':text,
+		'imgurl':imgurl,
+		'price':price,
+		'num':num,
+		'value':value,
+	}
+	localStorage.setItem("shopLocal",JSON.stringify(data));
+}
+function addShop(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var title = $("#title").val();
+	var type = $("#type").val();
+	var text = shopeditor.getMarkdown();
+	var imgurl = $("#imgurl").val();
+	var price = $("#price").val();
+	var num = $("#num").val();
+	var value = buyeditor.getMarkdown();
+	if (title == ""||imgurl == ""||text == ""||price == ""||num == ""||value == "") {
+		layer.msg("请输入正确的参数", {icon: 2});
+		return false
+	}
+	if(price<=0||num<=0){
+		layer.msg("请输入正确的参数", {icon: 2});
+		return false
+	}
+	var data = {
+		'title':title,
+		'type':type,
+		'text':text,
+		'imgurl':imgurl,
+		'price':price,
+		'num':num,
+		'value':value,
+	}
+	var index = layer.load(1, {
+	  shade: [0.4,'#000']
+	});
+	
+	$.ajax({
+		type : "post",
+		url: API.addShop(),
+		data:{
+			"params":JSON.stringify(API.removeObjectEmptyKey(data)),
+			"token":token,
+		},
+		dataType: 'json',
+		success : function(result) {
+			layer.close(index); 
+			if(result.code==1){
+				layer.msg("操作成功！", {icon: 1});
+				localStorage.removeItem('shopLocal');
+				var timer = setTimeout(function() {
+					loadPage("pages/myshop.html","商品管理")
+				}, 500);
+				
+			}else{
+				layer.msg(result.msg, {icon: 2});
+			}
+		},
+		error : function(e){
+			layer.close(index); 
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function toShopEdit(id){
+	localStorage.setItem('editSid',id);
+	loadPage("pages/shopEdit.html","编辑商品");
+}
+function getShopInfo(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var sid;
+	if(localStorage.getItem('editSid')){
+		sid = localStorage.getItem('editSid');
+	}else{
+		return false;
+	}
+	var data = {
+		"key":sid,
+		"token":token
+	}
+	var shopID = $("#shopID").val();
+	$("#post-shop").html(dataShow(0));
+	$.ajax({
+		type : "post",
+		url: API.shopInfo(),
+		data:data,
+		dataType: 'json',
+		success : function(result) {
+			if(result.title){
+				
+				var data = result;
+				$("#title").val(data.title);
+				$("#type").val(data.type);
+				$("#shop-data-type a").removeClass("active");
+				$("#shop-data-type a[data-type='"+data.type+"']").addClass("active");
+				$("#imgurl").val(data.imgurl);
+				$("#price").val(data.price);
+				$("#num").val(data.num);
+				if(data.imgurl!=""){
+					$("#imgurlText").val("已上传图片");
+				}
+				shopeditor.clear();
+				buyeditor.clear();
+				shopeditor.insertValue(data.text);
+				buyeditor.insertValue(data.value);
+			}
+		},
+		error : function(e){
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function editShop(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var title = $("#title").val();
+	var type = $("#type").val();
+	var text = shopeditor.getMarkdown();
+	var imgurl = $("#imgurl").val();
+	var price = $("#price").val();
+	var num = $("#num").val();
+	var value = buyeditor.getMarkdown();
+	if (title == ""||imgurl == ""||text == ""||price == ""||num == ""||value == "") {
+		layer.msg("请输入正确的参数", {icon: 2});
+		return false
+	}
+	if(price<=0||num<=0){
+		layer.msg("请输入正确的参数", {icon: 2});
+		return false
+	}
+	var sid;
+	if(localStorage.getItem('editSid')){
+		sid = localStorage.getItem('editSid');
+	}
+	var data = {
+		'id':sid,
+		'title':title,
+		'type':type,
+		'text':text,
+		'imgurl':imgurl,
+		'price':price,
+		'num':num,
+		'value':value,
+	}
+	var index = layer.load(1, {
+	  shade: [0.4,'#000']
+	});
+	
+	$.ajax({
+		type : "post",
+		url: API.editShop(),
+		data:{
+			"params":JSON.stringify(API.removeObjectEmptyKey(data)),
+			"token":token,
+		},
+		dataType: 'json',
+		success : function(result) {
+			layer.close(index); 
+			if(result.code==1){
+				layer.msg("操作成功！", {icon: 1});
+				localStorage.removeItem('editSid');
+				var timer = setTimeout(function() {
+					loadPage("pages/myshop.html","商品管理")
+				}, 500);
+				
+			}else{
+				layer.msg(result.msg, {icon: 2});
+			}
+		},
+		error : function(e){
+			layer.close(index); 
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function toShopDelete(id){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	 layer.confirm('确认删除该商品？', {
+		btn: ['确定', '取消'],
+	}, function(index) {
+		var data = {
+			key: id,
+			token: token,
+		}
+		var index = layer.load(1, {
+		  shade: [0.4,'#000']
+		});
+		
+		$.ajax({
+			type : "post",
+			url: API.deleteShop(),
+			data:data,
+			dataType: 'json',
+			success : function(result) {
+				layer.close(index); 
+				if(result.code==1){
+					layer.msg("操作成功！", {icon: 1});
+					var timer = setTimeout(function() {
+						loadPage("pages/myshop.html","商品管理")
+					}, 500);
+					
+				}else{
+					layer.msg(result.msg, {icon: 2});
+				}
+			},
+			error : function(e){
+				layer.close(index); 
+				layer.alert("请求失败，请检查网络", {icon: 2});
+			}
+		});
+	}, function(index) {
+		layer.close(index);
+	});
+}

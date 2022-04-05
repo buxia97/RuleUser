@@ -1,0 +1,68 @@
+<div class="col-10 overflow-hidden">
+	<div class="padding col-10 left home-left">
+		<div class="data-box">
+			<div class="data-box-title">
+				<h4>发布新商品
+				<a href="javascript:;"  onclick='loadPage("pages/myshop.html","商品管理")'>商品列表
+					<i class="iconfont icon-more"></i>
+				</a>
+				</h4>
+			</div>
+			<div class="postConcent col-10 padding">
+				<div class="box-input title">
+					<input type="text" value="" id="title" placeholder="请输入商品标题"/>
+				</div>
+				<div class="box-input shop-input">
+					<label>商品类型</label>
+					<div class="col-10 overflow-hidden shop-type" id="shop-data-type">
+						<div class="col-25 left">
+							<a href="javascript:;" class="active" data-type="1">实体</a>
+						</div>
+						<div class="col-25 left">
+							<a href="javascript:;" data-type="2">源码</a>
+						</div>
+						<div class="col-25 left">
+							<a href="javascript:;" data-type="3">软件工具</a>
+						</div>
+						<div class="col-25 left">
+							<a href="javascript:;" data-type="4">付费阅读</a>
+						</div>
+					</div>
+					<input type="hidden" id="type" value="1"/>
+				</div>
+				<div class="box-input">
+					<div id="shopeditor">
+						<textarea style="display:none;"></textarea>
+					</div>
+				</div>
+				<div class="box-input shop-input">
+					<label>价格<span>只能为整数，以积分结算</span></label>
+					<input type="number" value="" id="price" placeholder="请输入商品价格"/>
+				</div>
+				<div class="box-input shop-input">
+					<label>数量<span>只能为整数</span></label>
+					<input type="number" value="" id="num" placeholder="请输入商品数量"/>
+				</div>
+				<div class="box-input shop-input">
+					<label>商品缩略图</label>
+					<input type="text" value="" disabled="disabled" id="imgurlText" placeholder="未上传图片"/>
+					<input type="hidden" id="imgurl"/>
+					<input type="file"  accept="image/*" style="display: none;" id="upload" />
+					<div class="input-links">
+						<a href="javascript:;" onclick="toPayPic()" class="text-green">查看图片</a>
+						<a href="javascript:;" onclick="uploadPic()">上传新图片</a>
+					</div>
+				</div>
+				<div class="box-input">
+					<div id="buyeditor">
+						<textarea style="display:none;"></textarea>
+					</div>
+				</div>
+				<div class="box-btn">
+					<button type="button" onclick="addShop()">确认发布</button>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+</div>

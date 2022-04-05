@@ -1,9 +1,42 @@
 <div class="col-10 overflow-hidden">
 	<div class="padding col-10 left home-left">
 		<div class="data-box">
-			<div class="data-box-title">
-				<h4>已出售订单
-				</h4>
+			<div class="data-top padding">
+				<button type="button" class="red"  onclick='loadPage("pages/shopAdd.html","发布新商品")'><i class="iconfont icon-add"></i>发布新商品</button>
+			</div>
+			<div class="data-header padding">
+				<div class="data-header-main overflow-hidden">
+					<div class="data-search right">
+						<div class="data-search-box">
+							<input type="text" id="searchText" placeholder="请输入关键字"/>
+							<button type="button" onclick="toShopSearch()">
+								<i class="iconfont icon-search"></i>
+							</button>
+						</div>
+					</div>
+					<div class="data-type left" id="shop-type">
+						<a href="javascript:;" class="active" data-type="all">
+							全部
+						</a>
+						<a href="javascript:;"  data-type="1">
+							已上架
+						</a>
+						<a href="javascript:;" data-type="0">
+							待审核
+						</a>
+						<a href="javascript:;" data-type="2">
+							已禁用
+						</a>
+						<input type="hidden" value="all" id="type"/>
+					</div>
+				</div>
+			</div>
+			<div class="shop-list col-10" id="shop-list">
+				
+			</div>
+			<div class="more">
+				<input type="hidden" value="1" id="page"/>
+				<a href="javascript:;" onclick="getShop(true)">加载更多</a>
 			</div>
 		</div>
 	</div>

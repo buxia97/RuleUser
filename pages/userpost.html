@@ -8,22 +8,23 @@
 				<div class="data-header-main overflow-hidden">
 					<div class="data-search right">
 						<div class="data-search-box">
-							<input type="text" placeholder="请输入关键字"/>
-							<button type="button">
+							<input type="text" id="searchText" placeholder="请输入关键字"/>
+							<button type="button" onclick="toSearch()">
 								<i class="iconfont icon-search"></i>
 							</button>
 						</div>
 					</div>
-					<div class="data-type left">
-						<a href="javascript:;" class="active">
+					<div class="data-type left" id="archives-type">
+						<a href="javascript:;" class="active" data-type="all">
 							全部
 						</a>
-						<a href="javascript:;">
+						<a href="javascript:;"  data-type="publish">
 							已发布
 						</a>
-						<a href="javascript:;">
+						<a href="javascript:;" data-type="waiting">
 							待审核
 						</a>
+						<input type="hidden" value="all" id="type"/>
 					</div>
 				</div>
 			</div>
