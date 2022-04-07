@@ -183,6 +183,9 @@ button{
 	top: 0;
 	left: 0;
 }
+.text-center{
+	text-align: center;
+}
 .logo{
 	float: left;
 	padding-top: 10px;
@@ -569,7 +572,7 @@ button{
 	line-height: 20px;
 	font-size: 15px;
 }
-.comment-box{
+.comment-box,.order-box{
 	width: 100%;
 	padding: 15px 0px;
 	border-bottom: #e9ecf3 1px solid;
@@ -678,7 +681,7 @@ button{
 }
 .isLogin-logo{
 	width: 100%;
-	margin: 10px 0px 15px 0px;
+	margin: 20px 0px 15px 0px;
 }
 .isLogin-logo img{
 	display: block;
@@ -1060,6 +1063,7 @@ button{
 }
 .archives-list-links{
 	margin-top: 32px;
+	overflow: hidden;
 }
 .archives-list-data span{
 	color: #666;
@@ -1148,6 +1152,114 @@ button{
 	background-color: #0000FF;
 	color: #fff !important;
 }
+.order-title{
+	font-size: 16px;
+	line-height: 30px;
+	margin-bottom:12px;
+	font-weight: bold;
+	color: #000000;
+}
+.order-type{
+	padding: 0px 12px;
+	background-color: #0000FF;
+	color: #fff;
+	border-radius: 4px;
+	font-weight: normal;
+	font-size: 14px;
+}
+.order-shop{
+	padding: 15px 15px;
+	background-color: #f3f3f3;
+	margin-bottom: 10px;
+}
+.order-shop a{
+	color: #333;
+}
+.order-date{
+	margin-top: 5px;
+	text-align: right;
+}
+.order-data .order-price{
+	font-size: 18px;
+	font-weight: bold;
+}
+.order-data a{
+	margin-left: 10px;
+}
+.pay{
+	padding: 10px 40px;
+	margin-top: 20px;
+}
+.pay-input{
+	max-width: 300px;
+	overflow: hidden;
+	border-radius: 4px;
+	height: 35px;
+	border: solid 1px #0000FF;
+	margin-top: 20px;
+	margin-bottom: 25px;
+}
+.pay-input input{
+	width: calc(100% - 80px);
+	border: none;
+	padding: 0px 15px;
+	float: left;
+	height: 35px;
+	outline: none;
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 35px;
+}
+.pay-input button{
+	display: block;
+	border-radius: 0px;
+	height: 35px;
+	line-height: 35px;
+	width: 80px;
+	float: left;
+	background-color: #0000FF;
+	color: #fff;
+}
+.pay-tips{
+	line-height: 28px;
+}
+.pay-tips h5{
+	font-size: 17px;
+	margin-bottom: 10px;
+}
+.pay-price{
+	font-size: 25px;
+	font-weight: bold;
+}
+.data-box-title .title-tips{
+	font-size: 13px;
+	margin-left: 5px;
+	font-weight: normal;
+}
+.tocan{
+	position: absolute;
+	top: 15px;
+	color: #000;
+	right: 15px;
+}
+.tocan i{
+	font-size: 18px;
+	margin-right: 5px;
+}
+.scanPic{
+	width: 270px;
+	height: 270px;
+}
+.backLogin{
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	display: none;
+}
+.backLogin i{
+	font-size: 18px;
+	margin-right: 5px;
+}
 @media all and (max-width: 1600px) {
 	.home-left,.home-right{
 		width: 100%;
@@ -1229,6 +1341,19 @@ button{
 	.data-box{
 		padding: 20px 15px;
 	}
+	.archives-list-pic{
+		width: 100%;
+		height: 300px;
+	}
+	.archives-list-title span{
+		display: block;
+		float: none;
+		margin-top: 5px;
+	}
+	.archives-list-info{
+		width: 100%;
+		margin-top: 10px;
+	}
 }
 @media all and (max-width: 660px) {
 	.total-data-box h5{
@@ -1249,6 +1374,31 @@ button{
 	}
 	.main{
 		padding-top: 70px;
+	}
+	.pay{
+		margin-top: 10px;
+		padding: 10px;
+	}
+	.archives-list-pic{
+		height: 250px;
+	}
+	.data-search{
+		float: none;
+		margin-bottom: 10px;
+		overflow: hidden;
+	}
+	.data-search-box{
+		float: right;
+	}
+	.data-header-main{
+		height: 95px;
+	}
+	.archives-list-links{
+		margin-top: 15px;
+	}
+	.more a{
+		background: #f3f3f3;
+		color: #666;
 	}
 }
 @media all and (max-width: 460px) {
@@ -1273,6 +1423,37 @@ button{
 	.header-left{
 		width: 200px;
 	}
+	.archives-list-pic{
+		height: 190px;
+	}
+	.data-search-box{
+		width: 100%;
+		height: 35px;
+	}
+	.data-search-box input{
+		width: calc(100% - 40px);
+		height: 35px;
+	}
+	.data-search-box button{
+		height: 35px;
+		line-height: 35px;
+	}
+	.archives-list-btn,.archives-list-data{
+		float: none;
+		font-size: 13px;
+	}
+	.archives-list-btn{
+		margin-top: 15px;
+		text-align: right;
+		font-size: 13px;
+	}
+	.archives-list-box{
+		padding: 20px 0px;
+	}
+	.comment-box, .order-box{
+		font-size: 13px;
+	}
+	
 }
 @media all and (max-width: 380px) {
 	.total-data-box p{
@@ -1280,6 +1461,12 @@ button{
 	}
 	.total-data-box{
 		padding: 10px 12px;
+	}
+	.archives-list-pic{
+		height: 150px;
+	}
+	.data-type a{
+		margin-right: 20px;
 	}
 	
 }

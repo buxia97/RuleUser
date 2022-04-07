@@ -28,7 +28,7 @@ $(function(){
 	});
 	
 });
-
+var order = "abcdefghijkmlnopqrstuvwsyz.-";
 function main(){
 	var html = `
 	<div class="header" id="header"></div>
@@ -74,10 +74,10 @@ function header(){
 		</div>
 		<div class="menu">
 			<div class="menu-main">
-				<div class="menu-box">
+				<div class="menu-box menuIndex">
 					<a href="javascript:;" class="active" onclick='loadPage("pages/home.html","用户首页")'><i class="iconfont icon-color"></i>用户首页</a>
 				</div>
-				<div class="menu-box">
+				<div class="menu-box menuUser">
 					<a href="javascript:;"><i class="iconfont icon-bussinessman"></i>个人中心<i class="iconfont icon-moreunfold"></i></a>
 					<div class="menu-sub">
 						<div class="menu-sub-box">
@@ -91,7 +91,7 @@ function header(){
 						</div>
 					</div>
 				</div>
-				<div class="menu-box">
+				<div class="menu-box menuPost">
 					<a href="javascript:;"><i class="iconfont icon-form"></i>创作中心<i class="iconfont icon-moreunfold"></i></a>
 					<div class="menu-sub">
 						<div class="menu-sub-box">
@@ -105,14 +105,14 @@ function header(){
 						</div>
 					</div>
 				</div>
-				<div class="menu-box">
+				<div class="menu-box menuAssets">
 					<a href="javascript:;"><i class="iconfont icon-trade-assurance"></i>财务中心<i class="iconfont icon-moreunfold"></i></a>
 					<div class="menu-sub">
 						<div class="menu-sub-box">
 							<a href="javascript:;" onclick='loadPage("pages/pay.html","在线充值")'>在线充值</a>
 						</div>
 						<div class="menu-sub-box">
-							<a  href="javascript:;" onclick='loadPage("pages/userwithdrawlist.html","提现申请")'>提现申请</a>
+							<a  href="javascript:;" onclick='loadPage("pages/withdraw.html","提现申请")'>提现申请</a>
 						</div>
 						<div class="menu-sub-box">
 							<a href="javascript:;" onclick='loadPage("pages/order.html","购买订单")'>购买订单</a>
@@ -128,6 +128,7 @@ function header(){
 	`;
 	$("#header").html(html);
 }
+var encry2 = "qaZWsXedCrfvtgbyhNujmikolpFG";
 function footer(){
 	var html = `
 	<div class="footer-main">
@@ -160,6 +161,7 @@ function footer(){
 	`;
 	$("#footer").html(html);
 }
+var kk = "%E8%AF%B7%E5%85%88%E5%AE%8C%E6%88%90%E6%8E%88%E6%9D%83";
 //页面载入入口
 function loadPage(url,title){
 	loading();
@@ -190,23 +192,25 @@ function pageData(page){
 		getIndexNotice();
 		recommendList();
 		indexComment();
-	}
-	if(page=="pages/userinfo.html"){
-		
+		menuActive(".menuIndex");
 	}
 	if(page=="pages/inbox.html"){
 		getInbox();
+		menuActive(".menuUser");
 	}
 	if(page=="pages/usermark.html"){
 		getMark();
+		menuActive(".menuUser");
 	}
 	if(page=="pages/userinfo.html"){
 		getUserInfo();
+		menuActive(".menuUser");
 	}
 	if(page=="pages/post.html"){
 		localStorage.removeItem('cnum');
 		postStyle();
 		getContensLocal();
+		menuActive(".menuPost");
 		//定时保存本地输入
 		setInterval(function () {
 			contensLocal();	
@@ -217,20 +221,25 @@ function pageData(page){
 		localStorage.removeItem('cnum');
 		postStyle();
 		getContensLocal();
+		menuActive(".menuPost");
 		//getContent();
 	}
 	if(page=="pages/userpost.html"){
 		getArchives();
+		menuActive(".menuPost");
 	}
 	if(page=="pages/comment.html"){
 		getComment();
+		menuActive(".menuPost");
 	}
 	if(page=="pages/myshop.html"){
 		getShopList();
+		menuActive(".menuPost");
 	}
 	if(page=="pages/shopAdd.html"){
 		postStyle();
 		getShopBase();
+		menuActive(".menuPost");
 		//定时保存本地输入
 		setInterval(function () {
 			shopLocal();	
@@ -240,11 +249,40 @@ function pageData(page){
 	if(page=="pages/shopEdit.html"){
 		postStyle();
 		getShopBase();
+		menuActive(".menuPost");
 		
 	}
+	if(page=="pages/sellorder.html"){
+		getSelOrder();
+		menuActive(".menuPost");
+	}
+	if(page=="pages/userwithdrawlist.html"){
+		getWithdrawList();
+		menuActive(".menuAssets");
+	}
+	if(page=="pages/order.html"){
+		getBuyOrder();
+		menuActive(".menuAssets");
+	}
+	if(page=="pages/value.html"){
+		valueStyle();
+		getValue();
+		menuActive(".menuAssets");
+	}
+	if(page=="pages/pay.html"){
+		menuActive(".menuAssets");
+	}
+	if(page=="pages/withdraw.html"){
+
+		menuActive(".menuAssets");
+	}
+	loginUser();
 	
-	
-	
+}
+var encry3 = "mNBvcXzLkjhGfdsApoIuYtrEWqJH";
+function menuActive(text){
+	$(".menu-box a").removeClass("active");
+	$(text+">a").addClass("active");
 }
 function loading(){
 	var html = `
@@ -257,6 +295,7 @@ function loading(){
 	$("#main .content").html(html);
 }
 function isLogin(){
+	
 	var html = `
 	<div class="isLogin-bg">
 		<img src="img/bg.jpg" />
@@ -264,6 +303,8 @@ function isLogin(){
 	</div>
 	<div class="isLogin-main">
 		<div class="isLogin-box">
+			<a href="javascript:;" class="tocan" onclick="tocan()"><i class="iconfont icon-scanning"></i>扫码登录</a>
+			<a href="javascript:;" class="backLogin" onclick="login()"><i class="iconfont icon-password"></i>密码登录</a>
 			<div class="isLogin-logo">
 				<a href="${WEB_URL}"><img src="${LOGO_URL}" /></a>
 			</div>
@@ -275,7 +316,17 @@ function isLogin(){
 	`;
 	$("#isLogin").html(html);
 }
+function randomString(e) {    
+    e = e || 32;
+    var t = "ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678",
+    a = t.length,
+    n = "";
+    for (i = 0; i < e; i++) n += t.charAt(Math.floor(Math.random() * a));
+    return n
+}
 function login(){
+	$(".tocan").show();
+	$(".backLogin").hide();
 	var html = `
 		<div class="box-input">
 			<input type="text" placeholder="请输入用户名" id="username" value=""/>
@@ -342,12 +393,63 @@ function register(){
 		</div>
 		<div class="form-links">
 			<a href="javascript:;" onclick="login()">用户登录</a>
-			<a href="javascript:;" onclick="register()">用户注册</a>
 			<br/>
 			<p class="margin-top">注册即为同意<a href="#">《用户协议》</a></p>
 		</div>
 		`;
 	$("#isLogin-form").html(html);
+}
+var Interval;
+function tocan(){
+	var text = randomString(7)+new Date().getTime();
+	$(".tocan").hide();
+	$(".backLogin").show();
+	var html = `
+		
+		<img src="${API.getScan()}?codeContent=${text}" class="col-10 scanPic"/>
+		<input type="hidden" value="${text}" id="codeContent"/>
+		<div class="box-input text-center">
+			<h4>使用本网站APP进行扫码</h4>
+			<p class="margin-top"><a href="${appUrl}" target="_blank">${webName}客户端</a></p>
+		</div>
+		`;
+	$("#isLogin-form").html(html);
+	Interval = setInterval(function () {
+		getScan();
+	}, 1000);
+}
+function getScan(){
+	var text = $("#codeContent").val();
+	
+	$.ajax({
+		type : "post",
+		data:{
+			"codeContent":text
+		},
+		url : API.getScanStatus(),
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				layer.msg("扫码登录成功！", {icon: 1});
+				clearInterval(Interval);
+				//保存用户信息
+				localStorage.setItem('userinfo',JSON.stringify(result.data));
+				localStorage.setItem('token',result.data.token);
+				var timer = setTimeout(function() {
+					location.reload();
+					clearTimeout('timer')
+				}, 1000)
+			}else if(result.code==-1){
+				clearInterval(Interval);
+				layer.msg("二维码已过期，开始重新生成", {icon: 2});
+				tocan();
+			}
+		},
+		error : function(e){
+			clearInterval(Interval);
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
 }
 function tomenu(){
 	if($(".header-left").hasClass("wapShow")){
@@ -399,7 +501,7 @@ function userStatus(){
 		}
 	});
 }
-
+var encry1 = "MRqwErtYuiTplKjhgfdSaZXcvbNm";
 function toLogin(){
 	var username = $("#username").val();
 	var userpass = $("#userpass").val();
@@ -710,6 +812,57 @@ function dataShow(type){
 	}
 	return html;
 }
+//登录校验
+function loginUser(){
+	var plan;
+	var www;
+	var planVlaue;
+	var planArr;
+	if(authorize.indexOf("Gjk==") != -1 ){
+		plan=0;
+	}
+	if(authorize.indexOf("MwL==") != -1 ){
+		plan=1;
+	}
+	if(authorize.indexOf("qvB==") != -1 ){
+		plan=2;
+	}
+	if(plan==0){
+		planVlaue="Gjk==";
+		www = "iurer";
+		planArr=encry1;
+	}
+	if(plan==1){
+		planVlaue="MwL==";
+		www = "jjetg";
+		planArr=encry2;
+	}
+	if(plan==2){
+		planVlaue="qvB==";
+		www = "cdpvc";
+		planArr=encry3;
+	}
+	authorize = authorize.replace(planVlaue,"");
+	var totext="";
+	for(var i in authorize){
+		var index = planArr.indexOf(authorize[i]);
+		totext=totext+order[index];
+		
+	}
+	totext = totext.replace(www,"www");
+	var domain = window.location.hostname;
+	if(domain=="127.0.0.1"){
+		return false;
+	}
+	if(totext!=domain){
+		localStorage.clear();
+	}
+	if(totext!=domain){
+		layer.alert(decodeURIComponent(kk), {icon: 2});
+		//location.reload();
+	}
+	
+}
 function toOwo(){
 	$(".owo").toggle();
 }
@@ -857,11 +1010,11 @@ function getIndexPost(){
 										<p>浏览量</p>
 									</div>
 									<div class="col-25 right">
-										<h5>${list[i].allowComment}</h5>
+										<h5>${formatNumber(list[i].allowComment)}</h5>
 										<p>评论量</p>
 									</div>
 									<div class="col-25 right">
-										<h5>${list[i].likes}</h5>
+										<h5>${formatNumber(list[i].likes)}</h5>
 										<p>点赞量</p>
 									</div>
 								</div>
@@ -1200,6 +1353,7 @@ function reply(author,coid,cid){
 	});
 	OWO();
 }
+
 function toReply(){
 	var token;
 	if(localStorage.getItem("token")){
@@ -1573,6 +1727,19 @@ function postStyle(){
 	`;
 	var script =`
 	<script src="editormd/editormd.min.js"></script>`;
+	$("head").append(style);
+	$("#base").before(script);
+}
+function valueStyle(){
+	var style =`
+	<link rel="stylesheet" href="editormd/css/editormd.css" />
+	`;
+	var script =`
+	<script src="editormd/editormd.min.js"></script>
+	<script src="editormd/lib/prettify.min.js"></script>
+	<script src="editormd/lib/marked.min.js"></script>
+	`;
+	
 	$("head").append(style);
 	$("#base").before(script);
 }
@@ -1956,8 +2123,8 @@ function getArchives(isPage){
 								<div class="archives-list-links">
 									<div class="archives-list-data left">
 										<span><i class="iconfont icon-browse"></i>${formatNumber(list[i].views)}</span>
-										<span><i class="iconfont icon-remind1"></i>${list[i].commentsNum}</span>
-										<span><i class="iconfont icon-good"></i>${list[i].likes}</span>
+										<span><i class="iconfont icon-remind1"></i>${formatNumber(list[i].commentsNum)}</span>
+										<span><i class="iconfont icon-good"></i>${formatNumber(list[i].likes)}</span>
 									</div>
 									<div class="archives-list-btn right">
 										<a href="${toLinks(list[i].cid)}" target="_blank">访问文章</a>
@@ -2775,6 +2942,7 @@ function getShopList(isPage){
 						if(list[i].status==2){
 							status = `<span class="status-red">已禁用</span>`;
 						}
+						var type =`<span class="status-gray">${getShopType(list[i].type)}</span>`;
 						html+=`
 						<div class="archives-list-box overflow-hidden">
 							<div class="archives-list-pic left">
@@ -2787,6 +2955,7 @@ function getShopList(isPage){
 								</div>
 								<div class="archives-list-status">
 									${status}
+									${type}
 								</div>
 								<div class="archives-list-links shop-links">
 									<div class="archives-list-data left">
@@ -2961,6 +3130,10 @@ function shopLocal(){
 		'price':price,
 		'num':num,
 		'value':value,
+	}
+	if (title == ""||imgurl == ""||text == ""||price == ""||num == ""||value == "") {
+		
+		return false
 	}
 	localStorage.setItem("shopLocal",JSON.stringify(data));
 }
@@ -3188,5 +3361,523 @@ function toShopDelete(id){
 		});
 	}, function(index) {
 		layer.close(index);
+	});
+}
+function getShopType(id){
+	id = id-1;
+	var arr =["实体","源码","软件工具","付费阅读"];
+	return arr[id];
+}
+function getSelOrder(isPage){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var uid;
+	if(localStorage.getItem('userinfo')){
+		var userInfo = JSON.parse(localStorage.getItem('userinfo'));
+		uid = userInfo.uid;
+	}else{
+		return false;
+	}
+	var page = $("#page").val();
+	if(isPage){
+		page++;
+		$(".more a").text("正在加载中...")
+	}else{
+		$("#order").html(dataShow(0));
+	}
+	var data = {
+		"limit":10,
+		"page":page,
+		"token":token
+	}
+	$.ajax({
+		type : "post",
+		url: API.orderSellList(),
+		data:data,
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				var list = result.data;
+				var html = ``;
+				if(list.length>0){
+					$(".more").show();
+					$(".more a").text("加载更多");
+					for(var i in list){
+						var type = "";
+						var shopinfo= `
+						<div class="order-shop">
+							<a href="javascript:;">[该商品已失效！]</a>
+							<p class="order-date">${API.formatDate(list[i].created)}</p>
+						</div>
+						`;
+						var price = "";
+						var toAddress = '';
+						if(list[i].shopInfo){
+							type = `<span class="order-type right">${getShopType(list[i].shopInfo.type)}</span>`;
+							shopinfo = `
+							<div class="order-shop">
+								<a href="javascript:;">${list[i].shopInfo.title}</a>
+								<p class="order-date">${API.formatDate(list[i].created)}</p>
+							</div>
+							`;
+							price = `
+							成交价格：<span class="order-price text-red">${list[i].shopInfo.price} 积分</span>
+							`;
+							if(list[i].shopInfo.type==1){
+								toAddress = `<a href="javascript:;" class="right" onclick='userAddress(${JSON.stringify(list[i].address)})'>查看用户地址</a>`;
+							}
+							
+						}
+						html+=`
+						<div class="order-box">
+							<div class="order-title">
+								<p>订单ID：${list[i].id}${list[i].created}
+								${type}
+								</p>
+							</div>
+							${shopinfo}
+							<div class="order-data">
+								<p>${price} 
+								<a href="javascript:;" class="right" onclick="userEmail('${list[i].userEmail}')">联系该用户</a>
+								${toAddress}
+								</p>
+							</div>
+						</div>
+						`;
+					}
+					if(isPage){
+						$("#page").val(page);
+						$("#order").append(html);
+					}else{
+						$("#order").html(html);
+					}
+				}else{
+					if(isPage){
+						$(".more").hide();
+					}else{
+						$(".more").hide();
+						$("#order").html(dataShow(1));
+					}
+				}
+				
+			}else{
+				if(isPage){
+					$(".more").hide();
+				}else{
+					$(".more").hide();
+					$("#order").html(dataShow(1));
+				}
+			}
+		},
+		error : function(e){
+			$(".more").hide();
+			$("#order").html(dataShow(1));
+		}
+	});
+}
+function userEmail(text){
+	if(text==""){
+		layer.msg("该用户未配置邮箱或已失效", {icon: 2});
+		return false;
+	}
+	layer.open({
+		title:"联系用户",
+		type: 1,
+		area: ['320px', '200px'], 
+		content: `
+		<div class="layer-form">
+			<div class="box-input text-center">
+				${text}
+			</div>
+		</div>
+			
+		`,
+		cancel: function(){
+		}
+	});
+}
+function userAddress(text){
+	if(text==""){
+		layer.msg("该用户未配置地址或已失效", {icon: 2});
+		return false;
+	}
+	layer.open({
+		title:"用户地址信息",
+		type: 1,
+		area: ['320px', '200px'], 
+		content: `
+		<div class="layer-form">
+			<div class="box-input">
+				${text}
+			</div>
+		</div>
+			
+		`,
+		cancel: function(){
+		}
+	});
+}
+function pay(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var num = $("#num").val();
+	if(num==""||num<=0){
+		layer.msg("请输入正确的充值金额", {icon: 2});
+		return false;
+	}
+	if(num<5){
+		layer.msg("最低充值金额为5元", {icon: 2});
+		return false;
+	}
+	var data = {
+		num: num,
+		token: token,
+	}
+	var index = layer.load(1, {
+	  shade: [0.4,'#000']
+	});
+	
+	$.ajax({
+		type : "post",
+		url: API.scancodePay(),
+		data:data,
+		dataType: 'json',
+		success : function(result) {
+			layer.close(index); 
+			if(result.code==1){
+				var url = result.data;
+				var codeImg = API.qrCode()+"?codeContent="+url;
+				showCode(codeImg);
+			}else{
+				layer.msg(result.msg, {icon: 2});
+			}
+		},
+		error : function(e){
+			layer.close(index); 
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function showCode(img){
+	var num = $("#num").val();
+	layer.open({
+		title:"请扫描二维码",
+		type: 1,
+		area: ['280px', '370px'], 
+		content: `
+		<div class="layer-form">
+			<img src="${img}" class="col-10"/>
+			
+			<p class="text-center text-red pay-price">￥ ${num}</p>
+		</div>
+		`
+	});
+}
+function withdraw(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var num = $("#num").val();
+	if(num==""||num<=0){
+		layer.msg("请输入正确的提现数量", {icon: 2});
+		return false;
+	}
+	if(num<5000){
+		layer.msg("最低提现数量为5000积分", {icon: 2});
+		return false;
+	}
+	var data = {
+		num: num,
+		token: token,
+	}
+	var index = layer.load(1, {
+	  shade: [0.4,'#000']
+	});
+	
+	$.ajax({
+		type : "post",
+		url: API.userWithdraw(),
+		data:data,
+		dataType: 'json',
+		success : function(result) {
+			layer.close(index); 
+			if(result.code==1){
+				layer.msg("提现操作成功！", {icon: 1});
+				var timer = setTimeout(function() {
+					loadPage("pages/userwithdrawlist.html","提现记录")
+					clearTimeout('timer')
+				}, 1000)
+			}else{
+				layer.msg(result.msg, {icon: 2});
+			}
+		},
+		error : function(e){
+			layer.close(index); 
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function getWithdrawList(isPage){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var uid;
+	if(localStorage.getItem('userinfo')){
+		var userInfo = JSON.parse(localStorage.getItem('userinfo'));
+		uid = userInfo.uid;
+	}else{
+		return false;
+	}
+	var page = $("#page").val();
+	if(isPage){
+		page++;
+		$(".more a").text("正在加载中...")
+	}else{
+		$("#withdrawlist").html(dataShow(0));
+	}
+	var data = {
+		"type":"withdraw",
+		"uid":uid
+	}
+	$.ajax({
+		type : "post",
+		url: API.withdrawList(),
+		data:{
+			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
+			"limit":5,
+			"page":page,
+			"token":token
+		},
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				var list = result.data;
+				var html = ``;
+				if(list.length>0){
+					$(".more").show();
+					$(".more a").text("加载更多");
+					for(var i in list){
+						var typestyle = getWithdrawStyle(list[i].cid);
+						var type = `<span class="order-type right ${typestyle}">${getWithdrawType(list[i].cid)}</span>`;
+						html+=`
+						<div class="order-box">
+							<div class="order-title">
+								<p>订单ID：${list[i].id}
+								${type}
+								</p>
+							</div>
+							<div class="order-data">
+								<p><span class="text-red">${list[i].num}积分</span>
+								<span class="right">${API.formatDate(list[i].created)}<span>
+								</p>
+							</div>
+						</div>
+						`;
+					}
+					if(isPage){
+						$("#page").val(page);
+						$("#withdrawlist").append(html);
+					}else{
+						$("#withdrawlist").html(html);
+					}
+				}else{
+					if(isPage){
+						$(".more").hide();
+					}else{
+						$(".more").hide();
+						$("#withdrawlist").html(dataShow(1));
+					}
+				}
+				
+			}else{
+				if(isPage){
+					$(".more").hide();
+				}else{
+					$(".more").hide();
+					$("#withdrawlist").html(dataShow(1));
+				}
+			}
+		},
+		error : function(e){
+			$(".more").hide();
+			$("#withdrawlist").html(dataShow(1));
+		}
+	});
+}
+function getWithdrawType(i){
+	if(i==-2){
+		i=2;
+	}
+	var arr=["已成功","审核中","已拒绝"];
+	return arr[i];
+}
+function getWithdrawStyle(i){
+	if(i==-2){
+		i=2;
+	}
+	var arr=["status-green","status-orange","status-red"];
+	return arr[i];
+}
+function getBuyOrder(isPage){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var uid;
+	if(localStorage.getItem('userinfo')){
+		var userInfo = JSON.parse(localStorage.getItem('userinfo'));
+		uid = userInfo.uid;
+	}else{
+		return false;
+	}
+	var page = $("#page").val();
+	if(isPage){
+		page++;
+		$(".more a").text("正在加载中...")
+	}else{
+		$("#buyorder").html(dataShow(0));
+	}
+	var data = {
+		"token":token
+	}
+	$.ajax({
+		type : "post",
+		url: API.orderList(),
+		data:data,
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				var list = result.data;
+				var html = ``;
+				if(list.length>0){
+					$(".more").show();
+					$(".more a").text("加载更多");
+					for(var i in list){
+						var type = "";
+						var shopinfo= `
+						<div class="order-shop">
+							<a href="javascript:;">[该商品已失效！]</a>
+							<p class="order-date">${API.formatDate(list[i].created)}</p>
+						</div>
+						`;
+						var price = "";
+						var toValue = '';
+						if(list[i].shopInfo){
+							type = `<span class="order-type right">${getShopType(list[i].shopInfo.type)}</span>`;
+							shopinfo = `
+							<div class="order-shop">
+								<a href="javascript:;">${list[i].shopInfo.title}</a>
+								<p class="order-date">${API.formatDate(list[i].created)}</p>
+							</div>
+							`;
+							price = `
+							成交价格：<span class="order-price text-red">${list[i].shopInfo.price} 积分</span>
+							`;
+							if(list[i].shopInfo.type!=1){
+								toValue = `<a href="javascript:;" class="right text-red" onclick='toInfo(${list[i].toid})'>查看收费内容</a>`;
+							}
+							
+						}
+						html+=`
+						<div class="order-box">
+							<div class="order-title">
+								<p>订单ID：${list[i].id}${list[i].created}
+								${type}
+								</p>
+							</div>
+							${shopinfo}
+							<div class="order-data">
+								<p>${price} 
+								<a href="javascript:;" class="right" onclick="userEmail('${list[i].merchantEmail}')">联系商家</a>
+								${toValue}
+								</p>
+							</div>
+						</div>
+						`;
+					}
+					if(isPage){
+						$("#page").val(page);
+						$("#buyorder").append(html);
+					}else{
+						$("#buyorder").html(html);
+					}
+				}else{
+					if(isPage){
+						$(".more").hide();
+					}else{
+						$(".more").hide();
+						$("#buyorder").html(dataShow(1));
+					}
+				}
+				
+			}else{
+				if(isPage){
+					$(".more").hide();
+				}else{
+					$(".more").hide();
+					$("#buyorder").html(dataShow(1));
+				}
+			}
+		},
+		error : function(e){
+			$(".more").hide();
+			$("#buyorder").html(dataShow(1));
+		}
+	});
+}
+function toInfo(id){
+	localStorage.setItem("vid",id);
+	loadPage("pages/value.html","提现记录");
+}
+function getValue(){
+	var token;
+	var id;
+	
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	if(localStorage.getItem("vid")){
+		id = localStorage.getItem("vid");
+	}else{
+		return false;
+	}
+	var data = {
+		key: id,
+		token: token,
+	}
+	$.ajax({
+		type : "post",
+		url: API.shopInfo(),
+		data:data,
+		dataType: 'json',
+		success : function(result) {
+			if(result.value){
+				$("#value textarea").html(result.value);
+				var testEditormdView = editormd.markdownToHTML("value", {
+					htmlDecode      : "style,script,iframe",  // you can filter tags decode
+				});
+		}
+		},
+		error : function(e){
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
 	});
 }

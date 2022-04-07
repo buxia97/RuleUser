@@ -1,6 +1,9 @@
 //var API_URL = 'https://api.ruletree.club/'; //API地址，需要先开启允许跨域
 var API_URL = 'http://127.0.0.1:8081/';
 
+//授权码（必填）
+var authorize = "uafEfNfalESfEENqlaRGjk==";
+
 var WEB_URL = 'https://www.ruletree.club/'; //网站地址
 var LOGO_URL = "https://www.ruletree.club/logo.png";
 
@@ -92,6 +95,12 @@ var API = {
 	},
 	userBindStatus:function(){
 		return API_URL + 'typechoUsers/userBindStatus';
+	},
+	getScan:function(){
+		return API_URL + 'typechoUsers/getScan';
+	},
+	getScanStatus:function(){
+		return API_URL + 'typechoUsers/getScanStatus';
 	},
 	getMarkList:function(){
 		return API_URL + 'typechoUserlog/markList';
