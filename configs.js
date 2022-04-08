@@ -1,17 +1,19 @@
-//var API_URL = 'https://api.ruletree.club/'; //API地址，需要先开启允许跨域
-var API_URL = 'http://127.0.0.1:8081/';
+var API_URL = 'https://api.ruletree.club/'; //API地址，需要先开启允许跨域
+//var API_URL = 'http://127.0.0.1:8081/';
 
 //授权码（必填）
 var authorize = "uafEfNfalESfEENqlaRGjk==";
-
 var WEB_URL = 'https://www.ruletree.club/'; //网站地址
 var LOGO_URL = "https://www.ruletree.club/logo.png";
 
 var webName = "规则之树";  //网站名称
 var webEmail = "buxia97@126.com";  //站长邮箱
 
+var noticeUrl = "https://www.ruletree.club/category/Thought/"; //公告地址
 var opinionUrl = "https://www.ruletree.club/help.html";  //意见反馈地址
 var appUrl = "https://www.pgyer.com/J9bd"; //APP下载地址
+
+var userIndex="RuleUser"; //所在目录，用于接管网站功能用
 
 //底部链接
 var footerLink = `

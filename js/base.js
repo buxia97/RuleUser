@@ -2,14 +2,6 @@ main();
 header();
 footer();
 $(function(){
-	//内容部分
-	if(localStorage.getItem("page")){
-		var page = localStorage.getItem("page");
-		var pageName = localStorage.getItem("pageName");
-		loadPage(page,pageName);
-	}else{
-		loadPage("pages/home.html","用户首页");
-	}
 	//登陆判断
 	if(!localStorage.getItem("token")){
 		$("#main").hide();
@@ -19,6 +11,15 @@ $(function(){
 	}else{
 		userInfo();
 	}
+	//内容部分
+	if(localStorage.getItem("page")){
+		var page = localStorage.getItem("page");
+		var pageName = localStorage.getItem("pageName");
+		loadPage(page,pageName);
+	}else{
+		loadPage("pages/home.html","用户首页");
+	}
+	
 	
 	//导航部分
 	$("body").on('click','.menu-box>a',function(){
@@ -28,7 +29,7 @@ $(function(){
 	});
 	
 });
-var order = "abcdefghijkmlnopqrstuvwsyz.-";
+var order = "abcdefghijkmlnopqrstuvwxyz.-1234567890";
 function main(){
 	var html = `
 	<div class="header" id="header"></div>
@@ -69,7 +70,7 @@ function header(){
 			
 		</div>
 		<div class="post">
-			<a href="javascript:;" class="post-to">发布
+			<a href="javascript:;" onclick='loadPage("pages/post.html","发布文章")' class="post-to">发布
 			</a>
 		</div>
 		<div class="menu">
@@ -128,7 +129,7 @@ function header(){
 	`;
 	$("#header").html(html);
 }
-var encry2 = "qaZWsXedCrfvtgbyhNujmikolpFG";
+var encry2 = "qaZWsXedCrfvtgbyhNujmikolpFG+QERxGBn=H";
 function footer(){
 	var html = `
 	<div class="footer-main">
@@ -273,13 +274,13 @@ function pageData(page){
 		menuActive(".menuAssets");
 	}
 	if(page=="pages/withdraw.html"){
-
+		getAssets();
 		menuActive(".menuAssets");
 	}
 	loginUser();
 	
 }
-var encry3 = "mNBvcXzLkjhGfdsApoIuYtrEWqJH";
+var encry3 = "mNBvcXzLkjhGfdsApoIuYtrEWqJH=MxZla+SVy";
 function menuActive(text){
 	$(".menu-box a").removeClass("active");
 	$(text+">a").addClass("active");
@@ -304,7 +305,7 @@ function isLogin(){
 	<div class="isLogin-main">
 		<div class="isLogin-box">
 			<a href="javascript:;" class="tocan" onclick="tocan()"><i class="iconfont icon-scanning"></i>扫码登录</a>
-			<a href="javascript:;" class="backLogin" onclick="login()"><i class="iconfont icon-password"></i>密码登录</a>
+			<a href="javascript:;" class="backLogin" onclick="backLogin()"><i class="iconfont icon-password"></i>密码登录</a>
 			<div class="isLogin-logo">
 				<a href="${WEB_URL}"><img src="${LOGO_URL}" /></a>
 			</div>
@@ -325,8 +326,7 @@ function randomString(e) {
     return n
 }
 function login(){
-	$(".tocan").show();
-	$(".backLogin").hide();
+	
 	var html = `
 		<div class="box-input">
 			<input type="text" placeholder="请输入用户名" id="username" value=""/>
@@ -418,6 +418,12 @@ function tocan(){
 		getScan();
 	}, 1000);
 }
+function backLogin(){
+	$(".tocan").show();
+	$(".backLogin").hide();
+	clearInterval(Interval);
+	login();
+}
 function getScan(){
 	var text = $("#codeContent").val();
 	
@@ -501,7 +507,7 @@ function userStatus(){
 		}
 	});
 }
-var encry1 = "MRqwErtYuiTplKjhgfdSaZXcvbNm";
+var encry1 = "MRqwErtYuiTplKjhgfdSaZXcvbNmQrUMzC+Ay=";
 function toLogin(){
 	var username = $("#username").val();
 	var userpass = $("#userpass").val();
@@ -737,6 +743,7 @@ function quit(){
 function userInfo(){
 	if(localStorage.getItem('userinfo')){
 		var userInfo = JSON.parse(localStorage.getItem('userinfo'));
+		var uid = userInfo.uid;
 		var name = userInfo.name;
 		var lv = Number(userInfo.lv);
 		var lvText = rankList[lv];
@@ -748,30 +755,47 @@ function userInfo(){
 		if(userInfo.customize){
 			customize = `<span>${userInfo.customize}</span>`;
 		}
-		var userhtml =`
-			<a href="javascript:;"><img src="${userInfo.avatar}" /></a>
-			<div class="user-nav">
-				<div class="user-nav-box">
-					<a href="javascript:;" onclick='loadPage("pages/userinfo.html","信息设置")'><i class="iconfont icon-set"></i>个人设置</a>
-				</div>
-				<div class="user-nav-box">
-					<a href="javascript:;" onclick="quit()"><i class="iconfont icon-share"></i>退出登录</a>
-				</div>
-			</div>
-		`;
-		$("#user").html(userhtml);
+		$.ajax({
+			type : "post",
+			data:{
+				"key":uid
+			},
+			url : API.getUserInfo(),
+			dataType: 'json',
+			success : function(result) {
+				if(result.code==1){
+					var userData = result.data;
+					var userhtml =`
+						<a href="javascript:;"><img src="${userData.avatar}" /></a>
+						<div class="user-nav">
+							<div class="user-nav-box">
+								<a href="javascript:;" onclick='loadPage("pages/userinfo.html","信息设置")'><i class="iconfont icon-set"></i>个人设置</a>
+							</div>
+							<div class="user-nav-box">
+								<a href="javascript:;" onclick="quit()"><i class="iconfont icon-share"></i>退出登录</a>
+							</div>
+						</div>
+					`;
+					$("#user").html(userhtml);
+					
+					var userinfohtml = `
+						<a href="/"><img src="${userData.avatar}" /></a>
+						<div class="user-rand">
+							<span style="background-color: ${lvStyle};">${lvText}</span>
+							${customize}
+						</div>
+						<div class="user-title">
+							${name}
+						</div>
+					`;
+					$("#userInfo").html(userinfohtml);
+				}
+			},
+			error : function(e){
+				
+			}
+		});
 		
-		var userinfohtml = `
-			<a href="/"><img src="${userInfo.avatar}" /></a>
-			<div class="user-rand">
-				<span style="background-color: ${lvStyle};">${lvText}</span>
-				${customize}
-			</div>
-			<div class="user-title">
-				${name}
-			</div>
-		`;
-		$("#userInfo").html(userinfohtml);
 		
 	}
 }
@@ -3589,8 +3613,13 @@ function withdraw(){
 		return false;
 	}
 	var num = $("#num").val();
+	var assets = $("#assets").text();
 	if(num==""||num<=0){
 		layer.msg("请输入正确的提现数量", {icon: 2});
+		return false;
+	}
+	if(num>Number(assets)){
+		layer.msg("您当前余额不足", {icon: 2});
 		return false;
 	}
 	if(num<5000){
@@ -3880,4 +3909,33 @@ function getValue(){
 			layer.alert("请求失败，请检查网络", {icon: 2});
 		}
 	});
+}
+function getAssets(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	
+	$.ajax({
+		type : "post",
+		data:{
+			"token":token
+		},
+		url : API.getUserData(),
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				var userData = result.data;
+				$("#assets").text(userData.assets);
+			}
+		},
+		error : function(e){
+			
+		}
+	});
+}
+function allNotice(){
+	window.open(noticeUrl);
 }

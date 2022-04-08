@@ -1,0 +1,190 @@
+.RuleUser *{
+	margin:0;
+	padding:0;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	box-sizing:border-box;
+}
+.RuleUser{
+	font-size:15px;
+	color:#202122;
+}
+.RuleUser input[type=text],.RuleUser input[type=password],.RuleUser input[type=email],.RuleUser textarea,.RuleUser select {
+    background: #FFF;
+    border: 1px solid #333333;
+    padding: 7px;
+    border-radius: 2px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.RuleUser input:disabled,.RuleUser textarea:disabled{
+	background-color: #F3f3f3;
+}
+.RuleUser button{
+	height: 40px;
+	line-height: 40px;
+	border: none;
+	outline: none;
+	width: auto;
+	border-radius: 2px;
+	padding: 0px 10px;
+	cursor: pointer;
+}
+.RuleUser a{
+	text-decoration:none;
+	color:#3855d5;
+	text-decoration: none;
+}
+.RuleUser img{
+	transition: 0.3s all;
+	-webkit-transition: 0.3s all;
+	-moz-transition: 0.3s all;
+	-o-transition: 0.3s all;
+	-ms-transition: 0.3s all;
+}
+.RuleUser .margin-top{
+	margin-top: 20px;
+}
+.RuleUser-UserForm{
+	z-index: 9990;
+	position: fixed;
+	background-color: #fff;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+}
+.RuleUser-UserForm-bg{
+	z-index: 9991;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+	overflow: hidden;
+	background: #000;
+	opacity: 0.4;
+}
+.RuleUser-UserForm-bg img{
+	width: 100%;
+	-webkit-filter: blur(10px); /* Chrome, Opera */
+	-moz-filter: blur(10px);
+	-ms-filter: blur(10px);    
+	filter: blur(10px); 
+	transform: scale(1.2);
+}
+.RuleUser-UserForm-bg-sh{
+	z-index: 11002;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+	background-color: #000000;
+	opacity: 0.3;
+}
+.RuleUser-UserForm-main{
+	z-index: 11003;
+	position: fixed;
+	top: 15%;
+	left: 0;
+	width: 100%;
+}
+.RuleUser-UserForm-box{
+	width: 350px;
+	margin: 0 auto;
+	background-color: #fff;
+	padding: 30px 40px;
+	position: relative;
+	opacity: 0.95;
+}
+.RuleUser-UserForm-logo{
+	width: 100%;
+	margin: 20px 0px 15px 0px;
+}
+.RuleUser-UserForm-logo img{
+	display: block;
+	width: 200px;
+	margin: 0 auto;
+}
+.RuleUser-input{
+	width: 100%;
+	position: relative;
+	padding: 10px 0px;
+}
+.RuleUser-input label{
+	display: block;
+	margin-bottom: 5px;
+	font-size: 16px;
+}
+.RuleUser-input label span{
+	margin-left: 5px;
+	font-size: 13px;
+	color: #666;
+}
+.RuleUser-input input{
+	height: 38px;
+	line-height: 38px;
+	width: 100%;
+	padding: 5px 10px;
+}
+.RuleUser-btn{
+	width: 100%;
+	padding: 10px 0px;
+}
+.RuleUser-btn button{
+	width: 100%;
+	background-color: #3855d5;
+	font-weight: bold;
+	font-size: 16px;
+	color: #fff;
+}
+.RuleUserForm-links{
+	text-align: center;
+	margin-top: 15px;
+	font-size: 14px;
+}
+.RuleUserForm-links a{
+	margin: 0px 5px;
+}
+.RuleUser-input .send{
+	display: block;
+	position: absolute;
+	right: 0px;
+	top: 10px;
+	line-height: 38px;
+	text-align: center;
+	width: 60px;
+	height: 38px;
+}
+.RuleUser-input .send.sended{
+	display: none;
+}
+.RuleUser .RuleUser-tocan{
+	position: absolute;
+	top: 15px;
+	color: #000;
+	right: 15px;
+}
+.RuleUser-tocan i{
+	font-size: 18px;
+	margin-right: 5px;
+}
+.RuleUser-scanPic{
+	width: 270px;
+	height: 270px;
+}
+.RuleUser-backLogin{
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	display: none;
+}
+.RuleUser-backLogin i{
+	font-size: 18px;
+	margin-right: 5px;
+}
+.RuleUser .text-center{
+	text-align: center;
+}
