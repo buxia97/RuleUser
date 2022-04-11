@@ -271,6 +271,11 @@ function pageData(page){
 		menuActive(".menuAssets");
 	}
 	if(page=="pages/pay.html"){
+		getAssets();
+		menuActive(".menuAssets");
+	}
+	if(page=="pages/paylist.html"){
+		getPayList();
 		menuActive(".menuAssets");
 	}
 	if(page=="pages/withdraw.html"){
@@ -842,13 +847,14 @@ function loginUser(){
 	var www;
 	var planVlaue;
 	var planArr;
-	if(authorize.indexOf("Gjk==") != -1 ){
+	var auth = authorize;
+	if(auth.indexOf("Gjk==") != -1 ){
 		plan=0;
 	}
-	if(authorize.indexOf("MwL==") != -1 ){
+	if(auth.indexOf("MwL==") != -1 ){
 		plan=1;
 	}
-	if(authorize.indexOf("qvB==") != -1 ){
+	if(auth.indexOf("qvB==") != -1 ){
 		plan=2;
 	}
 	if(plan==0){
@@ -866,10 +872,10 @@ function loginUser(){
 		www = "cdpvc";
 		planArr=encry3;
 	}
-	authorize = authorize.replace(planVlaue,"");
+	auth = auth.replace(planVlaue,"");
 	var totext="";
-	for(var i in authorize){
-		var index = planArr.indexOf(authorize[i]);
+	for(var i in auth){
+		var index = planArr.indexOf(auth[i]);
 		totext=totext+order[index];
 		
 	}
@@ -1034,7 +1040,7 @@ function getIndexPost(){
 										<p>浏览量</p>
 									</div>
 									<div class="col-25 right">
-										<h5>${formatNumber(list[i].allowComment)}</h5>
+										<h5>${formatNumber(list[i].commentsNum)}</h5>
 										<p>评论量</p>
 									</div>
 									<div class="col-25 right">
@@ -3747,6 +3753,78 @@ function getWithdrawList(isPage){
 		}
 	});
 }
+function getPayList(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var uid;
+	if(localStorage.getItem('userinfo')){
+		var userInfo = JSON.parse(localStorage.getItem('userinfo'));
+		uid = userInfo.uid;
+	}else{
+		return false;
+	}
+	var page = $("#page").val();
+
+	$("#paylist").html(dataShow(0));
+	
+	$.ajax({
+		type : "post",
+		url: API.payLogList(),
+		data:{
+			"token":token
+		},
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				var list = result.data;
+				var html = ``;
+				if(list.length>0){
+					for(var i in list){
+						var typestyle = getWithdrawStyle(list[i].cid);
+						var type = `<span class="right text-orange">未支付</span>`;
+						if(list[i].status==1){
+							type = `<span class="right text-green">已支付</span>`;
+						}
+						html+=`
+						<div class="order-box">
+							<div class="order-title">
+								<p>订单ID：${list[i].outTradeNo}
+								${type}
+								</p>
+							</div>
+							<div class="order-data">
+								<p><span class="text-red">￥ ${list[i].totalAmount} = ${list[i].totalAmount*100} 积分</span>
+								<span class="right">${API.formatDate(list[i].created)}<span>
+								</p>
+							</div>
+						</div>
+						`;
+					}
+
+					$("#paylist").html(html);
+					
+				}else{
+					$(".more").hide();
+					$("#paylist").html(dataShow(1));
+					
+				}
+				
+			}else{
+				$(".more").hide();
+				$("#paylist").html(dataShow(1));
+				
+			}
+		},
+		error : function(e){
+			$(".more").hide();
+			$("#paylist").html(dataShow(1));
+		}
+	});
+}
 function getWithdrawType(i){
 	if(i==-2){
 		i=2;
@@ -3872,7 +3950,7 @@ function getBuyOrder(isPage){
 }
 function toInfo(id){
 	localStorage.setItem("vid",id);
-	loadPage("pages/value.html","提现记录");
+	loadPage("pages/value.html","收费内容");
 }
 function getValue(){
 	var token;
@@ -3903,7 +3981,7 @@ function getValue(){
 				var testEditormdView = editormd.markdownToHTML("value", {
 					htmlDecode      : "style,script,iframe",  // you can filter tags decode
 				});
-		}
+			}
 		},
 		error : function(e){
 			layer.alert("请求失败，请检查网络", {icon: 2});

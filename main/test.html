@@ -3,15 +3,23 @@
 	<head>
 		<meta charset="utf-8">
 		<title></title>
-		<link rel="stylesheet" href="RuleUser.css"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 	</head>
 	<body>
-		<div class="RuleUser">
-			<div class="RuleUser-UserForm" id="RuleUser-UserForm">
-			</div>
-		</div>
+		<button type="button" onclick="UserLogin()">登录</button>
+		<button type="button" onclick="UserRegister()">注册</button>
+		<button type="button" onclick="UserForgot()">找回密码</button>
+		<button type="button" onclick="UserScan()">扫码登录</button>
+		<button type="button" onclick="UserQuit()">退出登录</button>
+		<div id="RuleUser-PostShop"></div>
+		<div id="RuleUser-PostBtn"></div>
 		<script src="../configs.js"></script>
-		
 		<script src="RuleUser.js"></script>
+		<script>
+			loadPostBtn(2735);
+			loadPostShop(2735)
+		</script>
 	</body>
 </html>

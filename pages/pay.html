@@ -3,9 +3,13 @@
 		<div class="data-box">
 			<div class="data-box-title">
 				<h4>在线充值
+				<a href="javascript:;"  onclick='loadPage("pages/paylist.html","充值记录")'>充值记录
+					<i class="iconfont icon-more"></i>
+				</a>
 				</h4>
 			</div>
 			<div class="pay">
+				<h4>当前积分：<span class="text-red" id="assets">--</span></h4>
 				<div class="pay-input">
 					<input type="number" id="num" placeholder="输入充值金额"/>
 					<button type="button" onclick="pay()">充值</button>
