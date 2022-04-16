@@ -3,8 +3,8 @@ userStatus();
 var Interval;
 function postStyle(){
 	var style =`
-	<link rel="stylesheet" href="/${userIndex}/font/ruleIcon.css" />
-	<link rel="stylesheet" href="/${userIndex}/main/RuleUser.css" />
+	<link rel="stylesheet" href="/${userIndex}/font/ruleIcon.css?v=${version}" />
+	<link rel="stylesheet" href="/${userIndex}/main/RuleUser.css?v=${version}" />
 	`;
 	
 	$("head").append(style);
@@ -176,6 +176,7 @@ function tocan(){
 		</div>
 		`;
 	$("#RuleUser-UserForm-form").html(html);
+	openApp("?scan="+text);
 	Interval = setInterval(function () {
 		getScan();
 	}, 1000);
@@ -203,10 +204,14 @@ function getScan(){
 				//保存用户信息
 				localStorage.setItem('userinfo',JSON.stringify(result.data));
 				localStorage.setItem('token',result.data.token);
-				var timer = setTimeout(function() {
-					location.reload();
-					clearTimeout('timer')
-				}, 1000)
+				typechoLogin(result.data.token,result.data.uid,1);
+				if(TypechoUserLogin==0){
+					var timer = setTimeout(function() {
+						location.reload();
+						clearTimeout('timer')
+					}, 1000)
+				}
+				
 			}else if(result.code==-1){
 				clearInterval(Interval);
 				layer.msg("二维码已过期，开始重新生成", {icon: 2});
@@ -216,6 +221,64 @@ function getScan(){
 		error : function(e){
 			clearInterval(Interval);
 			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function typechoLogin(token,uid,tips){
+	if(TypechoUserLogin!=1){
+		return false;
+	}
+	var data={
+		token:token,
+		uid:uid,
+	}
+	$.ajax({
+		type : "post",
+		url : "/",
+		data:data,
+		dataType: 'json',
+		success : function(result) {
+			if(tips==1){
+				var timer = setTimeout(function() {
+					location.reload();
+					clearTimeout('timer')
+				}, 1000)
+			}
+		},
+		error : function(e){
+			if(tips==1){
+				var timer = setTimeout(function() {
+					location.reload();
+					clearTimeout('timer')
+				}, 1000)
+			}
+		}
+	});
+}
+function typechoQuitUser(tips){
+	if(TypechoUserLogin!=1){
+		return false;
+	}
+	var text = randomString(7)+new Date().getTime();
+	$.ajax({
+		type : "get",
+		url : "/?quit="+text,
+		dataType: 'json',
+		success : function(result) {
+			if(tips==1){
+				var timer = setTimeout(function() {
+					location.reload();
+					clearTimeout('timer')
+				}, 1000)
+			}
+		},
+		error : function(e){
+			if(tips==1){
+				var timer = setTimeout(function() {
+					location.reload();
+					clearTimeout('timer')
+				}, 1000)
+			}
 		}
 	});
 }
@@ -315,10 +378,13 @@ function UserQuit(){
 	localStorage.removeItem("page");
 	localStorage.removeItem("pageName");
 	layer.msg("退出成功！", {icon: 1});
-	var timer = setTimeout(function() {
-		location.reload();
-		clearTimeout('timer')
-	}, 1000)
+	typechoQuitUser(1);
+	if(TypechoUserLogin==0){
+		var timer = setTimeout(function() {
+			location.reload();
+			clearTimeout('timer')
+		}, 1000)
+	}
 }
 function toLogin(){
 	var username = $("#username").val();
@@ -347,10 +413,13 @@ function toLogin(){
 				//保存用户信息
 				localStorage.setItem('userinfo',JSON.stringify(result.data));
 				localStorage.setItem('token',result.data.token);
-				var timer = setTimeout(function() {
-					location.reload();
-					clearTimeout('timer')
-				}, 1000)
+				typechoLogin(result.data.token,result.data.uid,1);
+				if(TypechoUserLogin==0){
+					var timer = setTimeout(function() {
+						location.reload();
+						clearTimeout('timer')
+					}, 1000)
+				}
 			}else{
 				layer.msg(result.msg, {icon: 2});
 			}
@@ -451,14 +520,15 @@ function toForgot(){
 		}
 	});
 }
-function addComments(cid){
+function addComments(cid,sumbit){
 	var token;
 	if(localStorage.getItem("token")){
 		token = localStorage.getItem("token");
 	}else{
+		$(sumbit).submit();
 		return false;
 	}
-	var coid = $("#RuleCoid").val();
+	var coid = $("#comment-parent").val();
 	var text =  $("#RuleText").val();
 	if(coid==""||cid==""||text==""){
 		layer.msg("请输入正确的参数", {icon: 2});
@@ -504,6 +574,9 @@ function userStatus(){
 	var token;
 	if(localStorage.getItem("token")){
 		token = localStorage.getItem("token");
+		var userInfo = JSON.parse(localStorage.getItem('userinfo'));
+		var uid = userInfo.uid;
+		typechoLogin(token,uid,0);
 	}else{
 		//intercept();
 		return false;
@@ -531,15 +604,19 @@ function intercept(){
 	localStorage.removeItem('token');
 	localStorage.removeItem("page");
 	localStorage.removeItem("pageName");
-	var timer = setTimeout(function() {
-		location.reload();
-		clearTimeout('timer')
-	}, 1000)
+	typechoQuitUser(1);
+	if(TypechoUserLogin==0){
+		var timer = setTimeout(function() {
+			location.reload();
+			clearTimeout('timer')
+		}, 1000)
+	}
 }
 function loadPostBtn(cid){
 	var data = {
 		"key":cid,
 	}
+	
 	$.ajax({
 		type : "post",
 		url: API.getContentsInfo(),
@@ -567,12 +644,14 @@ function loadPostBtn(cid){
 					</a>
 				</div>
 				`;
+				
 				$("#RuleUser-PostBtn").html(html);
 				toIsMark(cid);
+				//openApp("?info="+cid);
 			}
 		},
 		error : function(e){
-			layer.alert("请求失败，请检查网络", {icon: 2});
+			//layer.alert("请求失败，请检查网络", {icon: 2});
 		}
 	});
 }
@@ -610,8 +689,7 @@ function toLikes(cid){
 	if(localStorage.getItem("token")){
 		token = localStorage.getItem("token");
 	}else{
-		UserLogin();
-		return false;
+		
 	}
 	
 	var data = {
@@ -796,7 +874,6 @@ function loadPostShop(cid){
 		dataType: 'json',
 		success : function(result) {
 			if(result.code==1){
-				console.log(JSON.stringify(result));
 				if(result.data.length < 1){
 					return false;
 				}
@@ -822,7 +899,7 @@ function loadPostShop(cid){
 			}
 		},
 		error : function(e){
-			layer.alert("请求失败，请检查网络", {icon: 2});
+			//layer.alert("请求失败，请检查网络", {icon: 2});
 		}
 	});
 }
@@ -870,7 +947,10 @@ function shopBuy(id){
 				if(result.code==1){
 					layer.msg("购买成功！", {icon: 1});
 					var timer = setTimeout(function() {
-						shopInfo(id)
+						//shopInfo(id)
+						localStorage.setItem("page","pages/order.html");
+						localStorage.setItem("pageName","购买订单");
+						window.location.href = '/'+userIndex;
 					}, 1000);
 					
 				}else{
@@ -885,4 +965,21 @@ function shopBuy(id){
 	}, function(index) {
 		layer.close(index);
 	});
+}
+function openApp(text){
+	if(Schema==""){
+		return false;
+	}
+	var url = Schema+text;
+	var iFrame;
+	var u = navigator.userAgent;
+	var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+	var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+	if (isAndroid) {
+		window.location.href=url;
+	} else if (isiOS) {
+		//苹果端不处理
+	} else {
+		//其它端不处理
+	}
 }

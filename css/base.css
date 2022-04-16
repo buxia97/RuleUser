@@ -1264,12 +1264,13 @@ button{
 	.home-left,.home-right{
 		width: 100%;
 	}
+	
+}
+@media all and (max-width: 1230px) {
 	.isLogin-bg img{
 		width: auto;
 		height: 100vh;
 	}
-}
-@media all and (max-width: 1230px) {
 	.header-left{
 		transition: 0.3s all;
 		-webkit-transition:0.3s all;

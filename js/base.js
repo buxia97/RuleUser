@@ -406,9 +406,12 @@ function register(){
 }
 var Interval;
 function tocan(){
+	
 	var text = randomString(7)+new Date().getTime();
+	
 	$(".tocan").hide();
 	$(".backLogin").show();
+	
 	var html = `
 		
 		<img src="${API.getScan()}?codeContent=${text}" class="col-10 scanPic"/>
@@ -419,6 +422,7 @@ function tocan(){
 		</div>
 		`;
 	$("#isLogin-form").html(html);
+	openApp(text);
 	Interval = setInterval(function () {
 		getScan();
 	}, 1000);
@@ -446,6 +450,7 @@ function getScan(){
 				//保存用户信息
 				localStorage.setItem('userinfo',JSON.stringify(result.data));
 				localStorage.setItem('token',result.data.token);
+				typechoLogin(result.data.token,result.data.uid);
 				var timer = setTimeout(function() {
 					location.reload();
 					clearTimeout('timer')
@@ -481,6 +486,7 @@ function intercept(){
 	localStorage.removeItem('token');
 	localStorage.removeItem("page");
 	localStorage.removeItem("pageName");
+	typechoQuitUser();
 	var timer = setTimeout(function() {
 		location.reload();
 		clearTimeout('timer')
@@ -541,6 +547,7 @@ function toLogin(){
 				//保存用户信息
 				localStorage.setItem('userinfo',JSON.stringify(result.data));
 				localStorage.setItem('token',result.data.token);
+				typechoLogin(result.data.token,result.data.uid);
 				var timer = setTimeout(function() {
 					location.reload();
 					clearTimeout('timer')
@@ -740,6 +747,7 @@ function quit(){
 	localStorage.removeItem("page");
 	localStorage.removeItem("pageName");
 	layer.msg("退出成功！", {icon: 1});
+	typechoQuitUser();
 	var timer = setTimeout(function() {
 		location.reload();
 		clearTimeout('timer')
@@ -929,7 +937,43 @@ function setOWO(owo){
 	$("#text").val(text+owo);
 	$(".owo").hide();
 }
-
+function typechoLogin(token,uid){
+	if(TypechoUserLogin!=1){
+		return false;
+	}
+	var data={
+		token:token,
+		uid:uid,
+	}
+	$.ajax({
+		type : "post",
+		url : "/",
+		data:data,
+		dataType: 'json',
+		success : function(result) {
+			
+		},
+		error : function(e){
+			//layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function typechoQuitUser(){
+	if(TypechoUserLogin!=1){
+		return false;
+	}
+	var text = randomString(7)+new Date().getTime();
+	$.ajax({
+		type : "get",
+		url : "/?quit="+text,
+		dataType: 'json',
+		success : function(result) {
+			
+		},
+		error : function(e){
+		}
+	});
+}
 //以上公共方法结束
 //下面是请求方法
 
@@ -4016,4 +4060,21 @@ function getAssets(){
 }
 function allNotice(){
 	window.open(noticeUrl);
+}
+function openApp(text){
+	if(Schema==""){
+		return false;
+	}
+	var url = Schema+text;
+	var iFrame;
+	var u = navigator.userAgent;
+	var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+	var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+	if (isAndroid) {
+		window.location.href=url;
+	} else if (isiOS) {
+		//苹果端不处理
+	} else {
+		//其它端不处理
+	}
 }
