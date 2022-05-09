@@ -147,6 +147,9 @@ button{
 .text-orange{
 	color: #f36134 !important;
 }
+.text-black{
+	color: #000000 !important;
+}
 .red{
 	background-color: #d93444 !important;
 }
@@ -1259,6 +1262,62 @@ button{
 .backLogin i{
 	font-size: 18px;
 	margin-right: 5px;
+}
+.vip-concent{
+	width: 100%;
+	overflow: hidden;
+	margin-top: 20px;
+	padding: 5px;
+}
+.vip-box{
+	padding: 5px;
+	width: 25%;
+	float: left;
+	text-align: center;
+}
+.vip-main{
+	background-image: linear-gradient(45deg, #0081ff, #1cbbb4);
+	padding: 30px 5px;
+	border-radius: 10px;
+	color: #ffffff;
+}
+.vip-box.permanentVip .vip-main{
+	background-image: linear-gradient(45deg, #ff9700, #ed1c24);
+	color: #ffffff;
+}
+.vip-main h5{
+	font-size: 18px;
+	margin-bottom: 10px;
+}
+.vip-main h5 span{
+	font-size: 15px;
+	margin-left: 5px;
+	font-weight: normal;
+	
+}
+.vip-main p{
+	margin-bottom: 15px;
+}
+.vip-main button{
+	background-color: #333333;
+	color: #ffffff;
+	position: relative;
+	border: 0px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	padding: 0 15px;
+	font-size: 14px;
+	height: 32px;
+	line-height: 1;
+	text-align: center;
+	text-decoration: none;
+	overflow: visible;
+	margin-left: initial;
+	-webkit-transform: translate(0px, 0px);
+	transform: translate(0px, 0px);
+	margin-right: initial;
 }
 @media all and (max-width: 1600px) {
 	.home-left,.home-right{

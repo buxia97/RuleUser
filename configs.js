@@ -101,12 +101,6 @@ var API = {
 	userBindStatus:function(){
 		return API_URL + 'typechoUsers/userBindStatus';
 	},
-	getScan:function(){
-		return API_URL + 'typechoUsers/getScan';
-	},
-	getScanStatus:function(){
-		return API_URL + 'typechoUsers/getScanStatus';
-	},
 	getMarkList:function(){
 		return API_URL + 'typechoUserlog/markList';
 	},
@@ -124,6 +118,9 @@ var API = {
 	},
 	removeLog:function(){
 		return API_URL + 'typechoUserlog/removeLog';
+	},
+	dataClean:function(){
+		return API_URL + 'typechoUserlog/dataClean';
 	},
 	
 	
@@ -148,20 +145,27 @@ var API = {
 	getMetasList:function(){
 		return API_URL + 'typechoMetas/metasList';
 	},
+	geMetaInfo:function(){
+		return API_URL + 'typechoMetas/metaInfo';
+	},
+	editMeta:function(){
+		return API_URL + 'typechoMetas/editMeta';
+	},
+	
 	getContentsList:function(){
-		return API_URL + 'typechoContents/contensList';
+		return API_URL + 'typechoContents/contentsList';
 	},
 	getContentsInfo:function(){
 		return API_URL + 'typechoContents/contentsInfo';
 	},
-	contensAdd:function(){
-		return API_URL + 'typechoContents/contensAdd';
+	contentsAdd:function(){
+		return API_URL + 'typechoContents/contentsAdd';
 	},
 	
-	contensUpdate:function(){
-		return API_URL + 'typechoContents/contensUpdate';
+	contentsUpdate:function(){
+		return API_URL + 'typechoContents/contentsUpdate';
 	},
-	contensImage:function(){
+	contentsImage:function(){
 		return API_URL + 'typechoContents/ImagePexels';
 	},
 	allData:function(){
@@ -180,12 +184,16 @@ var API = {
 	isCommnet:function(){
 		return API_URL + 'typechoContents/isCommnet';
 	},
+	//文章推荐
+	toRecommend:function(){
+		return API_URL + 'typechoContents/toRecommend';
+	},
 	//下面这个方法涉及图片上传，自己修改定义接口路径
 	upload:function(){
 		//return API_URL + 'upload/ossUpload';//OSS对象存储接口
-		//return API_URL + 'upload/cosUpload';//COS对象存储接口
+		return API_URL + 'upload/cosUpload';//COS对象存储接口
 		//return API_URL + 'upload/ftpUpload'; //远程ftp上传接口
-		return API_URL + 'upload/localUpload'; //本地上传接口
+		//return API_URL + 'upload/localUpload'; //本地上传接口
 	},
 	shopList:function(){
 		return API_URL + 'typechoShop/shopList';
@@ -211,6 +219,12 @@ var API = {
 	auditShop:function(){
 		return API_URL + 'typechoShop/auditShop';
 	},
+	getVipInfo:function(){
+		return API_URL + 'typechoShop/vipInfo';
+	},
+	buyVIP:function(){
+		return API_URL + 'typechoShop/buyVIP';
+	},
 	orderList:function(){
 		return API_URL + 'typechoUserlog/orderList';
 	},
@@ -226,12 +240,39 @@ var API = {
 	scancodePay:function(){
 		return API_URL + 'pay/scancodePay';
 	},
+	//微信支付（官方）
+	wxPay:function(){
+		return API_URL + 'pay/WxPay';
+	},
+	//卡密充值
+	tokenPay:function(){
+		return API_URL + 'pay/tokenPay';
+	},
+	
 	//充值二维码生成
 	qrCode:function(){
 		return API_URL + 'pay/qrCode';
 	},
 	payLogList:function(){
 		return API_URL + 'pay/payLogList';
+	},
+	//卡密充值相关
+	tokenPayList:function(){
+		return API_URL + 'pay/tokenPayList';
+	},
+	tokenPayExcel:function(){
+		return API_URL + 'pay/tokenPayExcel';
+	},
+	
+	
+	madetoken:function(){
+		return API_URL + 'pay/madetoken';
+	},
+	getScan:function(){
+		return API_URL + 'typechoUsers/getScan';
+	},
+	getScanStatus:function(){
+		return API_URL + 'typechoUsers/getScanStatus';
 	},
 	
 	IsNull(obj) {

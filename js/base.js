@@ -110,6 +110,9 @@ function header(){
 					<a href="javascript:;"><i class="iconfont icon-trade-assurance"></i>财务中心<i class="iconfont icon-moreunfold"></i></a>
 					<div class="menu-sub">
 						<div class="menu-sub-box">
+							<a href="javascript:;" onclick='loadPage("pages/vip.html","VIP会员")'>VIP会员</a>
+						</div>
+						<div class="menu-sub-box">
 							<a href="javascript:;" onclick='loadPage("pages/pay.html","在线充值")'>在线充值</a>
 						</div>
 						<div class="menu-sub-box">
@@ -280,6 +283,12 @@ function pageData(page){
 	}
 	if(page=="pages/withdraw.html"){
 		getAssets();
+		menuActive(".menuAssets");
+	}
+	if(page=="pages/vip.html"){
+		getAssets();
+		getVipStatus();
+		getVipMain();
 		menuActive(".menuAssets");
 	}
 	loginUser();
@@ -790,18 +799,42 @@ function userInfo(){
 						</div>
 					`;
 					$("#user").html(userhtml);
+					var vip = result.data.vip;
+					var isvip = result.data.isvip;
+					    
+					    
+					var vipHtml = `<span style="background-color: #f0f0f0;color: #333333;">VIP</span>`;
+					if(isvip==1){
+						if(vip==1){
+							vipHtml = `<span style="background-image: linear-gradient(45deg, #f43f3b, #ec008c);color: #ffffff;">VIP</span>`;
+						}else{
+							vipHtml = `<span style="background-color: #fbbd08;color: #333333;">VIP</span>`;
+						}
+						
+					}
 					
 					var userinfohtml = `
 						<a href="/"><img src="${userData.avatar}" /></a>
 						<div class="user-rand">
 							<span style="background-color: ${lvStyle};">${lvText}</span>
 							${customize}
+							${vipHtml}
 						</div>
 						<div class="user-title">
 							${name}
 						</div>
 					`;
 					$("#userInfo").html(userinfohtml);
+					
+					var userformhtml = `
+						<div class="box-input">
+							<img class="userEdit-avatar" src="${userData.avatar}""/>
+						</div>
+						<div class="box-btn">
+							<button type="button" class="green" onclick="toAvatar()">设置</button>
+						</div>
+					`;
+					$("#userformhtml").html(userformhtml);
 				}
 			},
 			error : function(e){
@@ -2578,7 +2611,7 @@ function contensAdd(){
 	
 	$.ajax({
 		type : "post",
-		url: API.contensAdd(),
+		url: API.contentsAdd(),
 		data:{
 			"params":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"token":token,
@@ -2909,7 +2942,7 @@ function updateContents(){
 	
 	$.ajax({
 		type : "post",
-		url: API.contensUpdate(),
+		url: API.contentsUpdate(),
 		data:{
 			"params":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"token":token,
@@ -4077,4 +4110,135 @@ function openApp(text){
 	} else {
 		//其它端不处理
 	}
+}
+
+function getVipStatus(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	
+	$.ajax({
+		type : "post",
+		url: API.userStatus(),
+		data:{
+			"token":token
+		},
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				var isvip = result.data.isvip;
+				var VipStatus = "未开通";
+				if(isvip==1){
+					if(result.data.vip==1){
+						VipStatus = "永久";
+					}else{
+						VipStatus = formatDate(result.data.vip);
+					}
+					
+				}
+				$("#VipStatus").text(VipStatus);
+				
+			}
+		},
+		error : function(e){
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function getVipMain(){
+	$("#vip-concent").html(dataShow(0));
+	$.ajax({
+		type : "post",
+		url: API.getVipInfo(),
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				var vipDiscount=result.data.vipDiscount;
+				var vipPrice=result.data.vipPrice;
+				var scale=result.data.scale;
+				var html =`
+					<div class="vip-box">
+						<div class="vip-main">
+							<h5>月付VIP<span class="text-red">${30*vipPrice}积分</span></h5>
+							<p>为您的账号获得30天VIP期限</p>
+							<button type="button" onclick="toBuyVip(30)">立即购买</button>
+						</div>
+					</div>
+					<div class="vip-box">
+						<div class="vip-main">
+							<h5>季付VIP<span class="text-red">${90*vipPrice}积分</span></h5>
+							<p>为您的账号获得90天VIP期限</p>
+							<button type="button" onclick="toBuyVip(90)">立即购买</button>
+						</div>
+					</div>
+					<div class="vip-box">
+						<div class="vip-main">
+							<h5>年付VIP<span class="text-red">${365*vipPrice}积分</span></h5>
+							<p>为您的账号获得365天VIP期限</p>
+							<button type="button" onclick="toBuyVip(365)">立即购买</button>
+						</div>
+					</div>
+					<div class="vip-box permanentVip">
+						<div class="vip-main">
+							<h5>永久VIP<span class="text-black">${500*vipPrice}积分</span></h5>
+							<p>为您的账号获得永久VIP期限</p>
+							<button type="button" onclick="toBuyVip(500)">立即购买</button>
+						</div>
+					</div>
+				`;
+				$("#vip-concent").html(html);
+				
+			}
+		},
+		error : function(e){
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function toBuyVip(day){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	 layer.confirm('确认要购买该VIP类型？', {
+		btn: ['确定', '取消'],
+	}, function(index) {
+		var data = {
+			day: day,
+			token: token,
+		}
+		var index = layer.load(1, {
+		  shade: [0.4,'#000']
+		});
+		
+		$.ajax({
+			type : "post",
+			url: API.buyVIP(),
+			data:data,
+			dataType: 'json',
+			success : function(result) {
+				layer.close(index); 
+				if(result.code==1){
+					layer.msg("操作成功！", {icon: 1});
+					var timer = setTimeout(function() {
+						location.reload();
+					}, 500);
+					
+				}else{
+					layer.msg(result.msg, {icon: 2});
+				}
+			},
+			error : function(e){
+				layer.close(index); 
+				layer.alert("请求失败，请检查网络", {icon: 2});
+			}
+		});
+	}, function(index) {
+		layer.close(index);
+	});
 }
