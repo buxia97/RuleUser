@@ -49,6 +49,12 @@ function UserScan(){
 	isLogin();
 	tocan();
 }
+function toMember(page,title){
+	var page = "pages/"+page;
+	localStorage.setItem("page",page);
+	localStorage.setItem("pageName",title);
+	window.open(WEB_URL+userIndex);
+}
 function toRuleUser(){
 	var RuleUser = `
 	<div class="RuleUser"></div>
@@ -885,7 +891,7 @@ function loadPostShop(cid){
 					</div>
 					<div class="PostShop-text">
 						<h5>${shop.title}</h5>
-						<p><span class="PostShop-price">${shop.price} 积分</span></p>
+						<p><span class="PostShop-price">${shop.price} 积分</span>vip只需<span class="PostShop-VIPprice">${parseInt(shop.price*shop.vipDiscount)}积分</span></p>
 						<p class="PostShop-btn">
 							<a href="javascript:;" class="PostShop-info" onclick="shopInfo(${shop.id})">查看详情</a>
 							<a href="javascript:;" class="PostShop-buy" onclick="shopBuy(${shop.id})">

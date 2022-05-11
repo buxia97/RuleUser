@@ -267,7 +267,14 @@
 }
 #RuleUser-PostShop .PostShop-text  .PostShop-price{
 	font-size: 20px;
-	color: #e54d42!important;
+	color: #e54d42 !important;
+	font-weight: bold;
+	margin-right: 5px;
+}
+#RuleUser-PostShop .PostShop-text  .PostShop-VIPprice{
+	font-size: 20px;
+	color: #fbbd08 !important;
+	margin-left: 5px;
 	font-weight: bold;
 }
 #RuleUser-PostShop .PostShop-text  .PostShop-info{

@@ -617,6 +617,10 @@ button{
 	margin-bottom: 10px;
 	word-wrap: break-word;
 }
+.comment-text .tImg{
+	width: 20px;
+	height: 20px;
+}
 .new-comment{
 	margin-top: 15px;
 }
@@ -1330,6 +1334,7 @@ button{
 		width: auto;
 		height: 100vh;
 	}
+	
 	.header-left{
 		transition: 0.3s all;
 		-webkit-transition:0.3s all;
@@ -1360,6 +1365,9 @@ button{
 		height: 100vh;
 		background-color: #000000;
 		opacity: 0.3;
+	}
+	.vip-box{
+		width: 50%;
 	}
 }
 @media all and (max-width: 980px) {
@@ -1460,6 +1468,9 @@ button{
 		background: #f3f3f3;
 		color: #666;
 	}
+	.vip-box{
+		width: 100%;
+	}
 }
 @media all and (max-width: 460px) {
 	.top-links{
@@ -1512,6 +1523,12 @@ button{
 	}
 	.comment-box, .order-box{
 		font-size: 13px;
+	}
+	.tool-box{
+		display: none;
+	}
+	.tool-box.toTop{
+		display: block;
 	}
 	
 }

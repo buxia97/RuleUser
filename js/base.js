@@ -145,7 +145,7 @@ function footer(){
 	</div>
 	<div class="tool">
 		<div class="tool-box toTop">
-			<a href="javascript:;">
+			<a href="#">
 				Top
 			</a>
 		</div>
@@ -1308,7 +1308,7 @@ function indexComment(){
 								</div>
 								<div class="comment-text">
 									
-									${list[i].text}
+									${markHtml(list[i].text)}
 									
 								</div>
 								<div class="comment-links">
@@ -1396,7 +1396,7 @@ function getInbox(isPage){
 								</div>
 								<div class="comment-text">
 									
-									${list[i].text}
+									${markHtml(list[i].text)}
 									
 								</div>
 								<div class="comment-links">
@@ -2114,8 +2114,8 @@ function getContensLocal(){
 			return ["undo", "redo", "|", "bold", "del", "italic", "quote", "ucwords", "hr", "|", "h1", "h2", "h3", "h4", "h5", "h6", "|",  "list-ul", "list-ol", "hr","|","link","reference-link","code","preformatted-text", "code-block", "table","|","filepic","shopbag", "||", "watch"]
 		},
 		toolbarCustomIcons : {
-			shopbag : '<a href="javascript:;" title="添加商品" onclick="toShop()"><i class="fa fa-shopping-cart"></i></a>',
-			filepic : `<a href="javascript:;" title="添加图片" onclick="contensPic()"><i class="fa fa-picture-o"></i></a>
+			shopbag : '<a href="javascript:;" title="添加商品" ontouchstart="toShop()" onclick="toShop()"><i class="fa fa-shopping-cart"></i></a>',
+			filepic : `<a href="javascript:;" title="添加图片" ontouchstart="contensPic()" onclick="contensPic()"><i class="fa fa-picture-o"></i></a>
 			<input type="file" style="display:none"  accept="image/*" id="contensPic"/>
 			`,
 		},
@@ -2394,9 +2394,18 @@ function toCategory(){
 		area: ['330px', '320px'], 
 		content: `
 		<div class="layer-form">
+			<div class="data-search center">
+				<div class="data-search-box">
+					<input type="text" id="searchText" placeholder="请输入关键字">
+					<button type="button" onclick="getCategory()">
+						<i class="iconfont icon-search"></i>
+					</button>
+				</div>
+			</div>
 			<div class="box-input overflow-hidden" id="category">
 				
 			</div>
+			
 		</div>
 			
 		`,
@@ -2413,6 +2422,14 @@ function toTag(){
 		area: ['330px', '320px'], 
 		content: `
 		<div class="layer-form">
+			<div class="data-search center">
+				<div class="data-search-box">
+					<input type="text" id="searchText" placeholder="请输入关键字">
+					<button type="button" onclick="getTag()">
+						<i class="iconfont icon-search"></i>
+					</button>
+				</div>
+			</div>
 			<div class="box-input overflow-hidden" id="tag">
 				
 			</div>
@@ -2437,6 +2454,7 @@ function getCategory(){
 	}
 	$("#category").html(dataShow(0));
 	var categoryText = $("#categoryText").val();
+	var searchText = $("#searchText").val();
 	$.ajax({
 		type : "post",
 		url: API.getMetasList(),
@@ -2444,6 +2462,7 @@ function getCategory(){
 			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"limit":100,
 			"page":1,
+			"searchKey":searchText,
 		},
 		dataType: 'json',
 		success : function(result) {
@@ -2503,6 +2522,7 @@ function getTag(){
 	}
 	$("#tag").html(dataShow(0));
 	var tagText = $("#tagText").val();
+	var searchText = $("#searchText").val();
 	$.ajax({
 		type : "post",
 		url: API.getMetasList(),
@@ -2510,6 +2530,7 @@ function getTag(){
 			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"limit":1000,
 			"page":1,
+			"searchKey":searchText,
 		},
 		dataType: 'json',
 		success : function(result) {
@@ -3120,7 +3141,7 @@ function getShopBase(){
 			return ["undo", "redo", "|", "bold", "del", "italic", "quote", "ucwords", "hr", "|", "h1", "h2", "h3", "h4", "h5", "h6", "|",  "list-ul", "list-ol", "hr","|","link","reference-link","code","preformatted-text", "code-block", "table","|","filepic", "||", "watch"]
 		},
 		toolbarCustomIcons : {
-			filepic : `<a href="javascript:;" title="添加图片" onclick="shopPic(0)"><i class="fa fa-picture-o"></i></a>
+			filepic : `<a href="javascript:;" title="添加图片" onclick="shopPic(0)" ontouchstart="shopPic(0)"><i class="fa fa-picture-o"></i></a>
 			<input type="file" style="display:none"  accept="image/*" id="shopPic0"/>
 			`,
 		},
@@ -3873,8 +3894,11 @@ function getPayList(){
 								${type}
 								</p>
 							</div>
+							<div class="order-shop">
+								<a href="javascript:;">${list[i].outTradeNo}</a>
+							</div>
 							<div class="order-data">
-								<p><span class="text-red">￥ ${list[i].totalAmount} = ${list[i].totalAmount*100} 积分</span>
+								<p><span class="text-red">${list[i].totalAmount*100} 积分</span>
 								<span class="right">${API.formatDate(list[i].created)}<span>
 								</p>
 							</div>
@@ -4241,4 +4265,33 @@ function toBuyVip(day){
 	}, function(index) {
 		layer.close(index);
 	});
+}
+function markHtml(text){
+	var owoList=[];
+	for(var i in OWOData){
+		owoList = owoList.concat(OWOData[i].container);
+	}
+	for(var i in owoList){
+		if(replaceSpecialChar(text).indexOf(owoList[i].data) != -1){
+			text = replaceAll(replaceSpecialChar(text),owoList[i].data,"<img src='"+owoList[i].icon+"' class='tImg' />")
+			
+		}
+	}
+	return text;
+	
+	
+}
+function replaceAll(string, search, replace) {
+  return string.split(search).join(replace);
+}
+function replaceSpecialChar(text) {
+	if(!text){
+		return false;
+	}
+	text = text.replace(/&quot;/g, '"');
+	text = text.replace(/&amp;/g, '&');
+	text = text.replace(/&lt;/g, '<');
+	text = text.replace(/&gt;/g, '>');
+	text = text.replace(/&nbsp;/g, ' ');
+	return text;
 }
