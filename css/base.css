@@ -1323,6 +1323,21 @@ button{
 	transform: translate(0px, 0px);
 	margin-right: initial;
 }
+.pay-type{
+	margin-bottom: 30px;
+	font-size: 17px;
+}
+.pay-type a{
+	color: #666;
+	margin-right: 10px;
+}
+.pay-type a.active{
+	color: #0000FF;
+	font-weight: bold;
+}
+.tokenpay{
+	display: none;
+}
 @media all and (max-width: 1600px) {
 	.home-left,.home-right{
 		width: 100%;

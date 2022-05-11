@@ -3694,6 +3694,50 @@ function pay(){
 		}
 	});
 }
+function tokenPay(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var num = $("#token").val();
+	if(num==""||num<=0){
+		layer.msg("请输入正确的充值金额", {icon: 2});
+		return false;
+	}
+	if(num<5){
+		layer.msg("最低充值金额为5元", {icon: 2});
+		return false;
+	}
+	var data = {
+		num: num,
+		token: token,
+	}
+	var index = layer.load(1, {
+	  shade: [0.4,'#000']
+	});
+	
+	$.ajax({
+		type : "post",
+		url: API.tokenPay(),
+		data:data,
+		dataType: 'json',
+		success : function(result) {
+			layer.close(index); 
+			if(result.code==1){
+				layer.msg(result.msg, {icon: 1});
+				getAssets();
+			}else{
+				layer.msg(result.msg, {icon: 2});
+			}
+		},
+		error : function(e){
+			layer.close(index); 
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
 function showCode(img){
 	var num = $("#num").val();
 	layer.open({
@@ -4295,3 +4339,12 @@ function replaceSpecialChar(text) {
 	text = text.replace(/&nbsp;/g, ' ');
 	return text;
 }
+$(function(){
+	$("body").on('click','.pay-type a',function(){
+		var type = $(this).attr("data-type");
+		$('.pay-type a').removeClass("active");
+		$(this).addClass("active");
+		$(".pay-concent").hide();
+		$("."+type).show();
+	});
+})
