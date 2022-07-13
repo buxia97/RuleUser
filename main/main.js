@@ -1,5 +1,6 @@
 postStyle();
 userStatus();
+regConfig();
 var Interval;
 function postStyle(){
 	var style =`
@@ -138,31 +139,50 @@ function forgot(){
 	$("#RuleUser-UserForm-form").html(html);
 }
 function register(){
+	var isEmail = 1;
+	var isInvite = 1;
+	var isEmailStyle = "";
+	var isInviteStyle = "";
+	if(localStorage.getItem("isEmail")){
+		isEmail = Number(localStorage.getItem("isEmail"));
+		if(isEmail == 0){
+			isEmailStyle = "display:none";
+		}
+	}
+	if(localStorage.getItem("isInvite")){
+		isInvite = Number(localStorage.getItem("isInvite"));
+		if(isInvite == 0){
+			isInviteStyle = "display:none";
+		}
+	}
 	var html = `
-		<div class="RuleUser-input">
+		<div class="box-input">
 			<input type="text" placeholder="请输入用户名(必填)" value="" id="username"/>
 		</div>
-		<div class="RuleUser-input">
+		<div class="box-input">
 			<input type="text" placeholder="请输入邮箱(必填)" value="" id="email"/>
 		</div>
-		<div class="RuleUser-input">
+		<div class="box-input" style="${isEmailStyle}">
 			<input type="text" placeholder="请输入验证码" value="" id="code"/>
 			<a href="javascript:;" class="send sendBefor" id="sendBefore" onclick="sendCode()">发送</a>
 			<span class="send sended" id="sended"></span>
 		</div>
-		<div class="RuleUser-input">
+		<div class="box-input">
 			<input type="password" placeholder="请输入密码" value="" id="userpass"/>
 		</div>
-		<div class="RuleUser-input">
+		<div class="box-input">
 			<input type="password" placeholder="再次输入密码" value="" id="repass"/>
 		</div>
-		<div class="RuleUser-btn">
+		<div class="box-input" style="${isInviteStyle}">
+			<input type="text" placeholder="请输入邀请码" value="" id="inviteCode"/>
+		</div>
+		<div class="box-btn">
 			<button type="button" onclick="toRegister()">立即注册</button>
 		</div>
-		<div class="RuleUserForm-links">
+		<div class="form-links">
 			<a href="javascript:;" onclick="login()">用户登录</a>
 			<br/>
-			<p class="margin-top">注册即为同意<a href="#">《用户协议》</a></p>
+			<p class="margin-top">注册即为同意<a href="${userAgreement}">《用户协议》</a></p>
 		</div>
 		`;
 	$("#RuleUser-UserForm-form").html(html);
@@ -391,6 +411,22 @@ function UserQuit(){
 			clearTimeout('timer')
 		}, 1000)
 	}
+}
+function regConfig(){
+	$.ajax({
+		type : "post",
+		url : API.regConfig(),
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				localStorage.setItem('isEmail',result.data.isEmail);
+				localStorage.setItem('isInvite',result.data.isInvite);
+			}
+		},
+		error : function(e){
+			
+		}
+	});
 }
 function toLogin(){
 	var username = $("#username").val();

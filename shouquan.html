@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer" content="webkit">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            *{margin:0;
+            padding:0;
+            -webkit-box-sizing:border-box;
+            -moz-box-sizing:border-box;
+            box-sizing:border-box;}
+            body{font-size:15px;
+            background-color: #f6f8f9;
+            color:#202122;}
+            style{display:none;}
+            html{
+            -webkit-text-size-adjust:100%;
+            -ms-text-size-adjust: 100%;}
+            :after,:before{-webkit-box-sizing:border-box;
+            -moz-box-sizing:border-box;
+            box-sizing:border-box;}
+            .main{
+                max-width: 500px;
+                width: 100%;
+                margin: 30px auto;
+                padding: 0px 15px;
+            }
+            .main p{
+                margin-bottom: 15px;
+            }
+            .main input{
+                width: 300px;
+                height: 40px;
+                border-radius: 4px;
+                border: solid 2px #333;
+                margin-bottom: 15px;
+                line-height: 30px;
+                padding: 0px 15px;
+            }
+            .main button{
+                background: #2196f3;
+                border: none;
+                width: 120px;
+                height: 40px;
+                margin: 0px auto;
+                text-align: center;
+                margin: 0 auto;
+                line-height: 40px;
+                color: #fff;
+            }
+            .main-form,.main-text{
+                text-align: center;
+            }
+            .sqm{
+                width: 300px;
+                height: 100px;
+                padding: 15px;
+                border: solid 2px #333;
+                margin-top: 20px;
+                font-size: 18px;
+                font-weight: bold;
+            }
+        </style>
+	<body>
+		<div class="main">
+		    <p>输入域名，不要带http://或者https://，只需要类似如baidu.com或者www.baidu.com等格式，输入后点击确认按钮将会生成授权码，复制即可使用，可以多次生成。</p>
+		    <div class="main-form">
+    		    <input type="text" placeholder="输入域名" id="domain">
+    		    <button type="button">生成授权码</button>
+		    </div>
+		    <div class="main-text">
+		        <textarea class="sqm" placeholder="授权码出现在这里"></textarea>
+		    </div>
+		</div>
+		<script src="/ruleuser/js/jquery-3.5.1.min.js"></script>
+		<script>
+		    ///authorize.php?domain=www.baidu.com
+		    $("button").click(function(){
+		      var domain = $("#domain").val();
+		      if(domain==""){
+		          return false;
+		      }
+              $.get("/authorize.php?domain="+domain,function(data,status){
+                $(".sqm").val(data);
+              });
+            });
+
+		</script>
+	</body>
+
+</html>

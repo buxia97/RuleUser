@@ -12,6 +12,7 @@ var webEmail = "buxia97@126.com";  //站长邮箱
 var noticeUrl = "https://www.ruletree.club/category/Thought/"; //公告地址
 var opinionUrl = "https://www.ruletree.club/help.html";  //意见反馈地址
 var appUrl = "https://www.pgyer.com/J9bd"; //APP下载地址
+var userAgreement = "#"; //用户协议地址
 
 var Schema = "ruleapp://"; //这里定义app的Schema，用于网页端唤醒app，这里是我自己的，千万别设置成一样的，不然你的网站会去唤醒规则之树的app，不需要可以留空
 
@@ -35,7 +36,7 @@ var rankStyle = ["#6699CC","#666699","#009933","#FF9900","#ff007f","#FF0033","#6
 
 //链接规则(用于站内链接自动跳转)，请根据自己的网站文件链接自由发挥，比如我的就是
 //https://www.ruletree.club/archives/2824/
-//{cid}对应文章id，{slug}对应独立页面名称，其实本质上就是页面拼接。
+//{cid}对应文章id，{slug}对应独立页面名称，{category}对应分类，其实本质上就是页面拼接。
 var linkRule =WEB_URL+"archives/{cid}/" //普通文章
 var pageRule =WEB_URL+"{slug}.html" //独立页面
 
@@ -274,7 +275,9 @@ var API = {
 	getScanStatus:function(){
 		return API_URL + 'typechoUsers/getScanStatus';
 	},
-	
+	regConfig:function(){
+		return API_URL + 'typechoUsers/regConfig';
+	},
 	IsNull(obj) {
 		return (obj != null && obj != undefined);
 	},

@@ -1,6 +1,7 @@
 main();
 header();
 footer();
+regConfig();
 $(function(){
 	//登陆判断
 	if(!localStorage.getItem("token")){
@@ -384,6 +385,22 @@ function forgot(){
 	$("#isLogin-form").html(html);
 }
 function register(){
+	var isEmail = 1;
+	var isInvite = 1;
+	var isEmailStyle = "";
+	var isInviteStyle = "";
+	if(localStorage.getItem("isEmail")){
+		isEmail = Number(localStorage.getItem("isEmail"));
+		if(isEmail == 0){
+			isEmailStyle = "display:none";
+		}
+	}
+	if(localStorage.getItem("isInvite")){
+		isInvite = Number(localStorage.getItem("isInvite"));
+		if(isInvite == 0){
+			isInviteStyle = "display:none";
+		}
+	}
 	var html = `
 		<div class="box-input">
 			<input type="text" placeholder="请输入用户名(必填)" value="" id="username"/>
@@ -391,7 +408,7 @@ function register(){
 		<div class="box-input">
 			<input type="text" placeholder="请输入邮箱(必填)" value="" id="email"/>
 		</div>
-		<div class="box-input">
+		<div class="box-input" style="${isEmailStyle}">
 			<input type="text" placeholder="请输入验证码" value="" id="code"/>
 			<a href="javascript:;" class="send sendBefor" id="sendBefore" onclick="sendCode()">发送</a>
 			<span class="send sended" id="sended"></span>
@@ -402,13 +419,16 @@ function register(){
 		<div class="box-input">
 			<input type="password" placeholder="再次输入密码" value="" id="repass"/>
 		</div>
+		<div class="box-input" style="${isInviteStyle}">
+			<input type="text" placeholder="请输入邀请码" value="" id="inviteCode"/>
+		</div>
 		<div class="box-btn">
 			<button type="button" onclick="toRegister()">立即注册</button>
 		</div>
 		<div class="form-links">
 			<a href="javascript:;" onclick="login()">用户登录</a>
 			<br/>
-			<p class="margin-top">注册即为同意<a href="#">《用户协议》</a></p>
+			<p class="margin-top">注册即为同意<a href="${userAgreement}">《用户协议》</a></p>
 		</div>
 		`;
 	$("#isLogin-form").html(html);
@@ -527,6 +547,22 @@ function userStatus(){
 		}
 	});
 }
+function regConfig(){
+	$.ajax({
+		type : "post",
+		url : API.regConfig(),
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				localStorage.setItem('isEmail',result.data.isEmail);
+				localStorage.setItem('isInvite',result.data.isInvite);
+			}
+		},
+		error : function(e){
+			
+		}
+	});
+}
 var encry1 = "MRqwErtYuiTplKjhgfdSaZXcvbNmQrUMzC+Ay=";
 function toLogin(){
 	var username = $("#username").val();
@@ -572,15 +608,36 @@ function toLogin(){
 	});
 }
 function toRegister(){
+	var isEmail = 1;
+	var isInvite = 1;
+	if(localStorage.getItem("isEmail")){
+		isEmail = Number(localStorage.getItem("isEmail"));
+	}
+	if(localStorage.getItem("isInvite")){
+		isInvite = Number(localStorage.getItem("isInvite"));
+	}
 	var username = $("#username").val();
 	var userpass = $("#userpass").val();
 	var code = $("#code").val();
 	var email = $("#email").val();
 	var repass = $("#repass").val();
+	var inviteCode = $("#inviteCode").val();
 	
-	if(username==""||userpass==""||email==""||code==""){
+	if(username==""||userpass==""||email==""){
 		layer.msg("请输入正确的参数", {icon: 2});
 		return false;
+	}
+	if(isEmail==1){
+		if(code==""){
+			layer.msg("请输入验证码", {icon: 2});
+			return false;
+		}
+	}
+	if(isInvite==1){
+		if(inviteCode==""){
+			layer.msg("请输入邀请码", {icon: 2});
+			return false;
+		}
 	}
 	if(userpass!=repass){
 		layer.msg("两次密码不一致", {icon: 2});
@@ -590,7 +647,8 @@ function toRegister(){
 		'name':username,
 		'code':code,
 		'password':userpass,
-		'mail':email
+		'mail':email,
+		'inviteCode':inviteCode
 	}
 	var index = layer.load(1, {
 	  shade: [0.4,'#000']
@@ -863,8 +921,11 @@ function formatDate(datetime) {
 	// 返回
 	return result;
 }
-function toLinks(cid){
+function toLinks(cid,slug){
 	var url = linkRule.replace("{cid}",cid);
+	if(slug&&slug!=""){
+		url = url.replace("{category}",slug);
+	}
 	return url;
 }
 function dataShow(type){
@@ -1101,7 +1162,7 @@ function getIndexPost(){
 						}
 						html+=`
 						<div class="index-archives-box overflow-hidden">
-							<a href="${toLinks(list[i].cid)}" target="_blank">
+							<a href="${toLinks(list[i].cid,list[i].category[0].slug,list[i].category[0].slug)}" target="_blank">
 								<div class="col-5 left">
 									<div class="index-archives-img">
 									${img}
@@ -1176,7 +1237,7 @@ function getIndexNotice(){
 						
 						html+=`
 						<div class="notice-box">
-							<a href="${toLinks(list[i].cid)}"  target="_blank"><span>${formatDate(list[i].created)}</span> ${list[i].title}</a>
+							<a href="${toLinks(list[i].cid,list[i].category[0].slug)}"  target="_blank"><span>${formatDate(list[i].created)}</span> ${list[i].title}</a>
 						</div>
 						`;
 					}
@@ -1228,7 +1289,7 @@ function recommendList(){
 						}
 						html+=`
 						<div class="padding col-33 left">
-							<a href="${toLinks(list[i].cid)}" target="_blank">
+							<a href="${toLinks(list[i].cid,list[i].category[0].slug)}" target="_blank">
 								<div class="hot-archives-box">
 									<div class="hot-archives-pic">
 										${img}
@@ -1312,7 +1373,7 @@ function indexComment(){
 									
 								</div>
 								<div class="comment-links">
-									发表在：<a href="${toLinks(list[i].cid)}" target="_blank">${list[i].contenTitle}</a>
+									发表在：<a href="${toLinks(list[i].cid,list[i].category[0].slug)}" target="_blank">${list[i].contenTitle}</a>
 								</div>
 							</div>
 						</div>
@@ -1400,7 +1461,7 @@ function getInbox(isPage){
 									
 								</div>
 								<div class="comment-links">
-									发表在：<a href="${toLinks(list[i].cid)}" target="_blank">${list[i].contenTitle}</a>
+									发表在：<a href="${toLinks(list[i].cid,list[i].category[0].slug)}" target="_blank">${list[i].contenTitle}</a>
 									<div class="reply right"><a href="javascript:;" onclick="reply('${list[i].author}','${list[i].coid}','${list[i].cid}')">回复</a></div>
 								</div>
 							</div>
@@ -1556,10 +1617,10 @@ function getMark(isPage){
 							
 							<div class="mark-main overflow-hidden radius">
 								<div class="archives-img">
-									<a href="${toLinks(list[i].cid)}" target="_blank">${img}</a>
+									<a href="${toLinks(list[i].cid,list[i].category[0].slug)}" target="_blank">${img}</a>
 								</div>
 								<div class="archives-info">
-									<h3><a href="${toLinks(list[i].cid)}" target="_blank">${list[i].title}</a></h3>
+									<h3><a href="${toLinks(list[i].cid,list[i].category[0].slug)}" target="_blank">${list[i].title}</a></h3>
 									<p>${formatDate(list[i].created)} <a href="javascript:;" class="text-red right" onclick="rmMark('${list[i].logid}')">取消收藏</a> </p>
 								</div>
 							</div>
@@ -2220,7 +2281,7 @@ function getArchives(isPage){
 							</div>
 							<div class="archives-list-info left">
 								<div class="archives-list-title">
-									<a href="${toLinks(list[i].cid)}" target="_blank">${list[i].title}</a>
+									<a href="${toLinks(list[i].cid,list[i].category[0].slug)}" target="_blank">${list[i].title}</a>
 									<span class="right">${API.formatDate(list[i].created)}</span>
 								</div>
 								<div class="archives-list-status">
@@ -2234,7 +2295,7 @@ function getArchives(isPage){
 										<span><i class="iconfont icon-good"></i>${formatNumber(list[i].likes)}</span>
 									</div>
 									<div class="archives-list-btn right">
-										<a href="${toLinks(list[i].cid)}" target="_blank">访问文章</a>
+										<a href="${toLinks(list[i].cid,list[i].category[0].slug)}" target="_blank">访问文章</a>
 										<a href="javascript:;"  onclick='toComment(${list[i].cid})'>查看评论</a>
 										<a href="javascript:;" onclick='toEdit(${list[i].cid})'>编辑文章</a>
 									</div>
@@ -2351,7 +2412,7 @@ function getComment(isPage){
 									
 								</div>
 								<div class="comment-links">
-									发表在：<a href="${toLinks(list[i].cid)}" target="_blank">${list[i].contenTitle}</a>
+									发表在：<a href="${toLinks(list[i].cid,list[i].category[0].slug)}" target="_blank">${list[i].contenTitle}</a>
 									<div class="reply right"><a href="javascript:;" onclick="reply('${list[i].author}','${list[i].coid}','${list[i].cid}')">回复</a></div>
 								</div>
 							</div>
