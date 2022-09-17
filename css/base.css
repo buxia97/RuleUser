@@ -1227,6 +1227,18 @@ button{
 	background-color: #0000FF;
 	color: #fff;
 }
+.epay .pay-input{
+	max-width: 320px;
+}
+.epay .pay-input input{
+	width: calc(100% - 170px);
+}
+.epay .pay-input select{
+	width: 90px;
+	float: left;
+	border: none;
+	outline: none;
+}
 .pay-tips{
 	line-height: 28px;
 }
@@ -1336,6 +1348,9 @@ button{
 	font-weight: bold;
 }
 .tokenpay{
+	display: none;
+}
+.epay{
 	display: none;
 }
 @media all and (max-width: 1600px) {

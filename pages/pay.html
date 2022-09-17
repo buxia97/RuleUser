@@ -12,6 +12,7 @@
 				<div class="pay-type">
 					<a href="javascript:;" class="active" data-type="alipay">支付宝</a>
 					<a href="javascript:;" data-type="tokenpay">充值码</a>
+					<a href="javascript:;" data-type="epay">易支付</a>
 				</div>
 				<h4>当前积分：<span class="text-red" id="assets">--</span></h4>
 				<div class="pay-concent alipay">
@@ -35,6 +36,23 @@
 						<h5>充值注意：</h5>
 						<p>1.输入正确的充值码，点击充值按钮，即可进行积分充值。</p>
 						<p>2.充值码在使用后将立即失效。</p>
+						<p>3.如果充值金额未到账，请查看账户中的充值记录，并立即反馈。</p>
+					</div>
+				</div>
+				<div class="pay-concent epay">
+					<div class="pay-input">
+						<select id="epay-type">
+							<option value="alipay" selected>支付宝</option>
+							<option value="wxpay">微信支付</option>
+							<option value="qqpay">QQ钱包</option>
+						</select>
+						<input type="number" id="money" placeholder="输入充值金额"/>
+						<button type="button" onclick="toEPay()">充值</button>
+					</div>
+					<div class="pay-tips">
+						<h5>充值注意：</h5>
+						<p>1.易支付可选择三种交易平台，分别为支付宝，微信，QQ钱包。</p>
+						<p>2.充值金额与网站积分的比例为<span class="text-red"> 1:100 </span>，最低充值金额<span class="text-red"> 5 </span>元。</p>
 						<p>3.如果充值金额未到账，请查看账户中的充值记录，并立即反馈。</p>
 					</div>
 				</div>

@@ -245,6 +245,10 @@ var API = {
 	wxPay:function(){
 		return API_URL + 'pay/WxPay';
 	},
+	//易支付
+	EPay:function(){
+		return API_URL + 'pay/EPay';
+	},
 	//卡密充值
 	tokenPay:function(){
 		return API_URL + 'pay/tokenPay';

@@ -208,6 +208,7 @@ function pageData(page){
 		menuActive(".menuUser");
 	}
 	if(page=="pages/userinfo.html"){
+		userInfo();
 		getUserInfo();
 		menuActive(".menuUser");
 	}
@@ -1373,7 +1374,7 @@ function indexComment(){
 									
 								</div>
 								<div class="comment-links">
-									发表在：<a href="${toLinks(list[i].cid,list[i].category[0].slug)}" target="_blank">${list[i].contenTitle}</a>
+									发表在：<a href="${toLinks(list[i].cid)}" target="_blank">${list[i].contenTitle}</a>
 								</div>
 							</div>
 						</div>
@@ -1461,7 +1462,7 @@ function getInbox(isPage){
 									
 								</div>
 								<div class="comment-links">
-									发表在：<a href="${toLinks(list[i].cid,list[i].category[0].slug)}" target="_blank">${list[i].contenTitle}</a>
+									发表在：<a href="${toLinks(list[i].cid)}" target="_blank">${list[i].contenTitle}</a>
 									<div class="reply right"><a href="javascript:;" onclick="reply('${list[i].author}','${list[i].coid}','${list[i].cid}')">回复</a></div>
 								</div>
 							</div>
@@ -1696,12 +1697,12 @@ function toAvatar(){
 	layer.open({
 		title:"头像设置说明",
 		type: 1,
-		area: ['320px', '320px'], 
+		area: ['320px', '280px'], 
 		content: `
 		<div class="layer-form">
 			<div class="box-input">
-				<p>Gravatar是全球最大的头像库，属于Wordpress旗下。它广泛应用于国内外各类网站和程序，包括知名的Github。在Gravatar通过您的邮箱注册用户，并设置头像后，您在所有支持Gravatar的网站使用邮箱，都会显示您的头像。</p>
-				<p>或者，您可以将将邮箱设置成QQ邮箱，将自动获取您的QQ头像。</p>
+				<p>下载APP即可设置您的个人头像！</p>
+				<p>同时，您还可以将邮箱设置成QQ邮箱，将自动获取您的QQ头像，或者前往全球最大的头像库Gravatar，通过邮箱注册账号，并设置您的公共头像。</p>
 			</div>
 			<div class="box-btn">
 				<button type="button" class="radius" onclick="toGravatar()">前往Gravatar</button>
@@ -1968,7 +1969,7 @@ function setEmail(){
 				<label>验证码</label>
 				<input type="text" id="code" placeholder="填写新邮箱验证码"/>
 				<div class="input-links">
-					<a href="javascript:;" onclick="setEmail()" class="sendBefore" id="sendBefore">发送</a>
+					<a href="javascript:;" onclick="sendEmailCode()" class="sendBefore" id="sendBefore">发送</a>
 					<span id="sended" class="sended"></span>
 				</div>
 			</div>
@@ -2412,7 +2413,7 @@ function getComment(isPage){
 									
 								</div>
 								<div class="comment-links">
-									发表在：<a href="${toLinks(list[i].cid,list[i].category[0].slug)}" target="_blank">${list[i].contenTitle}</a>
+									发表在：<a href="${toLinks(list[i].cid)}" target="_blank">${list[i].contenTitle}</a>
 									<div class="reply right"><a href="javascript:;" onclick="reply('${list[i].author}','${list[i].coid}','${list[i].cid}')">回复</a></div>
 								</div>
 							</div>
@@ -3745,6 +3746,68 @@ function pay(){
 				var url = result.data;
 				var codeImg = API.qrCode()+"?codeContent="+url;
 				showCode(codeImg);
+			}else{
+				layer.msg(result.msg, {icon: 2});
+			}
+		},
+		error : function(e){
+			layer.close(index); 
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function toEPay(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var num = $("#money").val();
+	var type = $("#epay-type").val();
+	if(num==""||num<=0){
+		layer.msg("请输入正确的充值金额", {icon: 2});
+		return false;
+	}
+	if(num<5){
+		layer.msg("最低充值金额为5元", {icon: 2});
+		return false;
+	}
+	var data = {
+		money: num,
+		device:"pc",
+		type:type,
+		token: token,
+	}
+	var index = layer.load(1, {
+	  shade: [0.4,'#000']
+	});
+	
+	$.ajax({
+		type : "post",
+		url: API.EPay(),
+		data:data,
+		dataType: 'json',
+		success : function(result) {
+			layer.close(index); 
+			if(result.code==1){
+				var payapi = result.payapi;
+				var payurl="";
+				if(result.data.payurl){
+					payurl = result.data.payurl;
+					var prefix= payurl.substring(0,2);
+					if(prefix=="./"){
+						payurl = payurl.replace("./","");
+						payurl = payapi + payurl;
+					}
+				}
+				if(result.data.qrcode){
+					//这是手机扫码，无法跳转，所以要改成跳转形式
+					//payurl = result.data.qrcode;
+					var trade_no = result.data.trade_no;
+					payurl = payapi + '/pay/qrcode/'+trade_no+'/?sitename=';
+				}
+				window.open(payurl)
 			}else{
 				layer.msg(result.msg, {icon: 2});
 			}
