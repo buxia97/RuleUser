@@ -44,7 +44,7 @@ var pageRule =WEB_URL+"{slug}.html" //独立页面
 var noticeID = 97;
 var recommendID = 394;
 
-var version = "1.0.2"  //版本号
+var version = "1.1.2"  //版本号
 //接口和公共方法定义
 var API = {
 	userLogin:function(){

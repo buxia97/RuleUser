@@ -1353,6 +1353,9 @@ button{
 .epay{
 	display: none;
 }
+.wxpay{
+	display: none;
+}
 @media all and (max-width: 1600px) {
 	.home-left,.home-right{
 		width: 100%;

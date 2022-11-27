@@ -922,10 +922,27 @@ function formatDate(datetime) {
 	// 返回
 	return result;
 }
-function toLinks(cid,slug){
-	var url = linkRule.replace("{cid}",cid);
-	if(slug&&slug!=""){
-		url = url.replace("{category}",slug);
+function toLinks(data){
+	var cid = data.cid;
+	var type = data.type;
+	
+	if(type=="page"){
+		var url = pageRule;
+		var slug = data.slug;
+		if(slug&&slug!=""){
+			url = url.replace("{slug}",slug);
+		}
+	}else{
+		var url = linkRule;
+		var category = data.category;
+		if(category[0].slug){
+			category = category[0].slug;
+		}
+		
+		var url = url.replace("{cid}",cid);
+		if(category&&category!=""){
+			url = url.replace("{category}",category);
+		}
 	}
 	return url;
 }
@@ -1163,7 +1180,7 @@ function getIndexPost(){
 						}
 						html+=`
 						<div class="index-archives-box overflow-hidden">
-							<a href="${toLinks(list[i].cid,list[i].category[0].slug,list[i].category[0].slug)}" target="_blank">
+							<a href="${toLinks(list[i])}" target="_blank">
 								<div class="col-5 left">
 									<div class="index-archives-img">
 									${img}
@@ -1238,7 +1255,7 @@ function getIndexNotice(){
 						
 						html+=`
 						<div class="notice-box">
-							<a href="${toLinks(list[i].cid,list[i].category[0].slug)}"  target="_blank"><span>${formatDate(list[i].created)}</span> ${list[i].title}</a>
+							<a href="${toLinks(list[i])}"  target="_blank"><span>${formatDate(list[i].created)}</span> ${list[i].title}</a>
 						</div>
 						`;
 					}
@@ -1290,7 +1307,7 @@ function recommendList(){
 						}
 						html+=`
 						<div class="padding col-33 left">
-							<a href="${toLinks(list[i].cid,list[i].category[0].slug)}" target="_blank">
+							<a href="${toLinks(list[i])}" target="_blank">
 								<div class="hot-archives-box">
 									<div class="hot-archives-pic">
 										${img}
@@ -1374,7 +1391,7 @@ function indexComment(){
 									
 								</div>
 								<div class="comment-links">
-									发表在：<a href="${toLinks(list[i].cid)}" target="_blank">${list[i].contenTitle}</a>
+									发表在：<a href="${toLinks(list[i].contentsInfo)}" target="_blank">${list[i].contenTitle}</a>
 								</div>
 							</div>
 						</div>
@@ -1462,7 +1479,7 @@ function getInbox(isPage){
 									
 								</div>
 								<div class="comment-links">
-									发表在：<a href="${toLinks(list[i].cid)}" target="_blank">${list[i].contenTitle}</a>
+									发表在：<a href="${toLinks(list[i].contentsInfo)}" target="_blank">${list[i].contenTitle}</a>
 									<div class="reply right"><a href="javascript:;" onclick="reply('${list[i].author}','${list[i].coid}','${list[i].cid}')">回复</a></div>
 								</div>
 							</div>
@@ -1618,10 +1635,10 @@ function getMark(isPage){
 							
 							<div class="mark-main overflow-hidden radius">
 								<div class="archives-img">
-									<a href="${toLinks(list[i].cid,list[i].category[0].slug)}" target="_blank">${img}</a>
+									<a href="${toLinks(list[i])}" target="_blank">${img}</a>
 								</div>
 								<div class="archives-info">
-									<h3><a href="${toLinks(list[i].cid,list[i].category[0].slug)}" target="_blank">${list[i].title}</a></h3>
+									<h3><a href="${toLinks(list[i])}" target="_blank">${list[i].title}</a></h3>
 									<p>${formatDate(list[i].created)} <a href="javascript:;" class="text-red right" onclick="rmMark('${list[i].logid}')">取消收藏</a> </p>
 								</div>
 							</div>
@@ -2282,7 +2299,7 @@ function getArchives(isPage){
 							</div>
 							<div class="archives-list-info left">
 								<div class="archives-list-title">
-									<a href="${toLinks(list[i].cid,list[i].category[0].slug)}" target="_blank">${list[i].title}</a>
+									<a href="${toLinks(list[i])}" target="_blank">${list[i].title}</a>
 									<span class="right">${API.formatDate(list[i].created)}</span>
 								</div>
 								<div class="archives-list-status">
@@ -2296,7 +2313,7 @@ function getArchives(isPage){
 										<span><i class="iconfont icon-good"></i>${formatNumber(list[i].likes)}</span>
 									</div>
 									<div class="archives-list-btn right">
-										<a href="${toLinks(list[i].cid,list[i].category[0].slug)}" target="_blank">访问文章</a>
+										<a href="${toLinks(list[i])}" target="_blank">访问文章</a>
 										<a href="javascript:;"  onclick='toComment(${list[i].cid})'>查看评论</a>
 										<a href="javascript:;" onclick='toEdit(${list[i].cid})'>编辑文章</a>
 									</div>
@@ -2413,7 +2430,7 @@ function getComment(isPage){
 									
 								</div>
 								<div class="comment-links">
-									发表在：<a href="${toLinks(list[i].cid)}" target="_blank">${list[i].contenTitle}</a>
+									发表在：<a href="${toLinks(list[i])}" target="_blank">${list[i].contenTitle}</a>
 									<div class="reply right"><a href="javascript:;" onclick="reply('${list[i].author}','${list[i].coid}','${list[i].cid}')">回复</a></div>
 								</div>
 							</div>
@@ -3744,6 +3761,51 @@ function pay(){
 			layer.close(index); 
 			if(result.code==1){
 				var url = result.data;
+				var codeImg = API.qrCode()+"?codeContent="+url;
+				showCode(codeImg);
+			}else{
+				layer.msg(result.msg, {icon: 2});
+			}
+		},
+		error : function(e){
+			layer.close(index); 
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function wxPay(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var num = $("#wxnum").val();
+	if(num==""||num<=0){
+		layer.msg("请输入正确的充值金额", {icon: 2});
+		return false;
+	}
+	if(num<5){
+		layer.msg("最低充值金额为5元", {icon: 2});
+		return false;
+	}
+	var data = {
+		num: num,
+		token: token,
+	}
+	var index = layer.load(1, {
+	  shade: [0.4,'#000']
+	});
+	
+	$.ajax({
+		type : "post",
+		url: API.scancodePay(),
+		data:data,
+		dataType: 'json',
+		success : function(result) {
+			layer.close(index); 
+			if(result.code==1){
+				var url = result.data.data;
 				var codeImg = API.qrCode()+"?codeContent="+url;
 				showCode(codeImg);
 			}else{
