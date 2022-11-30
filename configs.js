@@ -19,6 +19,9 @@ var Schema = "ruleapp://"; //这里定义app的Schema，用于网页端唤醒app
 var userIndex = "RuleUser"; //所在目录，用于接管网站功能用，比如放在typecho网站路径下的RuleUser文件
 var TypechoUserLogin = 1;  //是否与typecho同步登录，开启后，配合typecho代码配置，接管typecho原本的登录体系。
 
+//配合nginx实现的访问key
+var key = "";
+
 //底部链接
 var footerLink = `
 	<a href="https://www.ruletree.club">网站首页</a>
@@ -47,6 +50,9 @@ var recommendID = 394;
 var version = "1.1.2"  //版本号
 //接口和公共方法定义
 var API = {
+	getKey(){
+		return key;
+	},
 	userLogin:function(){
 		return API_URL + 'typechoUsers/userLogin';
 	},

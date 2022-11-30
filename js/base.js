@@ -468,6 +468,14 @@ function getScan(){
 	
 	$.ajax({
 		type : "post",
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"codeContent":text
 		},
@@ -533,6 +541,10 @@ function userStatus(){
 	
 	$.ajax({
 		type : "post",
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"token":token
 		},
@@ -582,6 +594,10 @@ function toLogin(){
 	
 	$.ajax({
 		type : "post",
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{"params":JSON.stringify(API.removeObjectEmptyKey(data))},
 		url : API.userLogin(),
 		dataType: 'json',
@@ -658,6 +674,10 @@ function toRegister(){
 	$.ajax({
 		type : "post",
 		url: API.userRegister(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{"params":JSON.stringify(API.removeObjectEmptyKey(data))},
 		dataType: 'json',
 		success : function(result) {
@@ -701,6 +721,10 @@ function toForgot(){
 	$.ajax({
 		type : "post",
 		url: API.userFoget(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{"params":JSON.stringify(API.removeObjectEmptyKey(data))},
 		dataType: 'json',
 		success : function(result) {
@@ -734,6 +758,10 @@ function sendCode(){
 	$.ajax({
 		type : "post",
 		url: API.RegSendCode(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{"params":JSON.stringify(API.removeObjectEmptyKey(data))},
 		
 		dataType: 'json',
@@ -771,6 +799,10 @@ function sendCodeFogot(){
 	$.ajax({
 		type : "post",
 		url: API.SendCode(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{"params":JSON.stringify(API.removeObjectEmptyKey(data))},
 		dataType: 'json',
 		success : function(result) {
@@ -838,7 +870,11 @@ function userInfo(){
 		}
 		$.ajax({
 			type : "post",
-			data:{
+			header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
+		data:{
 				"key":uid
 			},
 			url : API.getUserInfo(),
@@ -1101,6 +1137,10 @@ function getUserData(){
 	
 	$.ajax({
 		type : "post",
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"token":token
 		},
@@ -1160,6 +1200,10 @@ function getIndexPost(){
 	$.ajax({
 		type : "post",
 		url: API.getContentsList(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"limit":4,
@@ -1238,6 +1282,10 @@ function getIndexNotice(){
 	$.ajax({
 		type : "post",
 		url: API.getMetaContents(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"limit":5,
@@ -1287,6 +1335,10 @@ function recommendList(){
 	$.ajax({
 		type : "post",
 		url: API.getMetaContents(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"limit":3,
@@ -1351,6 +1403,10 @@ function indexComment(){
 	$.ajax({
 		type : "post",
 		url: API.getCommentsList(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"limit":4,
@@ -1436,6 +1492,10 @@ function getInbox(isPage){
 	$.ajax({
 		type : "post",
 		url: API.getCommentsList(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"limit":10,
@@ -1566,6 +1626,10 @@ function toReply(){
 	$.ajax({
 		type : "post",
 		url: API.setComments(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"params":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"token":token
@@ -1611,6 +1675,10 @@ function getMark(isPage){
 	$.ajax({
 		type : "post",
 		url: API.getMarkList(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"limit":8,
 			"page":page,
@@ -1685,6 +1753,10 @@ function rmMark(logid){
 	$.ajax({
 		type : "post",
 		url: API.removeLog(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"key":logid,
 			"token":token
@@ -1746,6 +1818,10 @@ function getUserInfo(){
 	$.ajax({
 		type : "post",
 		url: API.userStatus(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"token":token
 		},
@@ -1883,6 +1959,10 @@ function saveUserInfo(type){
 	$.ajax({
 		type : "post",
 		url: API.userEdit(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"params":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"token":token
@@ -2014,6 +2094,10 @@ function sendEmailCode(){
 	$.ajax({
 		type : "post",
 		url: API.RegSendCode(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{"params":JSON.stringify(API.removeObjectEmptyKey(data))},
 		
 		dataType: 'json',
@@ -2259,6 +2343,10 @@ function getArchives(isPage){
 	$.ajax({
 		type : "post",
 		url: API.getContentsList(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"limit":10,
@@ -2387,6 +2475,10 @@ function getComment(isPage){
 	$.ajax({
 		type : "post",
 		url: API.getCommentsList(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"limit":10,
@@ -2537,6 +2629,10 @@ function getCategory(){
 	$.ajax({
 		type : "post",
 		url: API.getMetasList(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"limit":100,
@@ -2605,6 +2701,10 @@ function getTag(){
 	$.ajax({
 		type : "post",
 		url: API.getMetasList(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"limit":1000,
@@ -2712,6 +2812,10 @@ function contensAdd(){
 	$.ajax({
 		type : "post",
 		url: API.contentsAdd(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"params":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"token":token,
@@ -2815,6 +2919,10 @@ function getShop(){
 	$.ajax({
 		type : "post",
 		url: API.shopList(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"limit":1000,
@@ -2983,6 +3091,10 @@ function cidShop(){
 	$.ajax({
 		type : "post",
 		url: API.shopList(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"limit":1000,
@@ -3043,6 +3155,10 @@ function updateContents(){
 	$.ajax({
 		type : "post",
 		url: API.contentsUpdate(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"params":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"token":token,
@@ -3122,6 +3238,10 @@ function getShopList(isPage){
 	$.ajax({
 		type : "post",
 		url: API.shopList(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"limit":10,
@@ -3382,6 +3502,10 @@ function addShop(){
 	$.ajax({
 		type : "post",
 		url: API.addShop(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"params":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"token":token,
@@ -3502,6 +3626,10 @@ function editShop(){
 	$.ajax({
 		type : "post",
 		url: API.editShop(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"params":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"token":token,
@@ -4019,6 +4147,10 @@ function getWithdrawList(isPage){
 	$.ajax({
 		type : "post",
 		url: API.withdrawList(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"limit":5,
@@ -4102,6 +4234,10 @@ function getPayList(){
 	$.ajax({
 		type : "post",
 		url: API.payLogList(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"token":token
 		},
@@ -4329,6 +4465,10 @@ function getAssets(){
 	
 	$.ajax({
 		type : "post",
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"token":token
 		},
@@ -4377,6 +4517,10 @@ function getVipStatus(){
 	$.ajax({
 		type : "post",
 		url: API.userStatus(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"token":token
 		},

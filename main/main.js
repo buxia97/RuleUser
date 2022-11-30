@@ -218,6 +218,10 @@ function getScan(){
 	
 	$.ajax({
 		type : "post",
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"codeContent":text
 		},
@@ -324,6 +328,10 @@ function sendCode(){
 	$.ajax({
 		type : "post",
 		url: API.RegSendCode(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{"params":JSON.stringify(API.removeObjectEmptyKey(data))},
 		
 		dataType: 'json',
@@ -360,6 +368,10 @@ function sendCodeFogot(){
 	$.ajax({
 		type : "post",
 		url: API.SendCode(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{"params":JSON.stringify(API.removeObjectEmptyKey(data))},
 		dataType: 'json',
 		success : function(result) {
@@ -445,6 +457,10 @@ function toLogin(){
 	
 	$.ajax({
 		type : "post",
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{"params":JSON.stringify(API.removeObjectEmptyKey(data))},
 		url : API.userLogin(),
 		dataType: 'json',
@@ -501,6 +517,10 @@ function toRegister(){
 	$.ajax({
 		type : "post",
 		url: API.userRegister(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{"params":JSON.stringify(API.removeObjectEmptyKey(data))},
 		dataType: 'json',
 		success : function(result) {
@@ -545,6 +565,10 @@ function toForgot(){
 	$.ajax({
 		type : "post",
 		url: API.userFoget(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{"params":JSON.stringify(API.removeObjectEmptyKey(data))},
 		dataType: 'json',
 		success : function(result) {
@@ -588,6 +612,10 @@ function addComments(cid,sumbit){
 	$.ajax({
 		type : "post",
 		url: API.setComments(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"params":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"token":token
@@ -626,6 +654,10 @@ function userStatus(){
 	
 	$.ajax({
 		type : "post",
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"token":token
 		},
@@ -707,6 +739,10 @@ function toIsMark(cid){
 	$.ajax({
 		type : "post",
 		url: API.getIsMark(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"token":token,
 			"cid":cid
@@ -745,6 +781,10 @@ function toLikes(cid){
 	$.ajax({
 		type : "post",
 		url: API.addLog(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"params":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"token":token
@@ -830,6 +870,10 @@ function toMark(cid){
 	$.ajax({
 		type : "post",
 		url: API.addLog(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"params":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"token":token
@@ -879,6 +923,10 @@ function userReward(cid){
 	$.ajax({
 		type : "post",
 		url: API.addLog(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"params":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"token":token
@@ -908,6 +956,10 @@ function loadPostShop(cid){
 	$.ajax({
 		type : "post",
 		url: API.shopList(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
 		data:{
 			"searchParams":JSON.stringify(API.removeObjectEmptyKey(data)),
 			"limit":1,
