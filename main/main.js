@@ -972,6 +972,7 @@ function loadPostShop(cid){
 					return false;
 				}
 				var shop = result.data[0];
+				isBuyShop(shop.id,shop.type);
 				var html = `
 				<div class="PostShop-main">
 					<div class="PostShop-pic">
@@ -982,14 +983,48 @@ function loadPostShop(cid){
 						<p><span class="PostShop-price">${shop.price} 积分</span>vip只需<span class="PostShop-VIPprice">${parseInt(shop.price*shop.vipDiscount)}积分</span></p>
 						<p class="PostShop-btn">
 							<a href="javascript:;" class="PostShop-info" onclick="shopInfo(${shop.id})">查看详情</a>
-							<a href="javascript:;" class="PostShop-buy" onclick="shopBuy(${shop.id})">
+							<a href="javascript:;" class="PostShop-buy nobuy" onclick="shopBuy(${shop.id})">
 								<i class="iconfont icon-cart"></i>
+							</a>
+							<a href="javascript:;" class="PostShop-buy isbuy" onclick="shopInfo(${shop.id})">
+								已购买
 							</a>
 						</p>
 					</div>
 				</div>
 				`;
 				$("#RuleUser-PostShop").html(html);
+			}
+		},
+		error : function(e){
+			//layer.alert("请求失败，请检查网络", {icon: 2});
+		}
+	});
+}
+function isBuyShop(id,type){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var data = {
+		"sid":id,
+		"token":token
+	}
+	$.ajax({
+		type : "post",
+		url: API.isBuyShop(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
+		data:data,
+		dataType: 'json',
+		success : function(result) {
+			if(result.code==1){
+				$(".nobuy").hide();
+				$(".isbuy").show();
 			}
 		},
 		error : function(e){

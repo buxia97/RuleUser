@@ -289,8 +289,17 @@
 	color: #fff;
 	border-radius: 6px;
 }
+#RuleUser-PostShop .PostShop-text  .PostShop-buy.isbuy{
+	float: right;
+	padding: 6px 12px;
+	background-color: #3ab648!important;
+	color: #fff;
+	display: none;
+	border-radius: 6px;
+}
 #RuleUser-PostShop .PostShop-text  .PostShop-buy i{
 	font-size: 17px;
+	color: #fff;
 }
 .PostShop-text h5{
 	margin: 0;
