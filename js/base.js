@@ -2851,8 +2851,13 @@ function contensPic(){
 			return false;
 		}
 		var formData = new FormData();
+		var contensPic = $("#contensPic").val();
+		if(contensPic==''){
+			return false;
+		}
 		formData.append("file", $("#contensPic")[0].files[0]);
 		formData.append("token",token);
+		$("#contensPic").val("");
 		var index = layer.load(1, {
 		  shade: [0.4,'#000']
 		});
@@ -3403,9 +3408,14 @@ function shopPic(type){
 		}else{
 			return false;
 		}
+		var shopPic = $("#shopPic"+type).val();
+		if(shopPic==""){
+			return false;
+		}
 		var formData = new FormData();
 		formData.append("file", $("#shopPic"+type)[0].files[0]);
 		formData.append("token",token);
+		$("#shopPic"+type).val("");
 		var index = layer.load(1, {
 		  shade: [0.4,'#000']
 		});
