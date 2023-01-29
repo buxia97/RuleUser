@@ -494,6 +494,7 @@ function toRegister(){
 	var code = $("#code").val();
 	var email = $("#email").val();
 	var repass = $("#repass").val();
+	var inviteCode = $("#inviteCode").val();
 	
 	if(username==""||userpass==""||email==""||code==""){
 
@@ -508,7 +509,8 @@ function toRegister(){
 		'name':username,
 		'code':code,
 		'password':userpass,
-		'mail':email
+		'mail':email,
+		'inviteCode':inviteCode
 	}
 	var index = layer.load(1, {
 	  shade: [0.4,'#000']

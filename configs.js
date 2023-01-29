@@ -1,5 +1,5 @@
-var API_URL = 'https://api.ruletree.club/'; //API地址，需要先开启允许跨域
-//var API_URL = 'http://127.0.0.1:8081/';
+//var API_URL = 'https://api.ruletree.club/'; //API地址，需要先开启允许跨域
+var API_URL = 'https://api.fumengkj.cn/';
 
 //授权码（必填）
 var authorize = "uafEfNfalESfEENqlaRGjk==";

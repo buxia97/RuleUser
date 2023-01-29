@@ -2019,9 +2019,14 @@ function uploadPic(){
 		}else{
 			return false;
 		}
+		var upload = $("#upload").val();
+		if(upload==""){
+			return false;
+		}
 		var formData = new FormData();
 		formData.append("file", $("#upload")[0].files[0]);
 		formData.append("token",token);
+		$("#upload").val("");
 		var index = layer.load(1, {
 		  shade: [0.4,'#000']
 		});
@@ -3937,7 +3942,7 @@ function wxPay(){
 	
 	$.ajax({
 		type : "post",
-		url: API.scancodePay(),
+		url: API.wxPay(),
 		data:data,
 		dataType: 'json',
 		success : function(result) {
