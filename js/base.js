@@ -644,13 +644,13 @@ function toRegister(){
 		layer.msg("请输入正确的参数", {icon: 2});
 		return false;
 	}
-	if(isEmail==1){
+	if(isEmail>0){
 		if(code==""){
 			layer.msg("请输入验证码", {icon: 2});
 			return false;
 		}
 	}
-	if(isInvite==1){
+	if(isInvite>0){
 		if(inviteCode==""){
 			layer.msg("请输入邀请码", {icon: 2});
 			return false;

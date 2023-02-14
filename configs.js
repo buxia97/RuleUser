@@ -1,5 +1,5 @@
-//var API_URL = 'https://api.ruletree.club/'; //API地址，需要先开启允许跨域
-var API_URL = 'https://api.fumengkj.cn/';
+var API_URL = 'https://api.ruletree.club/'; //API地址，需要先开启允许跨域
+//var API_URL = 'https://api.fumengkj.cn/';
 
 //授权码（必填）
 var authorize = "uafEfNfalESfEENqlaRGjk==";
@@ -33,7 +33,8 @@ var footerLink = `
 var CopyText = `规则之树版权所有。<a href="http://beian.miit.gov.cn" target="_blank" rel="nofllow">湘ICP备16007412号-3</a>`;  //底部版权
 //用户头衔，自己修改名词
 var rankList = ["小白","萌新","入门","熟手","大佬","巨佬","传说","古神"];
-
+//经验等级头衔
+var leverList = ["Lv0","Lv1","Lv2","Lv3","Lv4","Lv5","Lv6","Lv7"];
 //头衔对应的背景颜色
 var rankStyle = ["#6699CC","#666699","#009933","#FF9900","#ff007f","#FF0033","#660033","#000000"];
 

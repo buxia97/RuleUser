@@ -489,6 +489,14 @@ function toLogin(){
 	});
 }
 function toRegister(){
+	var isEmail = 1;
+	var isInvite = 1;
+	if(localStorage.getItem("isEmail")){
+		isEmail = Number(localStorage.getItem("isEmail"));
+	}
+	if(localStorage.getItem("isInvite")){
+		isInvite = Number(localStorage.getItem("isInvite"));
+	}
 	var username = $("#username").val();
 	var userpass = $("#userpass").val();
 	var code = $("#code").val();
@@ -504,6 +512,18 @@ function toRegister(){
 	if(userpass!=repass){
 		layer.msg("两次密码不一致", {icon: 2});
 		return false;
+	}
+	if(isEmail>0){
+		if(code==""){
+			layer.msg("请输入验证码", {icon: 2});
+			return false;
+		}
+	}
+	if(isInvite>0){
+		if(inviteCode==""){
+			layer.msg("请输入邀请码", {icon: 2});
+			return false;
+		}
 	}
 	var data = {
 		'name':username,
