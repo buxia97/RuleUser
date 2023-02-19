@@ -640,11 +640,15 @@ function toRegister(){
 	var repass = $("#repass").val();
 	var inviteCode = $("#inviteCode").val();
 	
-	if(username==""||userpass==""||email==""){
+	if(username==""||userpass==""){
 		layer.msg("请输入正确的参数", {icon: 2});
 		return false;
 	}
 	if(isEmail>0){
+		if(email==""){
+			layer.msg("请输入邮箱地址", {icon: 2});
+			return false;
+		}
 		if(code==""){
 			layer.msg("请输入验证码", {icon: 2});
 			return false;
@@ -3933,7 +3937,7 @@ function wxPay(){
 		return false;
 	}
 	var data = {
-		num: num,
+		price: num,
 		token: token,
 	}
 	var index = layer.load(1, {
@@ -4279,7 +4283,7 @@ function getPayList(){
 								<a href="javascript:;">${list[i].outTradeNo}</a>
 							</div>
 							<div class="order-data">
-								<p><span class="text-red">${list[i].totalAmount*100} 积分</span>
+								<p><span class="text-red">${list[i].totalAmount} 积分</span>
 								<span class="right">${API.formatDate(list[i].created)}<span>
 								</p>
 							</div>

@@ -155,31 +155,32 @@ function register(){
 			isInviteStyle = "display:none";
 		}
 	}
+	
 	var html = `
-		<div class="box-input">
+		<div class="RuleUser-input">
 			<input type="text" placeholder="请输入用户名(必填)" value="" id="username"/>
 		</div>
-		<div class="box-input">
+		<div class="RuleUser-input">
 			<input type="text" placeholder="请输入邮箱(必填)" value="" id="email"/>
 		</div>
-		<div class="box-input" style="${isEmailStyle}">
+		<div class="RuleUser-input" style="${isEmailStyle}">
 			<input type="text" placeholder="请输入验证码" value="" id="code"/>
 			<a href="javascript:;" class="send sendBefor" id="sendBefore" onclick="sendCode()">发送</a>
 			<span class="send sended" id="sended"></span>
 		</div>
-		<div class="box-input">
+		<div class="RuleUser-input">
 			<input type="password" placeholder="请输入密码" value="" id="userpass"/>
 		</div>
-		<div class="box-input">
+		<div class="RuleUser-input">
 			<input type="password" placeholder="再次输入密码" value="" id="repass"/>
 		</div>
-		<div class="box-input" style="${isInviteStyle}">
+		<div class="RuleUser-input" style="${isInviteStyle}">
 			<input type="text" placeholder="请输入邀请码" value="" id="inviteCode"/>
 		</div>
-		<div class="box-btn">
+		<div class="RuleUser-btn">
 			<button type="button" onclick="toRegister()">立即注册</button>
 		</div>
-		<div class="form-links">
+		<div class="RuleUserForm-links">
 			<a href="javascript:;" onclick="login()">用户登录</a>
 			<br/>
 			<p class="margin-top">注册即为同意<a href="${userAgreement}">《用户协议》</a></p>
@@ -504,7 +505,7 @@ function toRegister(){
 	var repass = $("#repass").val();
 	var inviteCode = $("#inviteCode").val();
 	
-	if(username==""||userpass==""||email==""||code==""){
+	if(username==""||userpass==""){
 
 		layer.msg("请输入正确的参数", {icon: 2});
 		return false;
@@ -514,6 +515,10 @@ function toRegister(){
 		return false;
 	}
 	if(isEmail>0){
+		if(email==""){
+			layer.msg("请输入邮箱地址", {icon: 2});
+			return false;
+		}
 		if(code==""){
 			layer.msg("请输入验证码", {icon: 2});
 			return false;
