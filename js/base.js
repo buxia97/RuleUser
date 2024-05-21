@@ -182,6 +182,8 @@ function loadPage(url,title){
 			$(".header-left").removeClass("wapShow")
 			$(".header-left-bg").removeClass("wapShow")
 			$("#main .content").html(result);
+			
+			
 			pageData(url);
 		},
 		error : function(e){
@@ -293,7 +295,7 @@ function pageData(page){
 		getVipMain();
 		menuActive(".menuAssets");
 	}
-	loginUser();
+	
 	
 }
 var encry3 = "mNBvcXzLkjhGfdsApoIuYtrEWqJH=MxZla+SVy";
@@ -857,13 +859,34 @@ function quit(){
 		clearTimeout('timer')
 	}, 1000)
 }
+function getLever(num){
+	var lv = 0;
+	if (num < 10) {
+		lv = 0;
+	} else if (num >= 10 && num < 50) {
+		lv = 1;
+	} else if (num >= 50 && num < 200) {
+		lv = 2;
+	} else if (num >= 200 && num < 500) {
+		lv = 3;
+	} else if (num >= 500 && num < 1000) {
+		lv = 4;
+	} else if (num >= 1000 && num < 2000) {
+		lv = 5;
+	} else if (num >= 2000 && num < 5000) {
+		lv = 6;
+	} else if (num >= 5000) {
+		lv = 7;
+	}
+	return lv;
+}
 function userInfo(){
 	if(localStorage.getItem('userinfo')){
 		var userInfo = JSON.parse(localStorage.getItem('userinfo'));
 		var uid = userInfo.uid;
 		var name = userInfo.name;
-		var lv = Number(userInfo.lv);
-		var lvText = rankList[lv];
+		var lv = getLever(userInfo.experience);
+		var lvText = leverList[lv];
 		var lvStyle = rankStyle[lv];
 		if(userInfo.screenName){
 			name = userInfo.screenName;
@@ -1001,58 +1024,7 @@ function dataShow(type){
 	}
 	return html;
 }
-//登录校验
-function loginUser(){
-	var plan;
-	var www;
-	var planVlaue;
-	var planArr;
-	var auth = authorize;
-	if(auth.indexOf("Gjk==") != -1 ){
-		plan=0;
-	}
-	if(auth.indexOf("MwL==") != -1 ){
-		plan=1;
-	}
-	if(auth.indexOf("qvB==") != -1 ){
-		plan=2;
-	}
-	if(plan==0){
-		planVlaue="Gjk==";
-		www = "iurer";
-		planArr=encry1;
-	}
-	if(plan==1){
-		planVlaue="MwL==";
-		www = "jjetg";
-		planArr=encry2;
-	}
-	if(plan==2){
-		planVlaue="qvB==";
-		www = "cdpvc";
-		planArr=encry3;
-	}
-	auth = auth.replace(planVlaue,"");
-	var totext="";
-	for(var i in auth){
-		var index = planArr.indexOf(auth[i]);
-		totext=totext+order[index];
-		
-	}
-	totext = totext.replace(www,"www");
-	var domain = window.location.hostname;
-	if(domain=="127.0.0.1"){
-		return false;
-	}
-	if(totext!=domain){
-		localStorage.clear();
-	}
-	if(totext!=domain){
-		layer.alert(decodeURIComponent(kk), {icon: 2});
-		//location.reload();
-	}
-	
-}
+
 function toOwo(){
 	$(".owo").toggle();
 }
@@ -2080,11 +2052,73 @@ function setEmail(){
 				</div>
 			</div>
 			<div class="box-btn">
-				<button type="button" class="radius" onclick="toReply()">保存设置</button>
+				<button type="button" class="radius" onclick="toMailEdit()">保存设置</button>
 			</div>
 		</div>
 			
 		`
+	});
+}
+function toMailEdit(){
+	var token;
+	if(localStorage.getItem("token")){
+		token = localStorage.getItem("token");
+	}else{
+		return false;
+	}
+	var uid;
+	var name;
+	if(localStorage.getItem('userinfo')){
+		var userInfo = JSON.parse(localStorage.getItem('userinfo'));
+		uid = userInfo.uid;
+		name =  userInfo.name;
+	}else{
+		return false;
+	}
+	var code = $("#code").val();
+	var mail = $("#newmail").val();
+	if(code==""||mail==""){
+		layer.msg("请输入正确的参数", {icon: 2});
+		return false;
+	}
+	var data = {
+		"uid":uid,
+		"name":name,
+		"mail":mail,
+		"code":code,
+	}
+	var index = layer.load(1, {
+	  shade: [0.4,'#000']
+	});
+	
+	$.ajax({
+		type : "post",
+		url: API.userEdit(),
+		header:{
+			"Accept": "application/json; charset=utf-8", 
+			"key":API.getKey()
+		},
+		data:{
+			"params":JSON.stringify(API.removeObjectEmptyKey(data)),
+			"token":token
+		},
+		dataType: 'json',
+		success : function(result) {
+			layer.close(index); 
+			if(result.code==1){
+				layer.msg("操作成功！", {icon: 1});
+				var timer = setTimeout(function() {
+					layer.closeAll();
+				}, 1000)
+				
+			}else{
+				layer.msg(result.msg, {icon: 2});
+			}
+		},
+		error : function(e){
+			layer.close(index); 
+			layer.alert("请求失败，请检查网络", {icon: 2});
+		}
 	});
 }
 function sendEmailCode(){
