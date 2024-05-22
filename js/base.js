@@ -2846,7 +2846,8 @@ function contensAdd(){
 		'category':category,
 		'tag':tag,
 		'text':text,
-		'sid':shopID
+		'sid':shopID,
+		'isMd':1
 	}
 	var index = layer.load(1, {
 	  shade: [0.4,'#000']
@@ -3194,7 +3195,8 @@ function updateContents(){
 		'category':category,
 		'tag':tag,
 		'text':text,
-		'sid':shopID
+		'sid':shopID,
+		"isMd":1
 	}
 	var index = layer.load(1, {
 	  shade: [0.4,'#000']
